@@ -12,6 +12,14 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+app.get(
+  "/.well-known/pki-validation/B8957A61CAF512916A6C2B6FD4641338.txt",
+  (req, res) => {
+    res.sendFile(__dirname +
+      "/well-known/pki-validation/B8957A61CAF512916A6C2B6FD4641338.txt");
+  }
+);
+
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });
