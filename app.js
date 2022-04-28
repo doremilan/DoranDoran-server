@@ -13,10 +13,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
 app.get(
-  "/.well-known/pki-validation/B8957A61CAF512916A6C2B6FD4641338.txt",
+  "/.well-known/pki-validation/AD424447A620C77C679BD83C2FA6E5BC.txt",
   (req, res) => {
     res.sendFile(__dirname +
-      "/well-known/pki-validation/B8957A61CAF512916A6C2B6FD4641338.txt");
+      "/well-known/pki-validation/AD424447A620C77C679BD83C2FA6E5BC.txt");
   }
 );
 
