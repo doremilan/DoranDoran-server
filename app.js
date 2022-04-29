@@ -2,7 +2,7 @@ const express = require("express");
 const connect = require("./schemas/index");
 const Router = require("./routers/index");
 const cors = require("cors");
-const port = 3060;
+const port = 3000;
 const app = express();
 const fs = require('fs')
 // const http = require('http')
@@ -36,8 +36,8 @@ app.get(
 const app_low = express();
 
 
-// const httpPort = 8080;
-// const httpsPort = 4433;
+// const httpPort = 3000;
+// const httpsPort = 443;
 
 app_low.use((req, res, next) => {
   if (req.secure) {
