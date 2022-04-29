@@ -25,6 +25,9 @@ const photoSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  // email:{
+  //   type:String,
+  // }
 });
 
 module.exports = mongoose.model("Photo", photoSchema);

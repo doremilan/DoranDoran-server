@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const voiceSchema = mongoose.Schema({
+const voiceFileSchema = mongoose.Schema({
   voiceTitle: {
     type: String,
     required: true,
@@ -17,6 +17,13 @@ const voiceSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  email: {
+    tpye: String,
+  },
+
+  // familyMemberNickname:{
+  //   type:String,
+  // }
 });
 
-module.exports = mongoose.model("Voice", voiceSchema);
+module.exports = mongoose.model("voiceFile", voiceFileSchema);
