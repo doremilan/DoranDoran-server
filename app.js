@@ -2,11 +2,11 @@ const express = require("express");
 const connect = require("./schemas/index");
 const Router = require("./routers/index");
 const cors = require("cors");
-const port = 3000;
+const port = 3060;
 const app = express();
 const fs = require('fs')
-const http = require('http')
-const https = require('https')
+// const http = require('http')
+// const https = require('https')
 
 connect();
 
@@ -36,8 +36,8 @@ const credentials = {
 const app_low = express();
 
 
-const httpPort = 8080;
-const httpsPort = 4433;
+// const httpPort = 8080;
+// const httpsPort = 4433;
 
 app_low.use((req, res, next) => {
   if (req.secure) {
@@ -49,16 +49,16 @@ app_low.use((req, res, next) => {
   }
 });
 
-http.createServer(app_low).listen(httpPort, () => {
-  console.log('http서버 켜짐');
-});
-
-https.createServer(credentials, app).listen(httpsPort, () => {
-  console.log('https서버 켜짐');
-});
-
-
-
-// app.listen(port, () => {
-//   console.log(port, "Server is listening...");
+// http.createServer(app_low).listen(httpPort, () => {
+//   console.log('http서버 켜짐');
 // });
+
+// https.createServer(credentials, app).listen(httpsPort, () => {
+//   console.log('https서버 켜짐');
+// });
+
+
+
+app.listen(port, () => {
+  console.log(port, "Server is listening...");
+});
