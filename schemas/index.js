@@ -1,9 +1,12 @@
 const mongoose = require("mongoose");
+require("dotenv").config();
+
+const DB = process.env.DB_NAME
 
 const connect = () => {
   mongoose
     .connect(
-      "mongodb+srv://Milan:dlalfks1**@cluster0.f4f1v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority",
+      DB,
       { ignoreUndefined: true }
     )
     .catch((err) => {
