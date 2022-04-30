@@ -13,17 +13,30 @@ const voiceFileSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  userId: {
+    tpye: String,
+  },
+  familyMemberNickname: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     required: true,
   },
+<<<<<<< HEAD
   userId: {
     tpye: String,
   },
+=======
+});
+>>>>>>> origin/develop
 
-  // familyMemberNickname:{
-  //   type:String,
-  // }
+userSchema.virtual("voiceFileId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
 });
 
 module.exports = mongoose.model("voiceFile", voiceFileSchema);

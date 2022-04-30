@@ -5,7 +5,7 @@ const eventSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  userId: {
     type: String,
     required: true,
   },
@@ -24,6 +24,14 @@ const eventSchema = mongoose.Schema({
   color: {
     type: Date,
   },
+});
+
+userSchema.virtual("eventId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
 });
 
 module.exports = mongoose.model("Event", eventSchema);

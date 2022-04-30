@@ -9,10 +9,21 @@ const familyMemberSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  userId: {
     type: String,
     required: true,
   },
+  profileImg: {
+    type: String,
+  },
+});
+
+userSchema.virtual("familyMemberId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
 });
 
 module.exports = mongoose.model("FamilyMember", familyMemberSchema);

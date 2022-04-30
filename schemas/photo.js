@@ -19,15 +19,27 @@ const photoSchema = mongoose.Schema({
   },
   totalLike: {
     type: String,
+  },
+  familyId: {
+    type: String,
+    required: true,
+  },
+  userId: {
+    type: String,
     required: true,
   },
   createdAt: {
     type: Date,
     required: true,
   },
-  // email:{
-  //   type:String,
-  // }
+});
+
+userSchema.virtual("photoId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
 });
 
 module.exports = mongoose.model("Photo", photoSchema);

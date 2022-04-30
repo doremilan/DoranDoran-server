@@ -5,10 +5,18 @@ const likeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  userId: {
     type: String,
     required: true,
   },
+});
+
+userSchema.virtual("likeId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
 });
 
 module.exports = mongoose.model("Like", likeSchema);

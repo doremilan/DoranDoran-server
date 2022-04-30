@@ -11,4 +11,12 @@ const familySchema = mongoose.Schema({
   },
 });
 
+userSchema.virtual("familyId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
+});
+
 module.exports = mongoose.model("Family", familySchema);
