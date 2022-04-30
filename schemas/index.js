@@ -12,3 +12,4 @@ const connect = () => {
 };
 
 module.exports = connect;
+module.exports = router;
