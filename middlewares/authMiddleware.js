@@ -1,5 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../schemas/user");
+require("dontenv").config();
 
 module.exports = (req, res, next) => {
   console.log("authMiddleware")
@@ -18,7 +19,7 @@ module.exports = (req, res, next) => {
   };
 
   try{
-    const { userId } = jwt.verify(tokenValue, "family-secret-key");
+    const { userId } = jwt.verify(tokenValue, process.env.SECRET_KEY);
     console.log('userId-->',userId)
     //error발생 StringToObjectID
     User.find({userId}).exec().then((userId) => {
