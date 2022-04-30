@@ -23,13 +23,7 @@ const voiceFileSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-<<<<<<< HEAD
-  userId: {
-    tpye: String,
-  },
-=======
 });
->>>>>>> origin/develop
 
 userSchema.virtual("voiceFileId").get(function () {
   return this._id.toHexString();
