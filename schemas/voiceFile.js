@@ -17,7 +17,7 @@ const voiceFileSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  email: {
+  userId: {
     tpye: String,
   },
 
