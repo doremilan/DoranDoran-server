@@ -216,7 +216,7 @@ export async function getPhoto(req, res) {
   }
 }
 
-// 사진 상세조회
+// 사진 상세조회 & 댓글 목록조회
 export async function getPhotoDetail(req, res) {
   const { photoId } = req.params;
   const { userId } = res.locals.user;

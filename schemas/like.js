@@ -5,10 +5,6 @@ const likeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  photoAlbumId: {
-    type: String,
-    required: true,
-  },
   userId: {
     type: String,
     required: true,
