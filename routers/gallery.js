@@ -5,20 +5,45 @@ const authMiddleware = require("../middlewares/authMiddleWare");
 const {
   postPhotoAlbums,
   getPhotoAlbums,
-  patchPhotoAlbums,
+  putPhotoAlbums,
   deletePhotoAlbums,
+  postPhoto,
+  getPhoto,
+  getPhotoDetail,
+  putPhoto,
+  deletePhoto,
 } = require("../controllers/galleryController");
 
-// 갤러리 앨범생성
+// 앨범생성
 router.post("/:familyId", authMiddleware, postPhotoAlbums);
 
-// 갤러리 앨범조회
+// 앨범조회
 router.get("/:familyId", authMiddleware, getPhotoAlbums);
 
-// 갤러리 앨범수정
-router.patch("/:familyId", authMiddleware, patchPhotoAlbums);
+// 앨범수정
+router.put("/:familyId", authMiddleware, putPhotoAlbums);
 
-// 갤러리 앨범삭제
+// 앨범삭제
 router.delete("/:familyId", authMiddleware, deletePhotoAlbums);
+
+// 사진 목록조회
+router.get("/:photoAlbumId", authMiddleware, getPhoto);
+
+// 사진 상세조회
+router.get("/:photoId", authMiddleware, getPhotoDetail);
+
+// 사진수정
+router.put("/:photoId", upload.single("photoFile"), authMiddleware, putPhoto);
+
+// 사진삭제
+router.delete("/:photoId", authMiddleware, deletePhoto);
+
+// 사진생성 (업로드 미들웨어 확인필요)
+router.post(
+  "/:familyId/:photoAlbumId",
+  upload.single("photoFile"),
+  authMiddleware,
+  postPhoto
+);
 
 module.exports = router;

@@ -3,15 +3,12 @@ const mongoose = require("mongoose");
 const photoSchema = mongoose.Schema({
   photoName: {
     type: String,
-    required: true,
   },
   content: {
     type: String,
-    required: true,
   },
   photoFile: {
     type: String,
-    required: true,
   },
   photoAlbumId: {
     type: String,
@@ -32,6 +29,9 @@ const photoSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  // userInfo: {
+  //   type: Object,
+  // },
 });
 
 userSchema.virtual("photoId").get(function () {

@@ -3,7 +3,6 @@ const mongoose = require("mongoose");
 const photoAlbumSchema = mongoose.Schema({
   photoAlbumName: {
     type: String,
-    required: true,
   },
   familyId: {
     type: String,
