@@ -19,6 +19,9 @@ const voiceFileSchema = mongoose.Schema({
   familyMemberNickname: {
     type: String,
   },
+  voicePlayTime: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     required: true,

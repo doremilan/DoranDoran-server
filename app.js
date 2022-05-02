@@ -80,7 +80,12 @@ app.use((error, req, res, next) => {
 //   console.log('https서버 켜짐');
 // });
 
+<<<<<<< HEAD
+
+//서버 열기 및 로그
+=======
 // 서버 열기
+>>>>>>> origin/develop
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });
