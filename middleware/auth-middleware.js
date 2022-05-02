@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const { User } = require("../schemas/user");
-
+require("dontenv").config();
 
 module.exports = (req, res, next) => {
     // console.log('지나감')
@@ -15,7 +15,7 @@ module.exports = (req, res, next) => {
     }
 
     try {
-        const { userId } = jwt.verify(tokenValue, "test");
+        const { userId } = jwt.verify(tokenValue, process.env.SECRET_KEY);
 
         User.findByPk(userId).then((user) => {
             res.locals.user = user;
