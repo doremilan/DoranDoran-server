@@ -4,7 +4,6 @@ const indexRouter = require("./routers/index");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
-const dayjs = require("dayjs");
 const fs = require("fs");
 const port = 3000;
 const app = express();
@@ -80,12 +79,7 @@ app.use((error, req, res, next) => {
 //   console.log('https서버 켜짐');
 // });
 
-<<<<<<< HEAD
-
-//서버 열기 및 로그
-=======
 // 서버 열기
->>>>>>> origin/develop
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });
