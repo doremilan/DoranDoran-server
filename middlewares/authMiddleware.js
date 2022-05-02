@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const User = require("../schemas/user");
-require("dontenv").config();
+require("dotenv").config();
 
 module.exports = (req, res, next) => {
   console.log("authMiddleware")

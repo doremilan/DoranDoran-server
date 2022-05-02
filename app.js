@@ -58,7 +58,7 @@ app_low.use((req, res, next) => {
 // });
 
 
-
+//서버 열기 및 로그
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });
