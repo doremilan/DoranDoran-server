@@ -1,61 +1,49 @@
 const express = require("express");
 const router = express.Router();
-const galleryController = require("../controllers/galleryController");
 const authMiddleware = require("../middlewares/authMiddleWare");
 
-// 갤러리 앨범 생성
-router.post("/:familyId", authMiddleware, async (req, res) => {
-  const { familyId } = req.params;
-  const { userId } = res.locals.user;
-  const { photoAlbumName } = req.body;
-  const createdAt = new Date();
+const {
+  postPhotoAlbums,
+  getPhotoAlbums,
+  putPhotoAlbums,
+  deletePhotoAlbums,
+  postPhoto,
+  getPhoto,
+  getPhotoDetail,
+  putPhoto,
+  deletePhoto,
+} = require("../controllers/galleryController");
 
-  try {
-    if (photoAlbumName !== null) {
-      const createdPhotoAlbum = await PhotoAlbum.create({
-        familyId,
-        userId,
-        photoAlbumName,
-        createdAt,
-      });
-      const newPhotoAlbumId = await PhotoAlbum.find({
-        _id: createdPhotoAlbum._id,
-      });
-      res.status(201).json({
-        newPhotoAlbumId,
-        msg: "새로운 앨범이 생성되었어요",
-      });
-    } else {
-      res.status(400).send({
-        result: false,
-        msg: "앨범 이름을 작성해주세요",
-      });
-    }
-  } catch (error) {
-    console.log("갤러리 앨범 생성 오류", error);
-    res.status(400).send({
-      result: false,
-      msg: "갤러리 앨범 생성 실패",
-    });
-  }
-});
+// 앨범생성
+router.post("/:familyId", authMiddleware, postPhotoAlbums);
 
-// 갤러리 앨범 목록 조회
-router.get("/:familyId", authMiddleware, async (req, res) => {
-  const { familyId } = req.params;
+// 앨범조회
+router.get("/:familyId", authMiddleware, getPhotoAlbums);
 
-  try {
-    const [photoAlbumList] = await PhotoAlbum.find({ familyId });
-    res.status(200).json({
-      photoAlbumList,
-    });
-  } catch (error) {
-    console.log("갤러리 앨범 조회 오류", error);
-    res.status(400).send({
-      result: false,
-      msg: "갤러리 앨범 조회 실패",
-    });
-  }
-});
+// 앨범수정
+router.put("/:familyId", authMiddleware, putPhotoAlbums);
+
+// 앨범삭제
+router.delete("/:familyId", authMiddleware, deletePhotoAlbums);
+
+// 사진 목록조회
+router.get("/:photoAlbumId", authMiddleware, getPhoto);
+
+// 사진 상세조회
+router.get("/:photoId", authMiddleware, getPhotoDetail);
+
+// 사진수정
+router.put("/:photoId", upload.single("photoFile"), authMiddleware, putPhoto);
+
+// 사진삭제
+router.delete("/:photoId", authMiddleware, deletePhoto);
+
+// 사진생성 (업로드 미들웨어 확인필요)
+router.post(
+  "/:familyId/:photoAlbumId",
+  upload.single("photoFile"),
+  authMiddleware,
+  postPhoto
+);
 
 module.exports = router;

@@ -28,9 +28,6 @@ userSchema.virtual("userId").get(function () {
 userSchema.set("toJSON", {
   virtuals: true,
 });
-<<<<<<< HEAD
 //몽고 db의 고유 아이디 값인 _id를 해당 특정 변수명으로 바꿔주는 코드
-=======
->>>>>>> origin/develop
 
 module.exports = mongoose.model("User", userSchema);

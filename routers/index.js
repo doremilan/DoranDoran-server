@@ -27,3 +27,4 @@ router.use("/mission", missionRouter);
 router.use("/badge", badgeRouter);
 
 module.exports = router;
+
