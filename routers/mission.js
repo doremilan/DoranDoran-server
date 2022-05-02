@@ -15,7 +15,10 @@ router.post("/:familyId", authMiddleware, postMission);
 // 미션 완료 체크
 router.post("/:missionId", authMiddleware, completeMission);
 
-// 이번주 미션 현황 & 목록조회
+// 이번주 미션 목록조회
+router.get("/:familyId", authMiddleware, getMission);
+
+// 이번주 미션 현황
 router.get("/:familyId", authMiddleware, getMission);
 
 // 지난 미션 목록조회

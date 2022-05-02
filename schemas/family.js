@@ -11,11 +11,11 @@ const familySchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("familyId").get(function () {
+familySchema.virtual("familyId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+familySchema.set("toJSON", {
   virtuals: true,
 });
 

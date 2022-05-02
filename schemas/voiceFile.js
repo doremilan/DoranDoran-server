@@ -28,11 +28,11 @@ const voiceFileSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("voiceFileId").get(function () {
+voiceFileSchema.virtual("voiceFileId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+voiceFileSchema.set("toJSON", {
   virtuals: true,
 });
 

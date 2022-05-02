@@ -18,11 +18,11 @@ const familyMemberSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("familyMemberId").get(function () {
+familyMemberSchema.virtual("familyMemberId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+familyMemberSchema.set("toJSON", {
   virtuals: true,
 });
 

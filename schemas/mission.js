@@ -13,21 +13,24 @@ const missionSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  familyMemberId: {
-    type: Array,
-    required: true,
-  },
   createdAt: {
     type: Date,
     required: true,
   },
+  // familyMemberId: {
+  //   type: Array,
+  //   required: true,
+  // },
+  // completedMemberId: {
+  //   type: Array,
+  // },
 });
 
-userSchema.virtual("missionId").get(function () {
+missionSchema.virtual("missionId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+missionSchema.set("toJSON", {
   virtuals: true,
 });
 
