@@ -13,6 +13,10 @@ const missionChkSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  familyMemberId: {
+    type: String,
+    required: true,
+  },
 });
 
 userSchema.virtual("missionChkId").get(function () {

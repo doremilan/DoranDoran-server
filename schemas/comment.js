@@ -13,6 +13,10 @@ const commentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  photoAlbumId: {
+    type: String,
+    required: true,
+  },
   createdAt: {
     type: Date,
     required: true,
