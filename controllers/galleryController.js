@@ -1,3 +1,5 @@
+import dayjs from "dayjs";
+
 const User = require("../schemas/user");
 const FamilyMember = require("../schemas/familyMember");
 const PhotoAlbum = require("../schemas/photoAlbum");
@@ -243,7 +245,7 @@ export async function getPhotoDetail(req, res) {
       detailPhoto.likeChk = likeChk;
     }
     // 댓글 목록 & 댓글 수
-    const [commentList] = await Comment.find({ photoId });
+    const [commentList] = await Comment.find({ photoId }).sort("-createdAt");
     const totalComment = commentList.length;
     for (let comment of commentList) {
       let commentUserInfo = await FamilyMember.findOne({

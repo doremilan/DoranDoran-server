@@ -17,6 +17,14 @@ const missionSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  familyMemberId: {
+    type: Array,
+    required: true,
+  },
+  createdAt: {
+    type: Date,
+    required: true,
+  },
 });
 
 userSchema.virtual("missionId").get(function () {
