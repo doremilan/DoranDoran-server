@@ -54,6 +54,7 @@ export async function createFamilyMember(req, res) {
 //멤버 검색 API
 export async function familyMemberCheckmodal(req, res) {
     const {keyword} = req.query
+    const {userId} = res.locals
         console.log('req.query'--> keyword )
 
         const regex = (pattern) => new RegExp(`.*${pattern}.*`);
@@ -73,11 +74,12 @@ export async function familyMemberCheckmodal(req, res) {
 export async function GetfamilyMember(req, res) {
     try{
         const familyId = req.params
+        const {userId} = res.locals
         let familyMemberList = await FamilyMember.find({})
 
         for (let family of familyMemberList ) {
             let userInfo = await Family.findOne({
-                familyId: user.familyId
+                familyId: userId.familyId
             });
             family.userInfo = userInfo
         }
@@ -96,7 +98,7 @@ export async function editFamilyTitle(req, res) {
     try{
         const familyId = req.params
         const familyTitle = req.body
-        const {user} = res.locals;
+        const {userId} = res.locals;
 
         console.log(req.familyId)
 
@@ -120,20 +122,20 @@ export async function editFamilyTitle(req, res) {
 //가족 구성원 수정 API
 export async function editFamilyMember(req, res) {
     try{
-        const {familyId, familyMemberId} = req.params
+        const {familyMemberId} = req.params
         const {familyMemberNickname} = req.body
         const {user} = res.locals;
 
-        console.log(familyId, familyMemberId)
+        console.log(familyMemberId)
         console.log(familyMemberNickname)
 
-        const modifyFamilyMemberNickname = await FamilyMember.updateOne({familyId, familyMemberId}, {$set:{familyMemberNickname}});
+        const modifyFamilyMemberNickname = await FamilyMember.updateOne({familyMemberId}, {$set:{familyMemberNickname}});
 
         console.log('변경 이후', familyMemberNickname)
 
-        res.status(200).send({
-            modifyFamilyMemberNickname
-        })
+        res.status(200).send(
+            [modifyFamilyMemberNickname]
+        )
 
     } catch(error){
 
