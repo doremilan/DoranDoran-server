@@ -13,10 +13,6 @@ const missionSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  dueDate: {
-    type: Date,
-    required: true,
-  },
   familyMemberId: {
     type: Array,
     required: true,
