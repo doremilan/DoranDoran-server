@@ -11,4 +11,12 @@ const badgeSchema = mongoose.Schema({
   },
 });
 
+userSchema.virtual("badgeId").get(function () {
+  return this._id.toHexString();
+});
+
+userSchema.set("toJSON", {
+  virtuals: true,
+});
+
 module.exports = mongoose.model("Badge", badgeSchema);
