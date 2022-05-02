@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get('/getUser', authMiddleware, async (req, res) => {
+router.get('/me', authMiddleware, async (req, res) => {
     try {
         const {userId, nickname, profileImg} = res.locals;
         res.send({userId, nickname, profileImg});
