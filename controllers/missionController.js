@@ -87,20 +87,22 @@ export async function completeMission(req, res) {
   }
 }
 
-// 이번달 미션 목록조회
+// 이번달 미션 목록조회 (작업중)
 export async function getMission(req, res) {
   const { familyId } = req.params;
-  const { userId } = res.locals.user;
 
   try {
     const thisMonth = new Date().getMonth();
     const Missions = await Mission.find({ familyId }).sort("-createdAt");
-    // 이번달 미션 리스트 추출
+    // 이번달 미션 리스트 & 전체 미션 수 추출
     const thisMonthMissionList = [];
+    let totalMission = 0;
+    let completedMission = 0;
     for (let mission of Missions) {
       if (mission.createdAt.getMonth() === thisMonth) {
         thisMonthMissionList.push(mission);
-        // 각 미션 멤버 & 미션완료 체크
+        totalMission += 1;
+        // 각 미션 멤버 리스트 & 미션완료 여부 체크
         const [completedMembers] = await MissionChk.find({
           missionId: mission.missionId,
         });
@@ -110,27 +112,31 @@ export async function getMission(req, res) {
         for (let missionMember of missionMembers) {
           for (let completedMember of completedMembers) {
             if (missionMember === completedMember) {
-              let myMissionChk = true;
+              let myMissionChk = true; //false값도 가는지 체크
               missionMember.myMissionChk = myMissionChk;
             }
           }
         }
         mission.missionMemberList = missionMembers; //배열체크
-        // 각 미션 전체 달성완료 체크
+        // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
         if (missionMembers.length === completedMembers.length) {
           let familyMissionChk = true;
           mission.familyMissionChk = familyMissionChk;
+          completedMission += 1;
         }
       }
     }
     res.status(200).json({
+      totalMission,
+      completedMission,
+      completePercentage,
       thisMonthMissionList,
     });
   } catch (error) {
-    console.log("사진 목록조회 오류", error);
+    console.log("미션 목록조회 오류", error);
     res.status(400).send({
       result: false,
-      msg: "사진 상세조회 실패",
+      msg: "미션 목록조회 실패",
     });
   }
 }
