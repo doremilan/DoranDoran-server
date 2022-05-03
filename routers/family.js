@@ -2,6 +2,17 @@ const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
+const {
+    CreateFamily,
+    CreateFamilyMember,
+    FamilyMemberCheckmodal,
+    GetfamilyMember,
+    EditFamilyTitle,
+    EditFamilyMember,
+    DeleteFamily,
+    DeleteFamilyMember
+  } = require("../controllers/familyController");
+
 //가족 생성 API
 router.post('/family', authMiddleware, CreateFamily)
 

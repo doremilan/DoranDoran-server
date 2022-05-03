@@ -5,6 +5,17 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 require("dotenv").config();
 
+const {
+  Getuser,
+  Signup,
+  Login,
+  Getprofile,
+  Editprofile,
+  EditTodaymood
+} = require("../controllers/userController");
+
+
+
 router.get("/me", authMiddleware, Getuser)
 
 
@@ -34,4 +45,4 @@ router.put("/myPfofile", authMiddleware, Editprofile)
 router.put("/myPfofile/todaymood", authMiddleware, EditTodaymood)
 
 
-  module.exports = router;
+module.exports = router;
