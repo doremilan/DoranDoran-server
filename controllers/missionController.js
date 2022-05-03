@@ -5,7 +5,7 @@ const MissionMember = require("../schemas/missionmember");
 const MissionChk = require("../schemas/missionChk");
 
 // 미션등록
-export async function postMission(req, res) {
+const postMission = async (req, res) => {
   const { familyId } = req.params;
   const { userId } = res.locals.user;
   const { missionTitle, familyMemberId } = req.body;
@@ -49,7 +49,7 @@ export async function postMission(req, res) {
 }
 
 // 미션 완료 체크
-export async function completeMission(req, res) {
+const completeMission = async (req, res) => {
   const { missionId } = req.params;
   const { userId } = res.locals.user;
   const { myMissionChk, familyMissionChk, completedAt } = req.body;
@@ -88,7 +88,7 @@ export async function completeMission(req, res) {
 }
 
 // 이번달 미션 목록조회 (작업중)
-export async function getMission(req, res) {
+const getMission = async (req, res) => {
   const { familyId } = req.params;
 
   try {
@@ -139,4 +139,10 @@ export async function getMission(req, res) {
       msg: "미션 목록조회 실패",
     });
   }
+}
+
+module.exports = {
+  postMission,
+  completeMission,
+  getMission
 }

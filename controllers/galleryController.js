@@ -6,7 +6,7 @@ const Comment = require("../schemas/comment");
 const Like = require("../schemas/like");
 
 // 앨범생성
-export async function postPhotoAlbums(req, res) {
+const postPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
   const { userId } = res.locals.user;
   const { photoAlbumName } = req.body;
@@ -44,7 +44,7 @@ export async function postPhotoAlbums(req, res) {
 }
 
 // 앨범조회
-export async function getPhotoAlbums(req, res) {
+const getPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
 
   try {
@@ -72,7 +72,7 @@ export async function getPhotoAlbums(req, res) {
 }
 
 // 앨범수정
-export async function putPhotoAlbums(req, res) {
+const putPhotoAlbums = async (req, res) => {
   const { photoAlbumId } = req.params;
   const { photoAlbumName } = req.body;
 
@@ -106,7 +106,7 @@ export async function putPhotoAlbums(req, res) {
 }
 
 // 앨범삭제
-export async function deletePhotoAlbums(req, res) {
+const deletePhotoAlbums = async (req, res) => {
   const { photoAlbumId } = req.params;
 
   try {
@@ -132,7 +132,7 @@ export async function deletePhotoAlbums(req, res) {
 }
 
 // 사진생성
-export async function postPhoto(req, res) {
+const postPhoto = async (req, res) => {
   const { familyId, photoAlbumId } = req.params;
   const { userId } = res.locals.user;
   const { photoName, content } = req.body;
@@ -179,7 +179,7 @@ export async function postPhoto(req, res) {
 }
 
 // 사진 목록조회
-export async function getPhoto(req, res) {
+const getPhoto = async (req, res) => {
   const { photoAlbumId } = req.params;
   const { userId } = res.locals.user;
 
@@ -217,7 +217,7 @@ export async function getPhoto(req, res) {
 }
 
 // 사진 상세조회 & 댓글 목록조회
-export async function getPhotoDetail(req, res) {
+const getPhotoDetail = async (req, res) => {
   const { photoId } = req.params;
   const { userId } = res.locals.user;
 
@@ -268,7 +268,7 @@ export async function getPhotoDetail(req, res) {
 }
 
 // 사진수정
-export async function putPhoto(req, res) {
+const putPhoto = async (req, res) => {
   const { photoId } = req.params;
   const { photoName, content } = req.body;
   const photoFile = req.files.photoFile[0].location; //업로드 미들웨어 확인필요
@@ -311,7 +311,7 @@ export async function putPhoto(req, res) {
 }
 
 // 사진삭제
-export async function deletePhoto(req, res) {
+const deletePhoto = async (req, res) => {
   const { photoId } = req.params;
 
   try {
@@ -333,4 +333,16 @@ export async function deletePhoto(req, res) {
       msg: "사진 삭제 실패",
     });
   }
+}
+
+module.exports = {
+  postPhotoAlbums,
+  getPhotoAlbums,
+  putPhotoAlbums,
+  deletePhotoAlbums,
+  postPhoto,
+  getPhoto,
+  getPhotoDetail,
+  putPhoto,
+  deletePhoto,
 }

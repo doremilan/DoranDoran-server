@@ -4,7 +4,7 @@ const FamilyMember = require('../schemas/familyMember')
 const User = require('../schemas/user')
 
 //보이스 앨범 생성
-export async function createVoiceAlbum(req, res) {
+const createVoiceAlbum = async (req, res) => {
     const { familyId } = req.params;
     const { userId } = res.locals;
     const { voiceAlbumName } = req.body;
@@ -42,7 +42,7 @@ export async function createVoiceAlbum(req, res) {
 }
 
 //보이스앨범 조회
-export async function getVoiceAlbum(req, res) {
+const getVoiceAlbum = async (req, res) => {
     const { familyId } = req.params;
 
     try {
@@ -61,7 +61,7 @@ export async function getVoiceAlbum(req, res) {
 }
 
 //보이스 앨범 수정
-export async function updateVoiceAlbum(req, res) {
+const updateVoiceAlbum = async (req, res) => {
     const { voiceAlbumId } = req.params;
     const { voiceAlbumName } = req.body;
 
@@ -82,7 +82,7 @@ export async function updateVoiceAlbum(req, res) {
 }
 
 //보이스 앨범 삭제
-export async function deleteVoiceAlbum(req, res) {
+const deleteVoiceAlbum = async (req, res) => {
     const { voiceAlbumId } = req.params
 
     try {
@@ -107,7 +107,7 @@ export async function deleteVoiceAlbum(req, res) {
 
 
 //음성파일 생성
-export async function createVoiceFile(req, res) {
+const createVoiceFile = async (req, res) => {
     const { voiceAlbumId } = req.params;
     const { voiceFileTilte, voicePlayTime } = req.body;
     const { userId } = res.locals;
@@ -138,7 +138,7 @@ export async function createVoiceFile(req, res) {
 
 
 // 음성파일 조회
-export async function getVoiceFile(req, res) {
+const getVoiceFile = async (req, res) => {
     const { voiceAlbumId } = req.params;
     const { userId } = res.locals.user;
 
@@ -156,7 +156,7 @@ export async function getVoiceFile(req, res) {
 }
 
 //음성파일 삭제
-export async function deleteVoiceFile(req, res) {
+const deleteVoiceFile = async (req, res) => {
     const { voiceFileId } = req.params;
     const { userId } = res.locals.user;
 
@@ -169,4 +169,12 @@ export async function deleteVoiceFile(req, res) {
     })
 }
 
-
+module.exports = {
+    createVoiceAlbum,
+    getVoiceAlbum,
+    updateVoiceAlbum,
+    deleteVoiceAlbum,
+    createVoiceFile,
+    getVoiceFile,
+    deleteVoiceFile,
+}

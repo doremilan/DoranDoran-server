@@ -3,7 +3,7 @@ const Event = require('../schemas/event')
 
 
 //일정 작성
-export async function createEvent(req, res) {
+const createEvent = async (req, res) => {
     const { userId } = res.locals;
     const { familyId } = req.params;
     const { event, startDate, endDate, color } = req.body;
@@ -24,7 +24,7 @@ export async function createEvent(req, res) {
 }
 
 //일정 수정
-export async function updateEvent(req, res) {
+const updateEvent = async (req, res) => {
     const { eventId } = req.params;
     const { event, startDate, endDate, color } = req.body;
 
@@ -50,7 +50,7 @@ export async function updateEvent(req, res) {
 
 
 //일정 삭제
-export async function deleteEvent(req, res) {
+const deleteEvent = async (req, res) => {
     const { eventId } = req.params;
 
     try {
@@ -102,7 +102,7 @@ export async function deleteEvent(req, res) {
 
 
 //일정 조회 
-export async function getEvent(req, res) {
+const getEvent = async (req, res) => {
     const { familyId } = req.params;
     // const { userId } = res.locals;
 
@@ -151,6 +151,12 @@ export async function getEvent(req, res) {
 
 // }
 
+module.exports = {
+    createEvent,
+    updateEvent,
+    deleteEvent,
+    getEvent,
+}
 
 
 
