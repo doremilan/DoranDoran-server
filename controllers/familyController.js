@@ -62,6 +62,7 @@ export async function FamilyMemberCheckmodal(req, res) {
 	    const titleRegex = regex(search);
 	    let searchKeyword = await FamilyMember.find({ $or : [
 		{'userId' : { $regex: titleRegex, $options : 'i' }},
+        {'email' : { $regex: titleRegex, $options : 'i' }},
 		{'userNickname' : { $regex: titleRegex, $options : 'i' }}]
         });
 

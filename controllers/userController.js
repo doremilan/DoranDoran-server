@@ -27,10 +27,10 @@ export async function Getuser(req, res) {
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 export async function Signup(req, res) {
-    let { userId, password, passwordCheck, nickName, profileImg } = req.body;
+    let { email, password, passwordCheck, nickName, profileImg } = req.body;
    
     //const userProfile = initProfile;
-    const existUsers = await User.findOne({ userId });
+    const existUsers = await User.findOne({ email });
   
     // 유저가 회원가입 할 시, 유저의 초기 프로필 사진 지정 ->  위의 initProfile 에서
     // url 링크를 가져온다 -> 유저의 초기 프로필 사진이 고정된다.
@@ -58,16 +58,16 @@ export async function Signup(req, res) {
   }
 
     //회원 가입 성공 시의 메시지 호출.
-    await User.create({ userId, password, nickName, profileImg });
-    console.log(`${userId} 님이 가입하셨습니다.`);
+    await User.create({ email, password, nickName, profileImg });
+    console.log(`${email} 님이 가입하셨습니다.`);
   
     res.status(201).send({ msg:"회원가입이 완료되었습니다." });
 };    
 
 //유저가 로그인 요청 시 사용하는 API입니다.
 export async function Login(req, res) {
-    const { userId, password } = req.body;
-    const user = await User.findOne({ userId, password });
+    const { email, password } = req.body;
+    const user = await User.findOne({ email, password });
 
     if (!user) {
     console.log("유저 로그인 요청에서 오류!", error)
