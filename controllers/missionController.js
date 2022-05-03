@@ -46,7 +46,7 @@ const postMission = async (req, res) => {
       msg: "미션 등록 실패",
     });
   }
-}
+};
 
 // 미션 완료 체크
 const completeMission = async (req, res) => {
@@ -85,7 +85,7 @@ const completeMission = async (req, res) => {
       msg: "미션체크 실패",
     });
   }
-}
+};
 
 // 이번달 미션 목록조회 (작업중)
 const getMission = async (req, res) => {
@@ -139,10 +139,10 @@ const getMission = async (req, res) => {
       msg: "미션 목록조회 실패",
     });
   }
-}
+};
 
 module.exports = {
   postMission,
   completeMission,
-  getMission
-}
+  getMission,
+};

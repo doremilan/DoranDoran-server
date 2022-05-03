@@ -41,7 +41,7 @@ const postPhotoAlbums = async (req, res) => {
       msg: "갤러리 앨범 생성 실패",
     });
   }
-}
+};
 
 // 앨범조회
 const getPhotoAlbums = async (req, res) => {
@@ -69,7 +69,7 @@ const getPhotoAlbums = async (req, res) => {
       msg: "갤러리 앨범 조회 실패",
     });
   }
-}
+};
 
 // 앨범수정
 const putPhotoAlbums = async (req, res) => {
@@ -103,7 +103,7 @@ const putPhotoAlbums = async (req, res) => {
       msg: "갤러리 앨범 수정 실패",
     });
   }
-}
+};
 
 // 앨범삭제
 const deletePhotoAlbums = async (req, res) => {
@@ -129,7 +129,7 @@ const deletePhotoAlbums = async (req, res) => {
       msg: "갤러리 앨범 삭제 실패",
     });
   }
-}
+};
 
 // 사진생성
 const postPhoto = async (req, res) => {
@@ -176,7 +176,7 @@ const postPhoto = async (req, res) => {
       msg: "사진 등록 실패",
     });
   }
-}
+};
 
 // 사진 목록조회
 const getPhoto = async (req, res) => {
@@ -214,7 +214,7 @@ const getPhoto = async (req, res) => {
       msg: "사진 목록조회 실패",
     });
   }
-}
+};
 
 // 사진 상세조회 & 댓글 목록조회
 const getPhotoDetail = async (req, res) => {
@@ -265,7 +265,7 @@ const getPhotoDetail = async (req, res) => {
       msg: "사진 상세조회 실패",
     });
   }
-}
+};
 
 // 사진수정
 const putPhoto = async (req, res) => {
@@ -308,7 +308,7 @@ const putPhoto = async (req, res) => {
       msg: "사진 수정 실패",
     });
   }
-}
+};
 
 // 사진삭제
 const deletePhoto = async (req, res) => {
@@ -333,7 +333,7 @@ const deletePhoto = async (req, res) => {
       msg: "사진 삭제 실패",
     });
   }
-}
+};
 
 module.exports = {
   postPhotoAlbums,
@@ -345,4 +345,4 @@ module.exports = {
   getPhotoDetail,
   putPhoto,
   deletePhoto,
-}
+};
