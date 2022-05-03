@@ -48,7 +48,6 @@ const familyMemberCheckmodal = async (req, res) => {
   try {
     const { keyword } = req.query;
     const { userId } = res.locals;
-    console.log("req.query-->", keyword);
 
     const regex = (pattern) => new RegExp(`.*${pattern}.*`);
     const titleRegex = regex(search);
@@ -77,7 +76,7 @@ const getfamilyMember = async (req, res) => {
     const { user } = res.locals.user;
     const userId = user[0].userId;
 
-    let familyMemberList = await FamilyMember.findO({});
+    let familyMemberList = await FamilyMember.find({});
 
     for (let family of familyMemberList) {
       let userInfo = await Family.findOne({

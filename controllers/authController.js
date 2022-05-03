@@ -51,7 +51,7 @@ const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email, password });
 
-  if (!user) {
+  if (!email || !password) {
     console.log("유저 로그인 요청에서 오류!", error);
 
     res.status(400).send({ msg: "입력한 정보를 다시 확인해 주세요." });
