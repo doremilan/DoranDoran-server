@@ -26,11 +26,11 @@ const eventSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("eventId").get(function () {
+eventSchema.virtual("eventId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+eventSchema.set("toJSON", {
   virtuals: true,
 });
 

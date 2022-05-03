@@ -23,11 +23,11 @@ const commentSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("commentId").get(function () {
+commentSchema.virtual("commentId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+commentSchema.set("toJSON", {
   virtuals: true,
 });
 

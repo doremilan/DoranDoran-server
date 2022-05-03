@@ -1,15 +1,15 @@
 const User = require("../schemas/user");
 const FamilyMember = require("../schemas/familyMember");
-const PhotoAlbum = require("../schemas/photoAlbum");
-const Photo = require("../schemas/photo");
 const Mission = require("../schemas/mission");
+const MissionMember = require("../schemas/missionmember");
+const MissionChk = require("../schemas/missionChk");
 
 // 미션등록
 export async function postMission(req, res) {
   const { familyId } = req.params;
   const { userId } = res.locals.user;
-  const { missionTitle, familyMemberId, dueDate } = req.body;
-  const createdAt = dayjs(new Date()).format("YYYY-MM-DD HH:mm:ss");
+  const { missionTitle, familyMemberId } = req.body;
+  const createdAt = new Date();
 
   try {
     // 공백 체크
@@ -18,10 +18,18 @@ export async function postMission(req, res) {
         missionTitle,
         userId,
         familyId,
-        dueDate,
         createdAt,
-        $push: { familyMemberId },
       });
+      const MissionId = await Mission.findById({
+        _id: createdMission._id,
+      });
+      for (let MemberId of familyMemberId) {
+        await MissionMember.create({
+          MemberId,
+          userId,
+          MissionId,
+        });
+      }
       res.status(201).json({
         msg: "새로운 미션이 등록되었어요.",
       });
@@ -40,55 +48,95 @@ export async function postMission(req, res) {
   }
 }
 
-// 이번주 미션 현황 & 목록조회
-export async function getMission(req, res) {
-  const { familyId } = req.params;
+// 미션 완료 체크
+export async function completeMission(req, res) {
+  const { missionId } = req.params;
   const { userId } = res.locals.user;
+  const { myMissionChk, familyMissionChk, completedAt } = req.body;
 
   try {
-    const Missions = await Mission.find({ familyId });
-
-    const MissionList = await Mission.findOne({ familyId });
-
-    if (photoUserInfo) {
-      detailPhoto.profileImg = userInfo.profileImg;
-      detailPhoto.familyMemberNickname = userInfo.familyMemberNickname;
-    }
-    // 좋아요 누른 멤버
-    const likeMember = await Like.find({ photoId });
-    const [likeMemberList] = await FamilyMember.find({
-      userId: likeMember.userId,
-    });
-    // 좋아요 체크
-    const userLike = await Like.findOne({ photoId, userId });
-    let likeChk = false;
-    if (userLike) {
-      likeChk = true;
-      detailPhoto.likeChk = likeChk;
-    } else {
-      detailPhoto.likeChk = likeChk;
-    }
-    // 댓글 목록 & 댓글 수
-    const [commentList] = await Comment.find({ photoId });
-    const totalComment = commentList.length;
-    for (let comment of commentList) {
-      let commentUserInfo = await FamilyMember.findOne({
-        userId: comment.userId,
+    //개인미션 체크
+    if (myMissionChk) {
+      await MissionChk.deleteOne({ missionId, userId });
+      let myMissionChk = false;
+      res.status(200).json({
+        myMissionChk,
+        familyMissionChk,
       });
-      comment.profileImg = commentUserInfo.profileImg;
-      comment.familyMemberNickname = commentUserInfo.familyMemberNickname;
+    } else {
+      await MissionChk.create({ missionId, userId });
+      let myMissionChk = true;
+      //전체미션 체크
+      const [missionMember] = await MissionMember.find({ missionId });
+      const [completedMember] = await MissionChk.find({ missionId });
+      if (missionMember.length === completedMember.length) {
+        return (familyMissionChk = true);
+      }
+      res.status(200).json({
+        myMissionChk,
+        familyMissionChk,
+        completedAt,
+      });
     }
-    res.status(200).json({
-      detailPhoto,
-      totalComment,
-      commentList,
-      likeMemberList,
-    });
   } catch (error) {
-    console.log("사진 목록조회 오류", error);
+    console.log("미션체크 오류", error);
     res.status(400).send({
       result: false,
-      msg: "사진 상세조회 실패",
+      msg: "미션체크 실패",
+    });
+  }
+}
+
+// 이번달 미션 목록조회 (작업중)
+export async function getMission(req, res) {
+  const { familyId } = req.params;
+
+  try {
+    const thisMonth = new Date().getMonth();
+    const Missions = await Mission.find({ familyId }).sort("-createdAt");
+    // 이번달 미션 리스트 & 전체 미션 수 추출
+    const thisMonthMissionList = [];
+    let totalMission = 0;
+    let completedMission = 0;
+    for (let mission of Missions) {
+      if (mission.createdAt.getMonth() === thisMonth) {
+        thisMonthMissionList.push(mission);
+        totalMission += 1;
+        // 각 미션 멤버 리스트 & 미션완료 여부 체크
+        const [completedMembers] = await MissionChk.find({
+          missionId: mission.missionId,
+        });
+        const [missionMembers] = await MissionMember.find({
+          missionId: mission.missionId,
+        });
+        for (let missionMember of missionMembers) {
+          for (let completedMember of completedMembers) {
+            if (missionMember === completedMember) {
+              let myMissionChk = true; //false값도 가는지 체크
+              missionMember.myMissionChk = myMissionChk;
+            }
+          }
+        }
+        mission.missionMemberList = missionMembers; //배열체크
+        // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
+        if (missionMembers.length === completedMembers.length) {
+          let familyMissionChk = true;
+          mission.familyMissionChk = familyMissionChk;
+          completedMission += 1;
+        }
+      }
+    }
+    res.status(200).json({
+      totalMission,
+      completedMission,
+      completePercentage,
+      thisMonthMissionList,
+    });
+  } catch (error) {
+    console.log("미션 목록조회 오류", error);
+    res.status(400).send({
+      result: false,
+      msg: "미션 목록조회 실패",
     });
   }
 }

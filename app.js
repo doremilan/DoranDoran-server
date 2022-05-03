@@ -79,7 +79,12 @@ app.use((error, req, res, next) => {
 //   console.log('https서버 켜짐');
 // });
 
+<<<<<<< HEAD
 // 서버 열기
+=======
+
+//서버 열기 및 로그
+>>>>>>> 7ed8ed921a27cb7c112ae5ae0c73a372c4f0aa5e
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });

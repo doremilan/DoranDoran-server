@@ -18,11 +18,11 @@ const photoAlbumSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("photoAlbumId").get(function () {
+photoAlbumSchema.virtual("photoAlbumId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+photoAlbumSchema.set("toJSON", {
   virtuals: true,
 });
 
