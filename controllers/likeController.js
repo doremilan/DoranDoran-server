@@ -1,7 +1,7 @@
 const Like = require("../schemas/like");
 
 // 좋아요
-export async function postLike(req, res) {
+const postLike = async (req, res) => {
   const { photoId } = req.params;
   const { userId } = res.locals.user;
   const { likeChk } = req.body;
@@ -29,4 +29,4 @@ export async function postLike(req, res) {
       msg: "좋아요 실패",
     });
   }
-}
+};

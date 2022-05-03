@@ -3,39 +3,42 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const {
-    CreateFamily,
-    CreateFamilyMember,
-    FamilyMemberCheckmodal,
-    GetfamilyMember,
-    EditFamilyTitle,
-    EditFamilyMember,
-    DeleteFamily,
-    DeleteFamilyMember
-  } = require("../controllers/familyController");
+  createFamily,
+  createFamilyMember,
+  familyMemberCheckmodal,
+  getfamilyMember,
+  editFamilyTitle,
+  editFamilyMember,
+  deleteFamily,
+  deleteFamilyMember,
+} = require("../controllers/familyController");
 
 //가족 생성 API
-router.post('/family', authMiddleware, CreateFamily)
+router.post("/family", authMiddleware, createFamily);
 
 //가족 구성원 생성 api
-router.post('/family/:familyId', authMiddleware, CreateFamilyMember)
+router.post("/family/:familyId", authMiddleware, createFamilyMember);
 
 //멤버 이메일 검색 API
-router.get('family/search/keyword?keyword="email"', authMiddleware, FamilyMemberCheckmodal)
+router.get(
+  'family/search/keyword?keyword="email"',
+  authMiddleware,
+  familyMemberCheckmodal
+);
 
 //가족구성원 조회 API
-router.get('/family/:familyId/familymember', authMiddleware, GetfamilyMember)
+router.get("/family/:familyId/familymember", authMiddleware, getfamilyMember);
 
 //가족 이름 수정  API
-router.put('/family/:familyId', authMiddleware, EditFamilyTitle)
+router.put("/family/:familyId", authMiddleware, editFamilyTitle);
 
 //가족 구성원 수정 API
-router.put('/:familyId/:familyMemberId', authMiddleware, EditFamilyMember)
+router.put("/:familyId/:familyMemberId", authMiddleware, editFamilyMember);
 
 //가족 삭제 API
-router.delete('/:familyId', authMiddleware, DeleteFamily )
+router.delete("/:familyId", authMiddleware, deleteFamily);
 
 //가족 구성원 삭제 API
-router.delete('/:familyMemberId', authMiddleware, DeleteFamilyMember)
-
+router.delete("/:familyMemberId", authMiddleware, deleteFamilyMember);
 
 module.exports = router;

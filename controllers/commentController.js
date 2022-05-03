@@ -1,7 +1,7 @@
 const Comment = require("../schemas/comment");
 
 // 댓글 작성
-export async function postComment(req, res) {
+const postComment = async (req, res) => {
   const { photoId, photoAlbumId } = req.params;
   const { userId } = res.locals.user;
   const { comment } = req.body;
@@ -37,10 +37,10 @@ export async function postComment(req, res) {
       msg: "댓글 등록 실패",
     });
   }
-}
+};
 
 // 댓글삭제
-export async function deleteComment(req, res) {
+const deleteComment = async (req, res) => {
   const { commentId } = req.params;
 
   try {
@@ -59,4 +59,4 @@ export async function deleteComment(req, res) {
       msg: "댓글 삭제 실패",
     });
   }
-}
+};
