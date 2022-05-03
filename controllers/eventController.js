@@ -3,7 +3,7 @@ const Event = require('../schemas/event')
 
 
 //일정 작성
-const createEvent = async (req, res) => {
+export async function createEvent(req, res) {
     const { userId } = res.locals;
     const { familyId } = req.params;
     const { event, startDate, endDate, color } = req.body;
@@ -24,7 +24,7 @@ const createEvent = async (req, res) => {
 }
 
 //일정 수정
-const updateEvent = async (req, res) => {
+export async function updateEvent(req, res) {
     const { eventId } = req.params;
     const { event, startDate, endDate, color } = req.body;
 
@@ -50,7 +50,7 @@ const updateEvent = async (req, res) => {
 
 
 //일정 삭제
-const deleteEvent = async (req, res) => {
+export async function deleteEvent(req, res) {
     const { eventId } = req.params;
 
     try {
@@ -72,26 +72,86 @@ const deleteEvent = async (req, res) => {
 }
 
 
-//일정 조회 (받는걸 어케써야될지 흠)
-const getEvent = async (req, res) => {
-    const { familyId, date } = req.params;
+// get 테스트 더미코드
+// const eventTest = [
+//     {
+//         familyId: "aabb",
+//         eventId: "asdfasdf434",
+//         event: "부모님께 연락하기",
+//         startDate: "2022-04-15 01:30",
+//         endDate: "2022-04-15 01:30",
+//         color: "red",
+//     },
+//     {
+//         familyId: "aabb",
+//         eventId: "aaaa",
+//         event: "부모님께 연sss하기",
+//         startDate: "2022-04-15 01:40",
+//         endDate: "2022-04-15 01:40",
+//         color: "red",
+//     },
+//     {
+//         familyId: "aabbcc",
+//         eventId: "aaaa",
+//         event: "부모님께 연sss하기",
+//         startDate: "2022-04-15 01:40",
+//         endDate: "2022-04-15 01:40",
+//         color: "red",
+//     },
+// ]
 
+
+//일정 조회 
+export async function getEvent(req, res) {
+    const { familyId } = req.params;
+    // const { userId } = res.locals;
+
+    try {
+        const [eventCalendarList] = await Event.find({ familyId })
+        console.log(eventCalendarList)
+
+        res.status(200).json({
+            eventCalendarList,
+        })
+    } catch (error) {
+        res.status(400).send({
+            result: false,
+            msg: "일정조회 실패"
+        })
+    }
 }
+// }
 
-//추억 조회
+// //추억 조회
+// const getPhotoEvent = async (req, res) => {
+//     const { familyId, startDate, endDate } = req.params;
+//     // const { userId } = res.locals;
+//     try {
+//         const [eventCalendarList] = await Event.find({
+//             familyId,
+//             startDate,
+//             endDate,
+
+//         })
+//         res.status(200).json({
+//             eventCalendarList,
+//         })
+//     } catch (error) {
+//         res.status(400).send({
+//             result: false,
+//             msg: "일정조회 실패"
+//         })
+//     }
+
+// }
 
 
-//추억상세보기
+// //추억상세보기
+// const getPhotoEventDetail = async (req, res) => {
+
+// }
 
 
 
 
 
-
-
-module.exports = {
-    createEvent,
-    updateEvent,
-    deleteEvent,
-
-}
