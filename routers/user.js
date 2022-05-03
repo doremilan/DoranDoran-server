@@ -7,7 +7,7 @@ require("dotenv").config();
 
 const authMiddleware = require("../middlewares/authMiddleware");
 
-router.get('/me', authMiddleware, Getuser)
+router.get("/me", authMiddleware, Getuser)
 
 
 //유저가 회원가입 요청시 사용하는 API입니다.
@@ -25,5 +25,12 @@ router.post("/login", Login)
   //이후 https 적용을 완료한 상태에서 배포를 한 뒤에
   //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
   //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
+
+router.get("/myprofile", Getprofile)
+
+router.put("/myPfofile", Editprofile)
+
+router.put("/myPfofile/todaymood", EditTodaymood)
+
 
   module.exports = router;

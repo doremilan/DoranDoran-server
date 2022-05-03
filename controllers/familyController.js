@@ -6,7 +6,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const User = require("../schemas/user");
 
 //가족 생성 API
-export async function createFamily(req, res) {
+export async function CreateFamily(req, res) {
     try{
         const {familyTitle} = req.body
         const {user} = res.locals.user
@@ -26,12 +26,13 @@ export async function createFamily(req, res) {
         res.status(200).send({ msg: "가족이 생성되었습니다." })
         }
         catch (error){
-        res.status(400).send({ msg: "가족 생성에 실패했습니다."})
+            console.log("가족 생성에서 오류!", error)
+            res.status(400).send({ msg: "가족 생성에 실패했습니다."})
         }
-}
+};
 
 //가족 구성원 생성 api
-export async function createFamilyMember(req, res) {
+export async function CreateFamilyMember(req, res) {
     try{
         const [familyMemberNickname] = req.body
         const {user} = res.locals.user
@@ -47,12 +48,14 @@ export async function createFamilyMember(req, res) {
         res.status(201).send({ restult: true })
         }
         catch(error){
+            console.log("멤버 검색에서 오류!", error)
             res.status(400).send({ result: false })
         }
-}
+};
 
 //멤버 검색 API
-export async function familyMemberCheckmodal(req, res) {
+export async function FamilyMemberCheckmodal(req, res) {
+    try {
     const {keyword} = req.query
     const {userId} = res.locals
         console.log('req.query'--> keyword )
@@ -68,14 +71,21 @@ export async function familyMemberCheckmodal(req, res) {
         res.status(200).send({
             searchKeyword
         })
-}
+    } catch(error) {
+        console.log("멤버 검색에서 오류!", error)
+        res.status(400).send({result: false})
+    }
+        
+};
 
 //가족구성원 조회 API
 export async function GetfamilyMember(req, res) {
     try{
         const familyId = req.params
-        const {userId} = res.locals
-        let familyMemberList = await FamilyMember.find({})
+        const {user} = res.locals.user
+        const userId = user[0].userId
+
+        let familyMemberList = await FamilyMember.findO({})
 
         for (let family of familyMemberList ) {
             let userInfo = await Family.findOne({
@@ -89,16 +99,18 @@ export async function GetfamilyMember(req, res) {
         res.status(200).send({ familyMemberList })
     }
     catch(error){ 
+        console.log("가족 구성원 조회에서 오류!", error)
         res.status(400).send({ result: false })
     }
-}
+};
 
 //가족 이름 수정 API
-export async function editFamilyTitle(req, res) {
+export async function EditFamilyTitle(req, res) {
     try{
         const familyId = req.params
         const familyTitle = req.body
-        const {userId} = res.locals;
+        const {user} = res.locals.user
+        const {userId} = user[0].userId
 
         console.log(req.familyId)
 
@@ -112,34 +124,76 @@ export async function editFamilyTitle(req, res) {
         modifyFamilyTitle
         })
     } catch(error) {
+        console.log("가족 이름 수정에서 오류!", error)
         res.status(400).send({
             result: false
         })
 
     }
-}
+};
 
 //가족 구성원 수정 API
-export async function editFamilyMember(req, res) {
+export async function EditFamilyMember(req, res) {
     try{
         const {familyMemberId} = req.params
         const {familyMemberNickname} = req.body
-        const {user} = res.locals;
+        const {user} = res.locals.user
+        const userId = user[0].userId
 
         console.log(familyMemberId)
         console.log(familyMemberNickname)
 
-        const modifyFamilyMemberNickname = await FamilyMember.updateOne({familyMemberId}, {$set:{familyMemberNickname}});
+        await FamilyMember.updateOne({familyMemberId}, {$set:{familyMemberNickname}});
+
+        const afterEditFamilyMemberList = FamilyMember.find({})
 
         console.log('변경 이후', familyMemberNickname)
 
         res.status(200).send(
-            [modifyFamilyMemberNickname]
+            afterEditFamilyMemberList
         )
 
     } catch(error){
+        console.log("가족 구성원 수정에서 오류!", error)
+        res.status(400).send({result: false})
 
     }
+};
+
+//가족 삭제 API
+export async function DeleteFamily(req, res) {
+    try{
+        const {familyId} = req.params
+        const {userId} = res.locals
+
+        await Family.deleteMany({familyId});
+
+        res.status(200).send({ msg: "가족이 지워졌습니다." })
+
+    } catch(error){
+        console.log("가족 삭제에서 오류!", error)
+        res.status(400).send({msg: "가족 삭제에 실패했습니다."})
+
+    }
+};
+
+
+//가족 구성원 삭제 API
+export async function DeleteFamilyMember(req, res) {
+    try{
+        const {familyMemberId} = req.params
+        const {user} = res.locals.user
+        const userId = user[0].userId
+
+        await FamilyMember.deleteMany({familyMemberId});
+
+        res.status(200).send({ msg: "가족 구성원이 삭제됐습니다"})
+
+    } catch(error){
+        console.log("가족 구성원 삭제에서 오류!", error)
+        res.status(400).send({result: false})        
+    }
 }
+
 
 module.exports = router;
