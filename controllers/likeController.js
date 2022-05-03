@@ -30,3 +30,7 @@ const postLike = async (req, res) => {
     });
   }
 };
+
+module.exports = {
+  postLike,
+};

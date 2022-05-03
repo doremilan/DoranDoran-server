@@ -8,9 +8,10 @@ const Like = require("../schemas/like");
 // 앨범생성
 const postPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
-  const { userId } = res.locals.user;
-  const { photoAlbumName } = req.body;
+  // const { userId } = res.locals.user;
+  const { photoAlbumName, userId } = req.body;
   const createdAt = new Date();
+  console.log(familyId, photoAlbumName, userId, createdAt);
 
   try {
     // 공백 체크
@@ -21,6 +22,7 @@ const postPhotoAlbums = async (req, res) => {
         photoAlbumName,
         createdAt,
       });
+      console.log(createdPhotoAlbum);
       const newPhotoAlbumId = await PhotoAlbum.findOne({
         _id: createdPhotoAlbum._id,
       });

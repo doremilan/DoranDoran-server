@@ -1,5 +1,4 @@
 const express = require("express");
-const connect = require("./schemas/index");
 const indexRouter = require("./routers/index");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -11,7 +10,8 @@ const app = express();
 // const http = require('http') // https 연결
 // const https = require('https') // https 연결
 
-connect();
+// const connect = require("./schemas/index");
+// connect();
 
 // 각종 미들웨어
 app.use(cors());

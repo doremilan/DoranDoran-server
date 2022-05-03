@@ -60,3 +60,8 @@ const deleteComment = async (req, res) => {
     });
   }
 };
+
+module.exports = {
+  postComment,
+  deleteComment,
+};

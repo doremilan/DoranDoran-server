@@ -23,16 +23,19 @@ const postMission = async (req, res) => {
       const MissionId = await Mission.findById({
         _id: createdMission._id,
       });
+      //체크필요
       for (let MemberId of familyMemberId) {
+        const familyMemberId = MemberId;
         await MissionMember.create({
-          MemberId,
+          familyMemberId,
           userId,
           MissionId,
         });
       }
-      res.status(201).json({
-        msg: "새로운 미션이 등록되었어요.",
-      });
+      for (let MemberId of familyMemberId)
+        res.status(201).json({
+          msg: "새로운 미션이 등록되었어요.",
+        });
     } else {
       res.status(400).send({
         result: false,
@@ -117,7 +120,7 @@ const getMission = async (req, res) => {
             }
           }
         }
-        mission.missionMemberList = missionMembers; //배열체크
+        mission.missionMemberList = missionMembers; //코드위치체크, 배열체크
         // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
         if (missionMembers.length === completedMembers.length) {
           let familyMissionChk = true;
@@ -126,11 +129,14 @@ const getMission = async (req, res) => {
         }
       }
     }
+    const Percentage = (completedMission / totalMission) * 100;
+    const completePercentage = Math.floor(Percentage);
     res.status(200).json({
       totalMission,
       completedMission,
       completePercentage,
       thisMonthMissionList,
+      //totalBadge 추가필요
     });
   } catch (error) {
     console.log("미션 목록조회 오류", error);

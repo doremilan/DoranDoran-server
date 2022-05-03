@@ -1,24 +1,24 @@
 const express = require("express");
 const router = express.Router();
-const authMiddleware = require("../middlewares/authMiddleWare");
+// const authMiddleware = require("../middlewares/authMiddleWare");
 
 const {
   getMission,
-  getPastMission,
+  // getPastMission,
   postMission,
   completeMission,
 } = require("../controllers/missionController");
 
 // 미션 등록
-router.post("/:familyId", authMiddleware, postMission);
+router.post("/:familyId", postMission);
 
 // 미션 완료 체크
-router.post("/:missionId", authMiddleware, completeMission);
+router.post("/:missionId", completeMission);
 
-// 이번주 미션 목록조회
-router.get("/:familyId", authMiddleware, getMission);
+// 이번주 미션 대시보드 & 목록조회
+router.get("/:familyId", getMission);
 
-// 지난 미션 목록조회
-router.get("/:familyId/pastmission", authMiddleware, getPastMission);
+// // 지난 미션 목록조회
+// router.get("/:familyId/pastmission", authMiddleware, getPastMission);
 
 module.exports = router;

@@ -9,7 +9,7 @@ const missionMemberSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  MemberId: {
+  familyMemberId: {
     type: String,
     required: true,
   },
