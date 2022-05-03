@@ -7,8 +7,6 @@ require("dotenv").config();
 
 const {
   getUser,
-  signup,
-  login,
   getProfile,
   editProfile,
   editTodayMood,
