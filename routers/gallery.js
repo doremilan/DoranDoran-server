@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleWare");
-
+const upload = require('../middlewares/upload')
 const {
   postPhotoAlbums,
   getPhotoAlbums,
@@ -33,7 +33,7 @@ router.get("/:photoAlbumId", authMiddleware, getPhoto);
 router.get("/:photoId", authMiddleware, getPhotoDetail);
 
 // 사진수정
-router.put("/:photoId", upload.single("photoFile"), authMiddleware, putPhoto);
+router.put("/:photoId", authMiddleware, putPhoto);
 
 // 사진삭제
 router.delete("/:photoId", authMiddleware, deletePhoto);
@@ -41,7 +41,7 @@ router.delete("/:photoId", authMiddleware, deletePhoto);
 // 사진생성 (업로드 미들웨어 확인필요)
 router.post(
   "/:familyId/:photoAlbumId",
-  upload.single("photoFile"),
+  // upload.single("photoFile"),
   authMiddleware,
   postPhoto
 );

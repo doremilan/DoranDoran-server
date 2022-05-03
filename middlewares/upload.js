@@ -4,15 +4,15 @@ const aws = require('aws-sdk');
 require("dotenv").config();
 
 const s3 = new aws.S3({
-    accessKeyId: S3_ACCESS_KEY,
-    secretAccessKey: S3_SECRET_ACCESS_KEY,
-    region: S3_BUCKET_REGION,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: process.env.S3_BUCKET_REGION,
 });
 
 const upload = multer({
     storage: multerS3({
         s3: s3,
-        bucket: S3_BUCKET_NAME,
+        bucket: process.env.S3_BUCKET_NAME,
         contentType: multerS3.AUTO_CONTENT_TYPE,
         acl: 'public-read',
         metadata: function (req, file, cb) {

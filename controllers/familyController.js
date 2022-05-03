@@ -183,4 +183,13 @@ const deleteFamilyMember = async (req, res) => {
   }
 };
 
-module.exports = router;
+module.exports = {
+  createFamily,
+  createFamilyMember,
+  familyMemberCheckmodal,
+  getfamilyMember,
+  editFamilyTitle,
+  editFamilyMember,
+  deleteFamily,
+  deleteFamilyMember,
+}
