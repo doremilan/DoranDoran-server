@@ -9,21 +9,21 @@ const missionChkSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  familyId: {
-    type: String,
-    required: true,
-  },
-  familyMemberId: {
-    type: String,
-    required: true,
-  },
+  // familyId: {
+  //   type: String,
+  //   required: true,
+  // },
+  // familyMemberId: {
+  //   type: String,
+  //   required: true,
+  // },
 });
 
-userSchema.virtual("missionChkId").get(function () {
+missionChkSchema.virtual("missionChkId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+missionChkSchema.set("toJSON", {
   virtuals: true,
 });
 

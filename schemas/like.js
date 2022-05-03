@@ -11,11 +11,11 @@ const likeSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("likeId").get(function () {
+likeSchema.virtual("likeId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+likeSchema.set("toJSON", {
   virtuals: true,
 });
 

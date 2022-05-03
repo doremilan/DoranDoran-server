@@ -34,11 +34,11 @@ const photoSchema = mongoose.Schema({
   // },
 });
 
-userSchema.virtual("photoId").get(function () {
+photoSchema.virtual("photoId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+photoSchema.set("toJSON", {
   virtuals: true,
 });
 
