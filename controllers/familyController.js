@@ -8,13 +8,7 @@ export async function CreateFamily(req, res) {
     try{
         const {familyTitle} = req.body
         const {user} = res.locals.user
-        const {userId} = user[0].userId
-        const {familyHostNickname} = user[0].nickname 
-        const {familyHost} = await FamilyMember.create({
-            familyId,
-            familyHostNickname,
-            userId
-        })
+        const {userId, familyHost} = user[0].userId
     
         await Family.create({
             familyTitle,
