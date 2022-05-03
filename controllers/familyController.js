@@ -83,7 +83,7 @@ export async function GetfamilyMember(req, res) {
         for (let family of familyMemberList ) {
             let userInfo = await Family.findOne({
                 familyId: userId.familyId
-            });
+            }); 
             family.userInfo = userInfo
         }
         //find로 찾아오면 무조건 배열 형태. 배열의 특징은 그 속의 각 요소가 ','로 구분되어 있음.***
@@ -176,7 +176,7 @@ export async function DeleteFamilyMember(req, res) {
     try{
         const {familyMemberId} = req.params
         const {user} = res.locals.user
-        const userId = user[0].userId
+        const {userId} = user[0].userId
 
         await FamilyMember.deleteMany({familyMemberId});
 
