@@ -1,9 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const Family = require("../schemas/family")
-const FamilyMember = require("../schemas/familyMember")
 const authMiddleware = require("../middlewares/authMiddleware");
-const User = require("../schemas/user");
 
 //가족 생성 API
 router.post('/family', authMiddleware, CreateFamily)
