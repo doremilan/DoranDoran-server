@@ -1,12 +1,17 @@
-const mongoose = require("mongoose");
-require("dotenv").config();
+const mongoose = require('mongoose');
+// require('dotenv').config();
 
-const DB = process.env.DB_NAME;
+// const DB = process.env.DB_NAME;
 
 const connect = () => {
-  mongoose.connect(DB, { ignoreUndefined: true }).catch((err) => {
-    console.error(err);
-  });
+  mongoose
+    .connect(
+      'mongodb+srv://Milan:dlalfks1**@cluster0.f4f1v.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+      { ignoreUndefined: true }
+    )
+    .catch((err) => {
+      console.error(err);
+    });
 };
 
 module.exports = connect;
