@@ -19,11 +19,11 @@ const voiceAlbumSchema = mongoose.Schema({
   },
 });
 
-userSchema.virtual("voiceAlbumId").get(function () {
+voiceAlbumSchema.virtual("voiceAlbumId").get(function () {
   return this._id.toHexString();
 });
 
-userSchema.set("toJSON", {
+voiceAlbumSchema.set("toJSON", {
   virtuals: true,
 });
 

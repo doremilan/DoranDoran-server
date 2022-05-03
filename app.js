@@ -80,7 +80,8 @@ app.use((error, req, res, next) => {
 //   console.log('https서버 켜짐');
 // });
 
-// 서버 열기
+
+//서버 열기 및 로그
 app.listen(port, () => {
   console.log(port, "Server is listening...");
 });
