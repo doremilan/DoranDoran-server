@@ -1,12 +1,16 @@
 const express = require("express");
 const connect = require("./schemas/index");
-const indexRouter = require("./routers/index");
 const cors = require("cors");
 const helmet = require("helmet");
 const morgan = require("morgan");
 const fs = require("fs");
-const port = 3000;
 const app = express();
+const port = 3000;
+const indexRouter = require("./routers/index");
+
+// const eventRouter = require('./routers/calendar')
+
+// app.use("/api", eventRouter);
 
 // const http = require('http') // https 연결
 // const https = require('https') // https 연결
