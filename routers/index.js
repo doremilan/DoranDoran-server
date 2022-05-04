@@ -1,5 +1,4 @@
 const express = require("express");
-
 const router = express.Router();
 
 const authRouter = require("./auth");
@@ -13,6 +12,8 @@ const voiceRouter = require("./voice");
 const calendarRouter = require("./calendar");
 const missionRouter = require("./mission");
 const badgeRouter = require("./badge");
+const voiceFileRouter = require('./voiceFile')
+
 
 router.use("/auth", authRouter);
 router.use("/user", userRouter);
@@ -25,6 +26,7 @@ router.use("/voice", voiceRouter);
 router.use("/calendar", calendarRouter);
 router.use("/mission", missionRouter);
 router.use("/badge", badgeRouter);
+router.use("/voiceFile", voiceFileRouter);
 
 module.exports = router;
 

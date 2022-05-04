@@ -1,44 +1,42 @@
 const express = require("express");
 const router = express.Router();
-const Middleware = require('../middlewares/authMiddleware');
-const voiceUpload = require('../middlewares/converter')
+// const Middleware = require('../middlewares/authMiddleware');
+const upload = require('../middlewares/upload')
+// const voiceUpload = upload.single('voiceFile')
+// const { voiceFile } = require('../controllers/voiceController')
 
 const {
     createVoiceAlbum,
     getVoiceAlbum,
     updateVoiceAlbum,
     deleteVoiceAlbum,
-    createVoiceFile,
-    getVoiceFile,
-    deleteVoiceFile,
+    // createVoiceFile,
+    // getVoiceFile,
+    // deleteVoiceFile,
 } = require('../controllers/voiceController')
 
 
 //앨범 조회 API
-router.get('/voice/:familyId', Middleware, getVoiceAlbum)
+router.get('/:familyId', getVoiceAlbum)
 
 //앨범 추가 APi
-router.post('/voice/familyId', Middleware, createVoiceAlbum)
+router.post('/:familyId', createVoiceAlbum)
 
 //앨범 수정 API
-router.put('/voice/voiceAlbumId', Middleware, updateVoiceAlbum)
+router.put('/:voiceAlbumId', updateVoiceAlbum)
 
 //앨범 삭제 API
-router.delete('/voice/voiceAlbumId', Middleware, deleteVoiceAlbum)
+router.delete('/:voiceAlbumId', deleteVoiceAlbum)
 
 
-//음성메세지 조회 API
-router.get('/voice/:voiceAlbumId', Middleware, createVoiceFile)
+// //음성메세지 생성 API
+// router.post('/:voiceAlbumId', upload.single("voiceFile"), createVoiceFile)
 
-//음성메세지 생성 API
-router.get('/voice/:voiceAlbumId', Middleware, getVoiceFile)
+// //음성메세지 조회 API
+// router.get('/:voiceAlbumId', getVoiceFile)
 
-//음성메세지 삭제 API
-router.get('/voice/:voiceFileId', Middleware, deleteVoiceFile)
-
-
-
-
+// //음성메세지 삭제 API
+// router.delete('/:voiceFileId', deleteVoiceFile)
 
 
 
