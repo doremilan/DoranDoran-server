@@ -7,9 +7,9 @@ const aws = require('aws-sdk');
 require("dotenv").config();
 
 const s3 = new aws.S3({
-    accessKeyId: S3_ACCESS_KEY,
-    secretAccessKey: S3_SECRET_ACCESS_KEY,
-    region: S3_BUCKET_REGION,
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
+    region: process.env.S3_BUCKET_REGION,
 });
 
 // name 수정 필요 
