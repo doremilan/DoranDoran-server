@@ -1,4 +1,3 @@
-const User = require('../schemas/user');
 const FamilyMember = require('../schemas/familyMember');
 const Mission = require('../schemas/mission');
 const MissionMember = require('../schemas/missionmember');
