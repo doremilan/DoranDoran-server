@@ -7,12 +7,7 @@ const {
   getPhotoAlbums,
   putPhotoAlbums,
   deletePhotoAlbums,
-  postPhoto,
-  getPhoto,
-  getPhotoDetail,
-  putPhoto,
-  deletePhoto,
-} = require('../controllers/galleryController');
+} = require('../controllers/photoAlbumController');
 
 // 앨범생성
 router.post('/:familyId', postPhotoAlbums);
@@ -25,25 +20,5 @@ router.put('/:photoAlbumId', putPhotoAlbums);
 
 // 앨범삭제
 router.delete('/:photoAlbumId', deletePhotoAlbums);
-
-// 사진 목록조회
-router.get('/:photoAlbumId', getPhoto);
-
-// 사진 상세조회
-router.get('/:photoId', getPhotoDetail);
-
-// 사진수정
-router.put('/:photoId', putPhoto);
-
-// 사진삭제
-router.delete('/:photoId', deletePhoto);
-
-// 사진생성 (업로드 미들웨어 확인필요)
-router.post(
-  '/:familyId/:photoAlbumId',
-  // upload.single("photoFile"),
-  // authMiddleware,
-  postPhoto
-);
 
 module.exports = router;
