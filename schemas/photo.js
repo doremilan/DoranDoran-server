@@ -15,7 +15,8 @@ const photoSchema = mongoose.Schema({
     required: true,
   },
   totalLike: {
-    type: String,
+    type: Number,
+    default: 0,
   },
   familyId: {
     type: String,

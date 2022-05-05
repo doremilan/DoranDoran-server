@@ -192,7 +192,7 @@ const deletePhoto = async (req, res) => {
       await Photo.deleteOne({ _id: photoId });
       await Comment.deleteMany({ _id: photoId });
       await Like.deleteMany({ _id: photoId });
-      res.status(204).json({
+      res.status(200).json({
         result: true,
         msg: '사진이 삭제되었어요.',
       });

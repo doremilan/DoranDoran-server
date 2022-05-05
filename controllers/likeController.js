@@ -1,10 +1,11 @@
+const Photo = require('../schemas/photo');
 const Like = require('../schemas/like');
 
 // 좋아요
 const postLike = async (req, res) => {
   const { photoId } = req.params;
-  const { userId } = res.locals.user;
-  const { likeChk } = req.body;
+  // const { userId } = res.locals.user;
+  const { likeChk, userId } = req.body;
 
   try {
     if (likeChk) {

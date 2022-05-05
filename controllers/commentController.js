@@ -18,7 +18,7 @@ const postComment = async (req, res) => {
         createdAt,
       });
       res.status(201).json({
-        newCommentId: createdComment.commentId,
+        commentId: createdComment.commentId,
         msg: '댓글이 등록되었어요.',
       });
     } else {
@@ -44,7 +44,7 @@ const deleteComment = async (req, res) => {
     const existComment = await Comment.findOne({ _id: commentId });
     if (existComment) {
       await Comment.deleteOne({ _id: commentId });
-      res.status(204).json({
+      res.status(200).json({
         result: true,
         msg: '댓글이 삭제되었어요.',
       });
