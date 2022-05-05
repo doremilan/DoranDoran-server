@@ -14,6 +14,7 @@ const getBadge = async (req, res) => {
     const badgeList = await Badge.find({ familyId });
     // 1번 배지 상태조회
     let badgeChk = false;
+    let bageCnt = 0;
     for (let badge of badgeList.badge) {
       if (badge.badgeTitle === '단란한 시작') {
         const existFamily = await Family.findOne({ _id: familyId });
@@ -26,52 +27,72 @@ const getBadge = async (req, res) => {
       }
       // 2번 배지 상태조회
       if (badge.badgeTitle === '추억의 발자국') {
-        const existPhoto = await Photo.findOne({ _id: familyId });
+        const existPhoto = await Photo.find({ _id: familyId });
         if (existPhoto >= 15) {
           badgeChk = true;
           badge.badgeChk = badgeChk;
+          bageCnt = existPhoto.length;
+          badge.bageCnt = bageCnt;
         } else {
           badge.badgeChk = badgeChk;
+          bageCnt = existPhoto.length;
+          badge.bageCnt = bageCnt;
         }
       }
       // 3번 배지 상태조회
       if (badge.badgeTitle === '정겨운 목소리') {
-        const existVoiceFile = await VoiceFile.findOne({ _id: familyId });
+        const existVoiceFile = await VoiceFile.find({ _id: familyId });
         if (existVoiceFile >= 10) {
           badgeChk = true;
           badge.badgeChk = badgeChk;
+          bageCnt = existVoiceFile.length;
+          badge.bageCnt = bageCnt;
         } else {
           badge.badgeChk = badgeChk;
+          bageCnt = existVoiceFile.length;
+          badge.bageCnt = bageCnt;
         }
       }
       // 4번 배지 상태조회
       if (badge.badgeTitle === '협동의 즐거움') {
-        const existMission = await Mission.findOne({ _id: familyId });
+        const existMission = await Mission.find({ _id: familyId });
         if (existMission >= 20) {
           badgeChk = true;
           badge.badgeChk = badgeChk;
+          bageCnt = existMission.length;
+          badge.bageCnt = bageCnt;
         } else {
           badge.badgeChk = badgeChk;
+          bageCnt = existMission.length;
+          badge.bageCnt = bageCnt;
         }
       }
       // 5번 배지 상태조회
       if (badge.badgeTitle === '소통의 기쁨') {
-        const existComment = await Comment.findOne({ _id: familyId });
+        const existComment = await Comment.find({ _id: familyId });
         if (existComment >= 50) {
           badgeChk = true;
           badge.badgeChk = badgeChk;
+          bageCnt = existComment.length;
+          badge.bageCnt = bageCnt;
         } else {
           badge.badgeChk = badgeChk;
+          bageCnt = existComment.length;
+          badge.bageCnt = bageCnt;
         }
       }
       // 6번 배지 상태조회
       if (badge.badgeTitle === '함께하는 나날') {
-        const existEvent = await Event.findOne({ _id: familyId });
+        const existEvent = await Event.find({ _id: familyId });
         if (existEvent >= 5) {
           badgeChk = true;
           badge.badgeChk = badgeChk;
+          bageCnt = existEvent.length;
+          badge.bageCnt = bageCnt;
         } else {
           badge.badgeChk = badgeChk;
+          bageCnt = existEvent.length;
+          badge.bageCnt = bageCnt;
         }
       }
     }

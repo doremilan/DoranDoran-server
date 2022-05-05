@@ -1,7 +1,71 @@
-// const express = require("express");
-// const router = express.Router();
-// const Family = require("../schemas/family");
-// const FamilyMember = require("../schemas/familyMember");
+const Family = require('../schemas/family');
+const FamilyMember = require('../schemas/familyMember');
+const badge = require('../schemas/badge');
+
+//가족 생성 API
+const createFamily = async (req, res) => {
+  try {
+    // const { user } = res.locals;
+    const { familyTitle, userId } = req.body;
+
+    const newFamily = await Family.create({
+      familyTitle,
+      familyHost: userId,
+    });
+
+    // const newFamilyMember = await FamilyMember.create({
+    //   familyId: newFamily.familyId,
+    //   familyMemberNickname: user.nickname,
+    //   userId: user.userId,
+    //   profileImg: user.profileImg,
+    // });
+
+    const newBadge = await badge.create({
+      familyId: newFamily.familyId,
+      badge: [
+        {
+          badgeChk: false,
+          badgeTitle: '단란한 시작',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '추억의 발자국',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '정겨운 목소리',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '협동의 즐거움',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '소통의 기쁨',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '함께하는 나날',
+          badgeCnt: 0,
+        },
+      ],
+    });
+
+    res.status(201).json({
+      msg: '가족이 생성되었습니다.',
+    });
+  } catch (error) {
+    console.log('가족 생성 오류', error);
+    res.status(400).json({
+      msg: '가족 생성 실패',
+    });
+  }
+};
 
 // //가족 생성 API
 // const createFamily = async (req, res) => {
@@ -183,13 +247,13 @@
 //   }
 // };
 
-// module.exports = {
-//   createFamily,
-//   createFamilyMember,
-//   familyMemberCheckmodal,
-//   getfamilyMember,
-//   editFamilyTitle,
-//   editFamilyMember,
-//   deleteFamily,
-//   deleteFamilyMember,
-// };
+module.exports = {
+  createFamily,
+  // createFamilyMember,
+  // familyMemberCheckmodal,
+  // getfamilyMember,
+  // editFamilyTitle,
+  // editFamilyMember,
+  // deleteFamily,
+  // deleteFamilyMember,
+};
