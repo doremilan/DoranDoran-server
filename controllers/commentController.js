@@ -3,8 +3,8 @@ const Comment = require('../schemas/comment');
 // 댓글 작성
 const postComment = async (req, res) => {
   const { photoId, photoAlbumId } = req.params;
-  const { userId } = res.locals.user;
-  const { comment } = req.body;
+  // const { userId } = res.locals.user;
+  const { comment, userId } = req.body;
   const createdAt = new Date();
 
   try {
@@ -17,11 +17,8 @@ const postComment = async (req, res) => {
         comment,
         createdAt,
       });
-      const newCommentId = await Comment.findOne({
-        _id: createdComment._id,
-      });
       res.status(201).json({
-        newCommentId,
+        newCommentId: createdComment.commentId,
         msg: '댓글이 등록되었어요.',
       });
     } else {
@@ -44,9 +41,9 @@ const deleteComment = async (req, res) => {
   const { commentId } = req.params;
 
   try {
-    const existComment = await Comment.findOne({ commentId });
+    const existComment = await Comment.findOne({ _id: commentId });
     if (existComment) {
-      await Comment.deleteOne({ commentId });
+      await Comment.deleteOne({ _id: commentId });
       res.status(204).json({
         result: true,
         msg: '댓글이 삭제되었어요.',

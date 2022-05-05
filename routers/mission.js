@@ -15,7 +15,7 @@ const {
 router.post('/:familyId', postMission);
 
 // 미션 완료 체크
-router.post('/:missionId', completeMission);
+router.post('/missionChk/:missionId', completeMission);
 
 // 이번달 미션 대시보드 & 목록조회
 router.get('/:familyId', getMission);
@@ -27,6 +27,6 @@ router.get('/:familyId/pastmission', getPastMission);
 router.get('/:familyId/familymember', getfamilyMemberList);
 
 // 미션삭제
-router.delete('/:missionId', deleteMission);
+router.delete('/:familyId/:missionId', deleteMission);
 
 module.exports = router;

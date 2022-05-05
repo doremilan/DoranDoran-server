@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const familyMemberSchema = mongoose.Schema({
   familyId: {
@@ -18,12 +18,12 @@ const familyMemberSchema = mongoose.Schema({
   },
 });
 
-familyMemberSchema.virtual("familyMemberId").get(function () {
+familyMemberSchema.virtual('familyMemberId').get(function () {
   return this._id.toHexString();
 });
 
-familyMemberSchema.set("toJSON", {
+familyMemberSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("FamilyMember", familyMemberSchema);
+module.exports = mongoose.model('FamilyMember', familyMemberSchema);

@@ -9,9 +9,16 @@ const missionMemberSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  missionMemberList: {
-    type: Array,
+  familyMemberNickname: {
+    type: String,
     required: true,
+  },
+  profileImg: {
+    type: String,
+    required: true,
+  },
+  myMissionChk: {
+    type: Boolean,
   },
 });
 
