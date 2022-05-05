@@ -2,7 +2,7 @@ const Comment = require('../schemas/comment');
 
 // 댓글 작성
 const postComment = async (req, res) => {
-  const { photoId, photoAlbumId } = req.params;
+  const { familyId, photoId, photoAlbumId } = req.params;
   // const { userId } = res.locals.user;
   const { comment, userId } = req.body;
   const createdAt = new Date();
@@ -11,6 +11,7 @@ const postComment = async (req, res) => {
     // 공백 체크
     if (comment !== null && comment !== '') {
       const createdComment = await Comment.create({
+        familyId,
         photoId,
         photoAlbumId,
         userId,

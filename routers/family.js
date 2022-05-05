@@ -14,7 +14,7 @@ const {
 } = require('../controllers/familyController');
 
 //가족 생성 API
-router.post('/family', createFamily);
+router.post('/', createFamily);
 
 // //가족 구성원 생성 api
 // router.post("/family/:familyId", authMiddleware, createFamilyMember);
@@ -41,4 +41,4 @@ router.post('/family', createFamily);
 // //가족 구성원 삭제 API
 // router.delete("/:familyMemberId", authMiddleware, deleteFamilyMember);
 
-// module.exports = router;
+module.exports = router;

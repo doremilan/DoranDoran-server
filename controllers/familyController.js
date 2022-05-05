@@ -2,7 +2,7 @@ const Family = require('../schemas/family');
 const FamilyMember = require('../schemas/familyMember');
 const badge = require('../schemas/badge');
 
-//가족 생성 API
+// 가족생성
 const createFamily = async (req, res) => {
   try {
     // const { user } = res.locals;
@@ -57,7 +57,7 @@ const createFamily = async (req, res) => {
     });
 
     res.status(201).json({
-      msg: '가족이 생성되었습니다.',
+      msg: '새로운 가족이 생성되었어요.',
     });
   } catch (error) {
     console.log('가족 생성 오류', error);

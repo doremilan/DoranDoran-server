@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const voiceFileSchema = mongoose.Schema({
   voiceTitle: {
@@ -28,20 +28,12 @@ const voiceFileSchema = mongoose.Schema({
   },
 });
 
-<<<<<<< HEAD
-voiceSchema.virtual("voiceFileId").get(function () {
+voiceFileSchema.virtual('voiceFileId').get(function () {
   return this._id.toHexString();
 });
 
-voiceSchema.set("toJSON", {
-=======
-voiceFileSchema.virtual("voiceFileId").get(function () {
-  return this._id.toHexString();
-});
-
-voiceFileSchema.set("toJSON", {
->>>>>>> 103e8eb1956ec6204e8c2c1a741b9f68e218d995
+voiceFileSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("voiceFile", voiceFileSchema);
+module.exports = mongoose.model('voiceFile', voiceFileSchema);

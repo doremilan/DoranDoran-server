@@ -4,7 +4,7 @@ const router = express.Router();
 
 const { getBadge } = require('../controllers/badgeController');
 
-// 좋아요
-router.badge('/:familyId', getBadge);
+// 배지조회
+router.get('/:familyId', getBadge);
 
 module.exports = router;
