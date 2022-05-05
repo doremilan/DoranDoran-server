@@ -8,10 +8,10 @@ const familyRouter = require("./family");
 const galleryRouter = require("./gallery");
 const commentRouter = require("./comment");
 const likeRouter = require("./like");
-const voiceRouter = require("./voice");
 const calendarRouter = require("./calendar");
 const missionRouter = require("./mission");
 const badgeRouter = require("./badge");
+const voiceRouter = require("./voiceAlbum");
 const voiceFileRouter = require('./voiceFile')
 
 
@@ -22,10 +22,10 @@ router.use("/family", familyRouter);
 router.use("/gallery", galleryRouter);
 router.use("/comment", commentRouter);
 router.use("/like", likeRouter);
-router.use("/voice", voiceRouter);
 router.use("/calendar", calendarRouter);
 router.use("/mission", missionRouter);
 router.use("/badge", badgeRouter);
+router.use("/voiceAlbum", voiceRouter);
 router.use("/voiceFile", voiceFileRouter);
 
 module.exports = router;

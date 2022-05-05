@@ -13,7 +13,7 @@ const {
     // createVoiceFile,
     // getVoiceFile,
     // deleteVoiceFile,
-} = require('../controllers/voiceController')
+} = require('../controllers/voiceAlbumController')
 
 
 //앨범 조회 API

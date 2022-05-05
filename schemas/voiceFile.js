@@ -14,7 +14,13 @@ const voiceFileSchema = mongoose.Schema({
     required: true,
   },
   userId: {
-    tpye: String,
+    type: String,
+  },
+  familyId: {
+    type: String,
+  },
+  profileImg: {
+    type: String,
   },
   familyMemberNickname: {
     type: String,
@@ -36,4 +42,4 @@ voiceFileSchema.set("toJSON", {
   virtuals: true,
 });
 
-module.exports = mongoose.model("voiceFile", voiceFileSchema);
+module.exports = mongoose.model("VoiceFile", voiceFileSchema);
