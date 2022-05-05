@@ -2,6 +2,11 @@ const FamilyMember = require('../schemas/familyMember');
 const Mission = require('../schemas/mission');
 const MissionMember = require('../schemas/missionmember');
 const MissionChk = require('../schemas/missionChk');
+const Badge = require('../schemas/badge');
+const Photo = require('../schemas/photo');
+const VoiceFile = require('../schemas/voiceFile');
+const Comment = require('../schemas/comment');
+const Event = require('../schemas/event');
 
 // 미션등록
 const postMission = async (req, res) => {
@@ -20,7 +25,6 @@ const postMission = async (req, res) => {
         createdAt,
       });
       // 미션 멤버 db 생성
-      console.log(familyMemberId);
       for (let MemberId of familyMemberId) {
         const familyMemberId = MemberId.familyMemberId;
         const missionMember = await FamilyMember.findOne({
@@ -114,7 +118,7 @@ const getMission = async (req, res) => {
     for (let mission of Missions) {
       if (mission.createdAt.getMonth() + 1 === thisMonth) {
         thisMonthMissionList.push(mission);
-        totalMission += 1;
+        totalMission++;
       }
     }
     // 각 미션의 멤버 리스트 추출
@@ -132,61 +136,99 @@ const getMission = async (req, res) => {
       if (missionMembers.length === completedMembers.length) {
         familyMissionChk = true;
         mission.familyMissionChk = familyMissionChk;
-        completedMission += 1;
+        completedMission++;
       } else {
         familyMissionChk = false;
         mission.familyMissionChk = familyMissionChk;
       }
 
       // 각 멤버의 미션완료 여부 체크
-      console.log(missionMembers);
-      console.log(completedMembers);
       let myMissionChk = false;
-      const checkedMember = missionMembers.filter((familyMemberId) =>
-        completedMembers.includes(familyMemberId)
-      );
-      if (checkedMember.length) {
-        myMissionChk = true;
-        checkedMember.myMissionChk = true;
+      // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
+      if (Object.keys(completedMembers).length === 0) {
+        missionMembers.map((missionMember) => {
+          myMissionChk = false;
+          missionMember.myMissionChk = myMissionChk;
+        });
       }
-      // const checkedMember = missionMembers.filter((missionMember) => {
-      //   let myMissionChk = false;
-      //   completedMembers.forEach((completedMember) => {
-      //     if (missionMember.familyMemberId === completedMember.familyMemberId) {
-      //       myMissionChk = true;
-      //       checkedMember.myMissionChk = true;
-      //     }
-      //   });
-      // });
-      console.log('0:', checkedMember);
-      console.log('1:', checkedMember.myMissionChk);
+      missionMembers.filter((missionMember) => {
+        completedMembers.forEach((completedMember) => {
+          if (completedMember.familyMemberId === missionMember.familyMemberId) {
+            myMissionChk = true;
+            missionMember.myMissionChk = myMissionChk;
+            // 중복체크 예외처리
+          } else if (missionMember.myMissionChk === true) {
+            missionMember.myMissionChk === true;
+          } else if (
+            completedMember.familyMemberId !== missionMember.familyMemberId
+          ) {
+            myMissionChk = false;
+            missionMember.myMissionChk = myMissionChk;
+          }
+        });
+      });
     }
-
-    // if (missionMember.familyMemberId === completedMember.familyMemberId) {
-    //   console.log(
-    //     '0:',
-    //     missionMember.familyMemberId,
-    //     completedMember.familyMemberId
-    //   );
-    //   myMissionChk = true;
-    //   missionMember.myMissionChk = myMissionChk;
-    //   console.log('1:', missionMember.myMissionChk);
-    // } else {
-    //   myMissionChk = false;
-    //   missionMember.myMissionChk = myMissionChk;
-    //   console.log('2:', missionMember.myMissionChk);
-    // }
 
     // 미션 달성률 계산
     const Percentage = (completedMission / totalMission) * 100;
-    const completePercentage = Math.floor(Percentage);
+    let completePercentage = Math.floor(Percentage);
+    // NaN일 경우 예외처리 (0으로 반환)
+    if (!Percentage) {
+      completePercentage = 0;
+    }
 
+    // 총 배지 획득 수 조회
+    const badgeList = await Badge.findOne({ familyId });
+    // console.log(badgeList);
+    const badges = badgeList.badge;
+    let totalBadge = 0;
+    for (let badge of badges) {
+      //1번 배지 상태조회
+      if (badge.badgeTitle === '단란한 시작') {
+        totalBadge++;
+      }
+      // 2번 배지 상태조회
+      if (badge.badgeTitle === '추억의 발자국') {
+        const existPhoto = await Photo.find({ familyId });
+        if (existPhoto.length >= 15) {
+          totalBadge++;
+        }
+      }
+      // 3번 배지 상태조회
+      if (badge.badgeTitle === '정겨운 목소리') {
+        const existVoiceFile = await VoiceFile.find({ familyId });
+        if (existVoiceFile.length >= 10) {
+          totalBadge++;
+        }
+      }
+      // 4번 배지 상태조회
+      if (badge.badgeTitle === '협동의 즐거움') {
+        const existMission = await Mission.find({ familyId });
+        if (existMission.length >= 20) {
+          totalBadge++;
+        }
+      }
+      // 5번 배지 상태조회
+      if (badge.badgeTitle === '소통의 기쁨') {
+        const existComment = await Comment.find({ familyId });
+        if (existComment.length >= 50) {
+          totalBadge++;
+        }
+      }
+      // 6번 배지 상태조회
+      if (badge.badgeTitle === '함께하는 나날') {
+        const existEvent = await Event.find({ familyId });
+        if (existEvent.length >= 5) {
+          totalBadge++;
+        }
+      }
+    }
     res.status(200).json({
       totalMission,
       completedMission,
       completePercentage,
+      totalBadge,
       thisMonthMissionList,
-      //totalBadge 추가필요 (추후작업예정)
     });
   } catch (error) {
     console.log('미션 목록조회 오류', error);
@@ -220,7 +262,8 @@ const getPastMission = async (req, res) => {
         missionId: mission.missionId,
       });
       mission.missionMemberList = missionMembers;
-      // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
+
+      // 각 미션 전체 달성완료 여부 체크
       let familyMissionChk = false;
       if (missionMembers.length === completedMembers.length) {
         familyMissionChk = true;
@@ -230,15 +273,31 @@ const getPastMission = async (req, res) => {
         mission.familyMissionChk = familyMissionChk;
       }
 
-      // 각 미션 멤버의 미션완료 여부 체크
-      // for (let missionMember of missionMembers) {
-      //   for (let completedMember of completedMembers) {
-      //     if (missionMember.familyMemberId === completedMember.familyMemberId) {
-      //       let myMissionChk = true; //false값도 가는지 체크
-      //       missionMember.myMissionChk = myMissionChk; //myMissionChk값 db에 만들어야 하는지 체크
-      //     }
-      //   }
-      // }
+      // 각 멤버의 미션완료 여부 체크
+      let myMissionChk = false;
+      // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
+      if (Object.keys(completedMembers).length === 0) {
+        missionMembers.map((missionMember) => {
+          myMissionChk = false;
+          missionMember.myMissionChk = myMissionChk;
+        });
+      }
+      missionMembers.filter((missionMember) => {
+        completedMembers.forEach((completedMember) => {
+          if (completedMember.familyMemberId === missionMember.familyMemberId) {
+            myMissionChk = true;
+            missionMember.myMissionChk = myMissionChk;
+            // 중복체크 예외처리
+          } else if (missionMember.myMissionChk === true) {
+            missionMember.myMissionChk === true;
+          } else if (
+            completedMember.familyMemberId !== missionMember.familyMemberId
+          ) {
+            myMissionChk = false;
+            missionMember.myMissionChk = myMissionChk;
+          }
+        });
+      });
     }
     res.status(200).json({
       pastMissionList,
@@ -305,15 +364,61 @@ const deleteMission = async (req, res) => {
       // 미션 달성률 계산
       const Percentage = (completedMission / totalMission) * 100;
       let completePercentage = Math.floor(Percentage);
-      // NaN일 경우 0으로 반환
+      // NaN일 경우 예외처리 (0으로 반환)
       if (!Percentage) {
         completePercentage = 0;
+      }
+      // 총 배지 획득 수 조회
+      const badgeList = await Badge.findOne({ familyId });
+      // console.log(badgeList);
+      const badges = badgeList.badge;
+      let totalBadge = 0;
+      for (let badge of badges) {
+        //1번 배지 상태조회
+        if (badge.badgeTitle === '단란한 시작') {
+          totalBadge++;
+        }
+        // 2번 배지 상태조회
+        if (badge.badgeTitle === '추억의 발자국') {
+          const existPhoto = await Photo.find({ familyId });
+          if (existPhoto.length >= 15) {
+            totalBadge++;
+          }
+        }
+        // 3번 배지 상태조회
+        if (badge.badgeTitle === '정겨운 목소리') {
+          const existVoiceFile = await VoiceFile.find({ familyId });
+          if (existVoiceFile.length >= 10) {
+            totalBadge++;
+          }
+        }
+        // 4번 배지 상태조회
+        if (badge.badgeTitle === '협동의 즐거움') {
+          const existMission = await Mission.find({ familyId });
+          if (existMission.length >= 20) {
+            totalBadge++;
+          }
+        }
+        // 5번 배지 상태조회
+        if (badge.badgeTitle === '소통의 기쁨') {
+          const existComment = await Comment.find({ familyId });
+          if (existComment.length >= 50) {
+            totalBadge++;
+          }
+        }
+        // 6번 배지 상태조회
+        if (badge.badgeTitle === '함께하는 나날') {
+          const existEvent = await Event.find({ familyId });
+          if (existEvent.length >= 5) {
+            totalBadge++;
+          }
+        }
       }
       res.status(200).json({
         totalMission,
         completedMission,
         completePercentage,
-        //totalBadges, (추후추가)
+        totalBadge,
       });
     }
   } catch (error) {

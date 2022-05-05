@@ -3,7 +3,7 @@ const router = express.Router();
 
 // const authRouter = require("./auth");
 // const userRouter = require("./user");
-// const mainRouter = require("./main");
+// const mainRouter = require('./main');
 const familyRouter = require('./family');
 const photoAlbumRouter = require('./photoAlbum');
 const photoRouter = require('./photo');
@@ -16,7 +16,7 @@ const badgeRouter = require('./badge');
 
 // router.use("/auth", authRouter);
 // router.use("/user", userRouter);
-// router.use("/main", mainRouter);
+// router.use('/main', mainRouter);
 router.use('/family', familyRouter);
 router.use('/photoAlbum', photoAlbumRouter);
 router.use('/photo', photoRouter);
