@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 
-// const authRouter = require("./auth");
-// const userRouter = require("./user");
+const authRouter = require("./auth");
+const userRouter = require("./user");
 const mainRouter = require('./main');
 const familyRouter = require('./family');
 const photoAlbumRouter = require('./photoAlbum');
