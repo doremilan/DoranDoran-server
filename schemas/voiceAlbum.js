@@ -27,4 +27,4 @@ voiceAlbumSchema.set("toJSON", {
   virtuals: true,
 });
 
-module.exports = mongoose.model("voiceAlbum", voiceAlbumSchema);
+module.exports = mongoose.model("VoiceAlbum", voiceAlbumSchema);

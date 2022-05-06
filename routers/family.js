@@ -3,14 +3,14 @@ const router = express.Router();
 const authMiddleware = require("../middlewares/authMiddleware");
 
 const {
-  createFamily,
-  createFamilyMember,
-  familyMemberCheckmodal,
-  getfamilyMember,
-  editFamilyTitle,
-  editFamilyMember,
-  deleteFamily,
-  deleteFamilyMember,
+    createFamily,
+    createFamilyMember,
+    familyMemberCheckmodal,
+    getfamilyMember,
+    editFamilyTitle,
+    editFamilyMember,
+    deleteFamily,
+    deleteFamilyMember,
 } = require("../controllers/familyController");
 
 //가족 생성 API
@@ -21,9 +21,9 @@ router.post("/family/:familyId", authMiddleware, createFamilyMember);
 
 //멤버 이메일 검색 API
 router.get(
-  'family/search/keyword?keyword="email"',
-  authMiddleware,
-  familyMemberCheckmodal
+    'family/search/keyword?keyword="email"',
+    authMiddleware,
+    familyMemberCheckmodal
 );
 
 //가족구성원 조회 API

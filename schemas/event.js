@@ -18,12 +18,18 @@ const eventSchema = mongoose.Schema({
     required: true,
   },
   endDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   color: {
-    type: Date,
+    type: String,
   },
+  familyMemberNickname: {
+    type: String,
+  },
+  profileImg: {
+    type: String,
+  }
 });
 
 eventSchema.virtual("eventId").get(function () {
