@@ -29,7 +29,7 @@ const eventSchema = mongoose.Schema({
   },
   profileImg: {
     type: String,
-  }
+  },
 });
 
 eventSchema.virtual('eventId').get(function () {
