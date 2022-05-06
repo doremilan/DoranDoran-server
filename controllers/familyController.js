@@ -1,260 +1,193 @@
-// const Family = require('../schemas/family');
-// const FamilyMember = require('../schemas/familyMember');
-// const badge = require('../schemas/badge');
+const Family = require('../schemas/family');
+const FamilyMember = require('../schemas/familyMember');
 
-// // 가족생성
-// const createFamily = async (req, res) => {
-//   try {
-//     // const { user } = res.locals;
-//     const { familyTitle, userId } = req.body;
+//가족 생성 API
+const createFamily = async (req, res) => {
+  try {
+    const { familyTitle } = req.body;
+    const { user } = res.locals.user;
+    const { userId, familyHost } = user[0].userId;
 
-//     const newFamily = await Family.create({
-//       familyTitle,
-//       familyHost: userId,
-//     });
+    await Family.create({
+      familyTitle,
+      familyHost,
+    });
 
-//     // const newFamilyMember = await FamilyMember.create({
-//     //   familyId: newFamily.familyId,
-//     //   familyMemberNickname: user.nickname,
-//     //   userId: user.userId,
-//     //   profileImg: user.profileImg,
-//     // });
+    res.status(200).send({ msg: '가족이 생성되었습니다.' });
+  } catch (error) {
+    console.log('가족 생성에서 오류!', error);
+    res.status(400).send({ msg: '가족 생성에 실패했습니다.' });
+  }
+};
 
-//     // 배지 자동생성
-//     const newBadge = await badge.create({
-//       familyId: newFamily.familyId,
-//       badge: [
-//         {
-//           badgeChk: false,
-//           badgeTitle: '단란한 시작',
-//           badgeCnt: 0,
-//         },
-//         {
-//           badgeChk: false,
-//           badgeTitle: '추억의 발자국',
-//           badgeCnt: 0,
-//         },
-//         {
-//           badgeChk: false,
-//           badgeTitle: '정겨운 목소리',
-//           badgeCnt: 0,
-//         },
-//         {
-//           badgeChk: false,
-//           badgeTitle: '협동의 즐거움',
-//           badgeCnt: 0,
-//         },
-//         {
-//           badgeChk: false,
-//           badgeTitle: '소통의 기쁨',
-//           badgeCnt: 0,
-//         },
-//         {
-//           badgeChk: false,
-//           badgeTitle: '함께하는 나날',
-//           badgeCnt: 0,
-//         },
-//       ],
-//     });
+//가족 구성원 생성 api
+const createFamilyMember = async (req, res) => {
+  try {
+    const [familyMemberNickname] = req.body;
+    const { user } = res.locals.user;
+    const { familyId } = req.params;
+    const userId = user[0].userId;
 
-//     res.status(201).json({
-//       msg: '새로운 가족이 생성되었어요.',
-//     });
-//   } catch (error) {
-//     console.log('가족 생성 오류', error);
-//     res.status(400).json({
-//       msg: '가족 생성 실패',
-//     });
-//   }
-// };
+    await FamilyMember.create({
+      familyId,
+      familyMemberNickname,
+      userId,
+    });
 
-// //가족 생성 API
-// const createFamily = async (req, res) => {
-//   try {
-//     const { familyTitle } = req.body;
-//     const { user } = res.locals.user;
-//     const { userId, familyHost } = user[0].userId;
+    res.status(201).send({ restult: true });
+  } catch (error) {
+    console.log('멤버 검색에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+};
 
-//     await Family.create({
-//       familyTitle,
-//       familyHost,
-//     });
+//멤버 검색 API
+const familyMemberCheckmodal = async (req, res) => {
+  try {
+    const { keyword } = req.query;
+    const { userId } = res.locals;
+    console.log('req.query-->', keyword);
 
-//     res.status(200).send({ msg: "가족이 생성되었습니다." });
-//   } catch (error) {
-//     console.log("가족 생성에서 오류!", error);
-//     res.status(400).send({ msg: "가족 생성에 실패했습니다." });
-//   }
-// };
+    const regex = (pattern) => new RegExp(`.*${pattern}.*`);
+    const titleRegex = regex(search);
+    let searchKeyword = await FamilyMember.find({
+      $or: [
+        { userId: { $regex: titleRegex, $options: 'i' } },
+        { email: { $regex: titleRegex, $options: 'i' } },
+        { userNickname: { $regex: titleRegex, $options: 'i' } },
+      ],
+    });
 
-// //가족 구성원 생성 api
-// const createFamilyMember = async (req, res) => {
-//   try {
-//     const [familyMemberNickname] = req.body;
-//     const { user } = res.locals.user;
-//     const { familyId } = req.params;
-//     const userId = user[0].userId;
+    console.log('searchKeyword-->', searchKeyword);
+    res.status(200).send({
+      searchKeyword,
+    });
+  } catch (error) {
+    console.log('멤버 검색에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+};
 
-//     await FamilyMember.create({
-//       familyId,
-//       familyMemberNickname,
-//       userId,
-//     });
+//가족구성원 조회 API
+const getfamilyMember = async (req, res) => {
+  try {
+    const familyId = req.params;
+    const { user } = res.locals.user;
+    const userId = user[0].userId;
 
-//     res.status(201).send({ restult: true });
-//   } catch (error) {
-//     console.log("멤버 검색에서 오류!", error);
-//     res.status(400).send({ result: false });
-//   }
-// };
+    let familyMemberList = await FamilyMember.findO({});
 
-// //멤버 검색 API
-// const familyMemberCheckmodal = async (req, res) => {
-//   try {
-//     const { keyword } = req.query;
-//     const { userId } = res.locals;
-//     console.log("req.query-->", keyword);
+    for (let family of familyMemberList) {
+      let userInfo = await Family.findOne({
+        familyId: userId.familyId,
+      });
+      family.userInfo = userInfo;
+    }
+    //find로 찾아오면 무조건 배열 형태. 배열의 특징은 그 속의 각 요소가 ','로 구분되어 있음.***
+    //familyMemberList 첫 번째, 두 번재...등의 요소를 순서대로 family에 임시 할당을 해 줌.
 
-//     const regex = (pattern) => new RegExp(`.*${pattern}.*`);
-//     const titleRegex = regex(search);
-//     let searchKeyword = await FamilyMember.find({
-//       $or: [
-//         { userId: { $regex: titleRegex, $options: "i" } },
-//         { email: { $regex: titleRegex, $options: "i" } },
-//         { userNickname: { $regex: titleRegex, $options: "i" } },
-//       ],
-//     });
+    res.status(200).send({ familyMemberList });
+  } catch (error) {
+    console.log('가족 구성원 조회에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+};
 
-//     console.log("searchKeyword-->", searchKeyword);
-//     res.status(200).send({
-//       searchKeyword,
-//     });
-//   } catch (error) {
-//     console.log("멤버 검색에서 오류!", error);
-//     res.status(400).send({ result: false });
-//   }
-// };
+//가족 이름 수정 API
+const editFamilyTitle = async (req, res) => {
+  try {
+    const familyId = req.params;
+    const familyTitle = req.body;
+    const { user } = res.locals.user;
+    const { userId } = user[0].userId;
 
-// //가족구성원 조회 API
-// const getfamilyMember = async (req, res) => {
-//   try {
-//     const familyId = req.params;
-//     const { user } = res.locals.user;
-//     const userId = user[0].userId;
+    console.log(req.familyId);
 
-//     let familyMemberList = await FamilyMember.findO({});
+    const modifyFamilyTitle = await Family.updateOne(
+      { familyId },
+      { $set: { familyTitle } }
+    );
 
-//     for (let family of familyMemberList) {
-//       let userInfo = await Family.findOne({
-//         familyId: userId.familyId,
-//       });
-//       family.userInfo = userInfo;
-//     }
-//     //find로 찾아오면 무조건 배열 형태. 배열의 특징은 그 속의 각 요소가 ','로 구분되어 있음.***
-//     //familyMemberList 첫 번째, 두 번재...등의 요소를 순서대로 family에 임시 할당을 해 줌.
+    console.log(familyId);
+    console.log(familyTitle);
 
-//     res.status(200).send({ familyMemberList });
-//   } catch (error) {
-//     console.log("가족 구성원 조회에서 오류!", error);
-//     res.status(400).send({ result: false });
-//   }
-// };
+    res.status(200).send({
+      familyId,
+      modifyFamilyTitle,
+    });
+  } catch (error) {
+    console.log('가족 이름 수정에서 오류!', error);
+    res.status(400).send({
+      result: false,
+    });
+  }
+};
 
-// //가족 이름 수정 API
-// const editFamilyTitle = async (req, res) => {
-//   try {
-//     const familyId = req.params;
-//     const familyTitle = req.body;
-//     const { user } = res.locals.user;
-//     const { userId } = user[0].userId;
+//가족 구성원 수정 API
+const editFamilyMember = async (req, res) => {
+  try {
+    const { familyMemberId } = req.params;
+    const { familyMemberNickname } = req.body;
+    const { user } = res.locals.user;
+    const userId = user[0].userId;
 
-//     console.log(req.familyId);
+    console.log(familyMemberId);
+    console.log(familyMemberNickname);
 
-//     const modifyFamilyTitle = await Family.updateOne(
-//       { familyId },
-//       { $set: { familyTitle } }
-//     );
+    await FamilyMember.updateOne(
+      { familyMemberId },
+      { $set: { familyMemberNickname } }
+    );
 
-//     console.log(familyId);
-//     console.log(familyTitle);
+    const afterEditFamilyMemberList = FamilyMember.find({});
 
-//     res.status(200).send({
-//       familyId,
-//       modifyFamilyTitle,
-//     });
-//   } catch (error) {
-//     console.log("가족 이름 수정에서 오류!", error);
-//     res.status(400).send({
-//       result: false,
-//     });
-//   }
-// };
+    console.log('변경 이후', familyMemberNickname);
 
-// //가족 구성원 수정 API
-// const editFamilyMember = async (req, res) => {
-//   try {
-//     const { familyMemberId } = req.params;
-//     const { familyMemberNickname } = req.body;
-//     const { user } = res.locals.user;
-//     const userId = user[0].userId;
+    res.status(200).send(afterEditFamilyMemberList);
+  } catch (error) {
+    console.log('가족 구성원 수정에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+};
 
-//     console.log(familyMemberId);
-//     console.log(familyMemberNickname);
+//가족 삭제 API
+const deleteFamily = async (req, res) => {
+  try {
+    const { familyId } = req.params;
+    const { userId } = res.locals;
 
-//     await FamilyMember.updateOne(
-//       { familyMemberId },
-//       { $set: { familyMemberNickname } }
-//     );
+    await Family.deleteMany({ familyId });
 
-//     const afterEditFamilyMemberList = FamilyMember.find({});
+    res.status(200).send({ msg: '가족이 지워졌습니다.' });
+  } catch (error) {
+    console.log('가족 삭제에서 오류!', error);
+    res.status(400).send({ msg: '가족 삭제에 실패했습니다.' });
+  }
+};
 
-//     console.log("변경 이후", familyMemberNickname);
+//가족 구성원 삭제 API
+const deleteFamilyMember = async (req, res) => {
+  try {
+    const { familyMemberId } = req.params;
+    const { user } = res.locals.user;
+    const { userId } = user[0].userId;
 
-//     res.status(200).send(afterEditFamilyMemberList);
-//   } catch (error) {
-//     console.log("가족 구성원 수정에서 오류!", error);
-//     res.status(400).send({ result: false });
-//   }
-// };
+    await FamilyMember.deleteMany({ familyMemberId });
 
-// //가족 삭제 API
-// const deleteFamily = async (req, res) => {
-//   try {
-//     const { familyId } = req.params;
-//     const { userId } = res.locals;
-
-//     await Family.deleteMany({ familyId });
-
-//     res.status(200).send({ msg: "가족이 지워졌습니다." });
-//   } catch (error) {
-//     console.log("가족 삭제에서 오류!", error);
-//     res.status(400).send({ msg: "가족 삭제에 실패했습니다." });
-//   }
-// };
-
-// //가족 구성원 삭제 API
-// const deleteFamilyMember = async (req, res) => {
-//   try {
-//     const { familyMemberId } = req.params;
-//     const { user } = res.locals.user;
-//     const { userId } = user[0].userId;
-
-//     await FamilyMember.deleteMany({ familyMemberId });
-
-//     res.status(200).send({ msg: "가족 구성원이 삭제됐습니다" });
-//   } catch (error) {
-//     console.log("가족 구성원 삭제에서 오류!", error);
-//     res.status(400).send({ result: false });
-//   }
-// };
+    res.status(200).send({ msg: '가족 구성원이 삭제됐습니다' });
+  } catch (error) {
+    console.log('가족 구성원 삭제에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+};
 
 module.exports = {
   createFamily,
-  // createFamilyMember,
-  // familyMemberCheckmodal,
-  // getfamilyMember,
-  // editFamilyTitle,
-  // editFamilyMember,
-  // deleteFamily,
-  // deleteFamilyMember,
+  createFamilyMember,
+  familyMemberCheckmodal,
+  getfamilyMember,
+  editFamilyTitle,
+  editFamilyMember,
+  deleteFamily,
+  deleteFamilyMember,
 };

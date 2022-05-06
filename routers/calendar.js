@@ -9,7 +9,6 @@
 //     getEvent,
 // } = require('../controllers/eventController')
 
-
 // //일정보기 API
 // router.get('/calendar/:familyId/eventcalendar/:date', getEvent)
 
@@ -27,6 +26,5 @@
 
 // //일정 삭제 API
 // router.get('/calendar/:eventId', deleteEvent)
-
 
 // module.exports = router;
