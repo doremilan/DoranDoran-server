@@ -34,4 +34,4 @@ missionMemberSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model('MissionMember', missionMemberSchema);
+module.exports = mongoose.models.MissionMember || mongoose.model('MissionMember', missionMemberSchema);

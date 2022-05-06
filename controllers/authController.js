@@ -1,11 +1,6 @@
-const express = require('express');
-const router = express.Router();
 const User = require('../schemas/user');
 const jwt = require('jsonwebtoken');
-const fs = require('fs');
 require('dotenv').config();
-
-const authMiddleware = require('../middlewares/authMiddleware');
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {

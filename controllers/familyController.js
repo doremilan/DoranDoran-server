@@ -14,7 +14,6 @@ const MissionMember = require('../schemas/missionMember');
 const MissionChk = require('../schemas/missionChk');
 const badge = require('../schemas/badge');
 
-const { find, findOne } = require('../schemas/family');
 
 //가족 생성 API
 //api 테스트 성공

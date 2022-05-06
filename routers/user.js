@@ -1,9 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
-const jwt = require('jsonwebtoken');
-const fs = require('fs');
-require('dotenv').config();
+
 
 const {
   getUser,
