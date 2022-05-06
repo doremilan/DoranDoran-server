@@ -13,6 +13,7 @@ const likeRouter = require('./like');
 // const calendarRouter = require("./calendar");
 const missionRouter = require('./mission');
 const badgeRouter = require('./badge');
+const randomMsgRouter = require('./randomMsg');
 
 // router.use("/auth", authRouter);
 // router.use("/user", userRouter);
@@ -26,5 +27,6 @@ router.use('/like', likeRouter);
 // router.use("/calendar", calendarRouter);
 router.use('/mission', missionRouter);
 router.use('/badge', badgeRouter);
+router.use('/randomMsg', randomMsgRouter);
 
 module.exports = router;

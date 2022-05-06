@@ -7,8 +7,7 @@ const Photo = require('../schemas/photo');
 const VoiceFile = require('../schemas/voiceFile');
 const Comment = require('../schemas/comment');
 const Event = require('../schemas/event');
-
-//****랜덤 메시지 db 추가필요*****
+const LandomMsg = require('../schemas/randomMsg');
 
 // 메인화면 조회
 const getMainPage = async (req, res) => {
@@ -16,8 +15,10 @@ const getMainPage = async (req, res) => {
   const { userId } = res.locals.user;
 
   try {
+    const randomMsg = await LandomMsg.aggregate({ $sample: { size: 1 } });
+
     res.status(200).json({
-      randomMsg, //db추가필요
+      randomMsg,
       userInfo,
       familyInfo, // - familyMember,
       missionStatus, // thisMonthMission,
