@@ -7,6 +7,7 @@ const Photo = require('../schemas/photo');
 const VoiceFile = require('../schemas/voiceFile');
 const Comment = require('../schemas/comment');
 const Event = require('../schemas/event');
+const User = require('../schemas/user');
 
 // 미션등록
 const postMission = async (req, res) => {
@@ -325,14 +326,16 @@ const getPastMission = async (req, res) => {
   }
 };
 
-// 미션 멤버 목록조회(멤버추가 시 사용) ***접속자의 패밀리멤버id추가필요!!***
+// 미션 멤버 목록조회(멤버추가 시 사용)
 const getfamilyMemberList = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals.user;
+  const { userId } = res.locals.user;
 
   try {
     const familyMemberList = await FamilyMember.find({ familyId });
+    const userInfo = await User.findOne({ _id: userId });
     res.status(200).json({
+      userInfo,
       familyMemberList,
     });
   } catch (error) {
