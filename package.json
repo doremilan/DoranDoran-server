@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/doremilan/team8_familyProject#readme",
   "dependencies": {
+    "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "aws-sdk": "^2.1126.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -32,5 +33,11 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.4",
     "multer-s3": "^2.10.0"
+  },
+  "devDependencies": {
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-config-prettier": "^8.5.0",
+    "eslint-plugin-import": "^2.25.2",
+    "eslint-plugin-prettier": "^4.0.0"
   }
 }

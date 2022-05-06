@@ -1,47 +1,83 @@
-const { find, findOne } = require("../schemas/family");
-const Family = require("../schemas/family");
-const FamilyMember = require("../schemas/familyMember");
-const User = require("../schemas/user")
-const Mission = require("../schemas/mission")
-const Badge = require("../schemas/badge")
-const Comment = require("../schemas/comment")
-const Event = require("../schemas/event")
-const Photo = require("../schemas/photo")
-const PhotoAlbum = require("../schemas/photoAlbum")
-const VoiceAlbum = require("../schemas/voiceAlbum")
-const VoiceFile = require("../schemas/voiceFile")
-const Like = require("../schemas/like")
-const MissionMember = require("../schemas/missionMember")
-const MissionChk = require("../schemas/missionChk")
+const Family = require('../schemas/family');
+const FamilyMember = require('../schemas/familyMember');
+const User = require('../schemas/user');
+const Mission = require('../schemas/mission');
+const Badge = require('../schemas/badge');
+const Comment = require('../schemas/comment');
+const Event = require('../schemas/event');
+const Photo = require('../schemas/photo');
+const PhotoAlbum = require('../schemas/photoAlbum');
+const VoiceAlbum = require('../schemas/voiceAlbum');
+const VoiceFile = require('../schemas/voiceFile');
+const Like = require('../schemas/like');
+const MissionMember = require('../schemas/missionMember');
+const MissionChk = require('../schemas/missionChk');
+const badge = require('../schemas/badge');
 
 
 //가족 생성 API
 //api 테스트 성공
 const createFamily = async (req, res) => {
   try {
-    const {user} = res.locals;
-    console.log("가족 생성의 user-->",user)
+    const { user } = res.locals;
+    console.log('가족 생성의 user-->', user);
     const { familyTitle } = req.body;
 
     const newFamily = await Family.create({
       familyTitle,
-      familyHost: user.userId
-    })
+      familyHost: user.userId,
+    });
 
     const familyHost = await FamilyMember.create({
-    familyId: newFamily.familyId,
-    familyMemberNickname: user.nickname,
-    userId: user.userId, 
-    profileImg: user.profileImg
-  })
-    
-    console.log("familyHost-->", familyHost)
+      familyId: newFamily.familyId,
+      familyMemberNickname: user.nickname,
+      userId: user.userId,
+      profileImg: user.profileImg,
+    });
 
-    res.status(200).json({ msg: "가족이 생성되었습니다." });
+    // 배지 자동생성
+    const newBadge = await badge.create({
+      familyId: newFamily.familyId,
+      badge: [
+        {
+          badgeChk: false,
+          badgeTitle: '단란한 시작',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '추억의 발자국',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '정겨운 목소리',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '협동의 즐거움',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '소통의 기쁨',
+          badgeCnt: 0,
+        },
+        {
+          badgeChk: false,
+          badgeTitle: '함께하는 나날',
+          badgeCnt: 0,
+        },
+      ],
+    });
 
+    console.log('familyHost-->', familyHost);
+
+    res.status(200).json({ msg: '가족이 생성되었습니다.' });
   } catch (error) {
-    console.log("가족 생성에서 오류!", error);
-    res.status(400).send({ msg: "가족 생성에 실패했습니다." });
+    console.log('가족 생성에서 오류!', error);
+    res.status(400).send({ msg: '가족 생성에 실패했습니다.' });
   }
 };
 
@@ -52,26 +88,26 @@ const createFamilyMember = async (req, res) => {
     const { familyId } = req.params;
     const { user } = res.locals;
     const { email, familyMemberNickname } = req.body;
-    const findMmemberUser = await User.findOne({email})
-    const userId = findMmemberUser.userId
-    const profileImg = findMmemberUser.profileImg
-    
-    console.log("familyId-->", familyId)
-    console.log("familyMemberNickname-->", familyMemberNickname)
-    console.log("userId-->", userId)
-    console.log("profileImg-->", profileImg)
+    const findMmemberUser = await User.findOne({ email });
+    const userId = findMmemberUser.userId;
+    const profileImg = findMmemberUser.profileImg;
+
+    console.log('familyId-->', familyId);
+    console.log('familyMemberNickname-->', familyMemberNickname);
+    console.log('userId-->', userId);
+    console.log('profileImg-->', profileImg);
 
     await FamilyMember.insertMany({
       familyId: familyId,
       //email: email, FamilMember의 schema에 추가할 지..? 추가한다면 가족 생성할 때도 넣어야 함.
       familyMemberNickname: familyMemberNickname,
       userId: userId,
-      profileImg: profileImg
-    })
-    
+      profileImg: profileImg,
+    });
+
     res.status(201).json({ restult: true });
   } catch (error) {
-    console.log("멤버 생성에서 오류!", error);
+    console.log('멤버 생성에서 오류!', error);
     res.status(400).send({ result: false });
   }
 };
@@ -84,7 +120,7 @@ const searchUser = async (req, res) => {
     // 를 넣음으로써 해결. 수정자의 i는 대소문자를 구분 안 하고 일치하는 조건을 말한다.
     // RegExp() 이 정규식 함수는 두 개 이상 실행이 안 되는 건가?
     const { search } = req.query;
-    console.log('req.query-->', search)
+    console.log('req.query-->', search);
 
     const regex = (pattern) => new RegExp(`.*${pattern}.*`);
     //RegExp 생성자는 패턴을 사용해 텍스트를 판별할 때 사용
@@ -94,26 +130,22 @@ const searchUser = async (req, res) => {
     //산토끼를 완성 검색하면 토끼는 안 나옴. 토끼를 검색하면 산토끼는 나옴.
 
     const userRegex = regex(search);
-    
-    const searchKeyword = await User.find({  
-      $or: [ 
-      { email: { $regex: userRegex, $options: "i" } }
-      ],
+
+    const searchKeyword = await User.find({
+      $or: [{ email: { $regex: userRegex, $options: 'i' } }],
     });
 
-    console.log("searchKeyword-->", searchKeyword);
+    console.log('searchKeyword-->', searchKeyword);
 
     res.status(200).json({
-      email: searchKeyword[0].email, 
-      nickname: searchKeyword[0].nickname
+      email: searchKeyword[0].email,
+      nickname: searchKeyword[0].nickname,
     });
-    
+
     // console.log("searchKeyword.email-->" , searchKeyword.email )
     // console.log("searchKeyword.nickname-->" , searchKeyword.nickname )
-
-
   } catch (error) {
-    console.log("멤버 검색에서 오류!", error);
+    console.log('멤버 검색에서 오류!', error);
     res.status(400).send({ result: false });
   }
 };
@@ -125,11 +157,10 @@ const getfamilyMember = async (req, res) => {
     const { familyId } = req.params;
     const { user } = res.locals;
     const familyMemberList = await FamilyMember.find({ _id: familyId });
-    
+
     res.status(200).json({ familyMemberList });
-    
   } catch (error) {
-    console.log("가족 구성원 조회에서 오류!", error);
+    console.log('가족 구성원 조회에서 오류!', error);
     res.status(400).send({ result: false });
   }
 };
@@ -138,23 +169,20 @@ const getfamilyMember = async (req, res) => {
 //api 테스트 성공
 const editFamilyTitle = async (req, res) => {
   try {
-    const {familyId} = req.params;
-    const {familyTitle} = req.body;
+    const { familyId } = req.params;
+    const { familyTitle } = req.body;
     const { email } = res.locals.user;
 
-    await Family.updateOne(
-      { email, _id:familyId },
-      { $set: { familyTitle } }
-    );
-    
-    console.log("_id:familyId-->", familyId)
+    await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } });
+
+    console.log('_id:familyId-->', familyId);
 
     res.status(200).json({
       familyId,
-      familyTitle
+      familyTitle,
     });
   } catch (error) {
-    console.log("가족 이름 수정에서 오류!", error);
+    console.log('가족 이름 수정에서 오류!', error);
     res.status(400).send({
       result: false,
     });
@@ -170,15 +198,18 @@ const editFamilyMember = async (req, res) => {
     const { email } = res.locals.user;
 
     await FamilyMember.updateOne(
-      { email, _id:familyId, _id:familyMemberId },
+      { email, _id: familyId, _id: familyMemberId },
       { $set: { familyMemberNickname } }
     );
 
-    const modifyFamilyMemberList = await FamilyMember.find({ _id:familyId, _id:familyMemberId })
+    const modifyFamilyMemberList = await FamilyMember.find({
+      _id: familyId,
+      _id: familyMemberId,
+    });
 
-    res.status(200).json({modifyFamilyMemberList});
+    res.status(200).json({ modifyFamilyMemberList });
   } catch (error) {
-    console.log("가족 구성원 수정에서 오류!", error);
+    console.log('가족 구성원 수정에서 오류!', error);
     res.status(400).send({ result: false });
   }
 };
@@ -193,27 +224,27 @@ const deleteFamily = async (req, res) => {
     const { familyId } = req.params;
     const { email } = res.locals.user;
 
-    console.log("삭제 email-->", email)
-    console.log("삭제 familyId-->", familyId)
+    console.log('삭제 email-->', email);
+    console.log('삭제 familyId-->', familyId);
 
-    await Family.deleteOne({ _id:familyId });
-    await FamilyMember.deleteMany({ _id:familyId })
-    await Mission.deleteMany({ _id:familyId }) 
-    await Badge.deleteOne({ _id:familyId }) 
-    await Comment.deleteMany({ _id:familyId }) 
-    await Event.deleteMany({ _id:familyId }) 
-    await Photo.deleteMany({ _id:familyId }) 
-    await PhotoAlbum.deleteMany({ _id:familyId }) 
-    await VoiceAlbum.deleteMany({ _id:familyId })
-    await VoiceFile.deleteMany({ _id:familyId })
-    await Like.deleteMany({ _id:familyId })
-    await MissionMember.deleteMany({ _id:familyId })
-    await MissionChk.deleteMany({ _id:familyId })
+    await Family.deleteOne({ _id: familyId });
+    await FamilyMember.deleteOne({ _id: familyId });
+    await Mission.deleteOne({ _id: familyId });
+    await Badge.deleteOne({ _id: familyId });
+    await Comment.deleteOne({ _id: familyId });
+    await Event.deleteOne({ _id: familyId });
+    await Photo.deleteOne({ _id: familyId });
+    await PhotoAlbum.deleteOne({ _id: familyId });
+    await VoiceAlbum.deleteOne({ _id: familyId });
+    await VoiceFile.deleteOne({ _id: familyId });
+    await Like.deleteOne({ _id: familyId });
+    await MissionMember.deleteOne({ _id: familyId });
+    await MissionChk.deleteOne({ _id: familyId });
 
-    res.status(200).json({ msg: "가족이 삭제됐습니다." });
+    res.status(200).json({ msg: '가족이 삭제됐습니다.' });
   } catch (error) {
-    console.log("가족 삭제에서 오류!", error);
-    res.status(400).send({ msg: "가족 삭제에 실패했습니다." });
+    console.log('가족 삭제에서 오류!', error);
+    res.status(400).send({ msg: '가족 삭제에 실패했습니다.' });
   }
 };
 
@@ -224,14 +255,13 @@ const deleteFamilyMember = async (req, res) => {
     const { familyMemberId } = req.params;
     const { email } = res.locals.user;
 
-    console.log("삭제 email-->", email)
-    console.log("삭제 familyMemberId-->", familyMemberId)
-    await FamilyMember.deleteOne({ _id:familyMemberId });
+    console.log('삭제 email-->', email);
+    console.log('삭제 familyMemberId-->', familyMemberId);
+    await FamilyMember.deleteOne({ _id: familyMemberId });
 
-    res.status(200).json({ msg: "가족 구성원이 삭제됐습니다" });
-
+    res.status(200).json({ msg: '가족 구성원이 삭제됐습니다' });
   } catch (error) {
-    console.log("가족 구성원 삭제에서 오류!", error);
+    console.log('가족 구성원 삭제에서 오류!', error);
     res.status(400).send({ result: false });
   }
 };
@@ -244,6 +274,5 @@ module.exports = {
   editFamilyTitle,
   editFamilyMember,
   deleteFamily,
-  deleteFamilyMember
+  deleteFamilyMember,
 };
-

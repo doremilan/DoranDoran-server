@@ -1,37 +1,37 @@
-const jwt = require("jsonwebtoken");
-const User = require("../schemas/user");
-const fs = require("fs")
-require("dotenv").config();
+const jwt = require('jsonwebtoken');
+const User = require('../schemas/user');
+require('dotenv').config();
 
 module.exports = (req, res, next) => {
-  console.log("authMiddleware 처음")
+  console.log('authMiddleware');
   //헤더의 이름 authorization 은 프론트와 얘기해야 함.
-  const Token = req.headers.authorization;
-  const logInToken = Token.replace("Bearer ", "");
-  
-  try{
-    const token = jwt.verify(logInToken, process.env.SECRET_KEY);
-    const email = token.email
-    console.log(token)
+  const { authorization } = req.headers;
+  // console.log("1,autu", authorization)
+  const [tokenType, tokenValue] = authorization.split(' ');
+  // console.log(tokenType);
+  // console.log(tokenValue);
 
-    //error발생 StringToObjectID
-    //userId가 미들웨어 거칠 때는 _id 에서 userId로 변환이 안되어있기에, 토큰이 안 담김 -> email에도 담았음.
-    User.findOne({email})
-    .exec()
-    .then((user) => {
-      res.locals.user = user
-      console.log("middleware의 user:", user)
-      //로컬의 DB에 있는 유저 정보를 가지고 있음.
-      res.locals.token = logInToken
-      //로컬에 존재하는 로그인 토큰
-      console.log("authemiddleware 무사히 통과")
-
-      next();
+  if (tokenType !== 'Bearer') {
+    res.status(401).send({
+      errorMessage: '로그인 후 이용하세요!',
     });
-  
-  } catch(error){
-    console.log("authmiddleware에서 에러났음")
-    res.status(401).send({ msg : "토큰이 유효하지 않습니다."})
     return;
-  };
+  }
+
+  try {
+    const { userId } = jwt.verify(tokenValue, process.env.SECRET_KEY);
+    console.log('userId-->', userId);
+    //error발생 StringToObjectID
+    User.find({ userId })
+      .exec()
+      .then((userId) => {
+        res.locals.user = user;
+        next();
+      });
+  } catch (error) {
+    res.status(401).send({
+      errorMessage: '로그인 후 이용하세요.',
+    });
+    return;
+  }
 };

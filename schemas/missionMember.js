@@ -1,26 +1,37 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const missionMemberSchema = mongoose.Schema({
   missionId: {
     type: String,
     required: true,
   },
-  userId: {
+  familyMemberId: {
     type: String,
     required: true,
   },
-  MemberId: {
+  familyMemberNickname: {
+    type: String,
+    required: true,
+  },
+  profileImg: {
+    type: String,
+    required: true,
+  },
+  myMissionChk: {
+    type: Boolean,
+  },
+  familyId: {
     type: String,
     required: true,
   },
 });
 
-missionMemberSchema.virtual("missionMemberId").get(function () {
+missionMemberSchema.virtual('missionMemberId').get(function () {
   return this._id.toHexString();
 });
 
-missionMemberSchema.set("toJSON", {
+missionMemberSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("MissionMember", missionMemberSchema);
+module.exports = mongoose.models.MissionMember || mongoose.model('MissionMember', missionMemberSchema);
