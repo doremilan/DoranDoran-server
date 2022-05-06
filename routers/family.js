@@ -1,20 +1,20 @@
-const express = require('express');
-const router = express.Router();
-// const authMiddleware = require("../middlewares/authMiddleware");
+// const express = require('express');
+// const router = express.Router();
+// // const authMiddleware = require("../middlewares/authMiddleware");
 
-const {
-  createFamily,
-  // createFamilyMember,
-  // familyMemberCheckmodal,
-  // getfamilyMember,
-  // editFamilyTitle,
-  // editFamilyMember,
-  // deleteFamily,
-  // deleteFamilyMember,
-} = require('../controllers/familyController');
+// const {
+//   createFamily,
+//   // createFamilyMember,
+//   // familyMemberCheckmodal,
+//   // getfamilyMember,
+//   // editFamilyTitle,
+//   // editFamilyMember,
+//   // deleteFamily,
+//   // deleteFamilyMember,
+// } = require('../controllers/familyController');
 
-//가족 생성 API
-router.post('/', createFamily);
+// //가족 생성 API
+// router.post('/', createFamily);
 
 // //가족 구성원 생성 api
 // router.post("/family/:familyId", authMiddleware, createFamilyMember);
@@ -41,4 +41,4 @@ router.post('/', createFamily);
 // //가족 구성원 삭제 API
 // router.delete("/:familyMemberId", authMiddleware, deleteFamilyMember);
 
-module.exports = router;
+// module.exports = router;
