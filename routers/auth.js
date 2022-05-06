@@ -1,5 +1,5 @@
-const express = require("express");
-const router = express.Router();
+// const express = require("express");
+// const router = express.Router();
 
 // const { signup, login } = require("../controllers/authController");
 
@@ -17,4 +17,4 @@ const router = express.Router();
 // //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 // //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
-module.exports = router;
+// module.exports = router;

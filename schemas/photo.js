@@ -1,12 +1,6 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const photoSchema = mongoose.Schema({
-  photoName: {
-    type: String,
-  },
-  content: {
-    type: String,
-  },
   photoFile: {
     type: String,
   },
@@ -15,7 +9,8 @@ const photoSchema = mongoose.Schema({
     required: true,
   },
   totalLike: {
-    type: String,
+    type: Number,
+    default: 0,
   },
   familyId: {
     type: String,
@@ -29,17 +24,17 @@ const photoSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  // userInfo: {
-  //   type: Object,
-  // },
+  userInfo: {
+    type: Object,
+  },
 });
 
-photoSchema.virtual("photoId").get(function () {
+photoSchema.virtual('photoId').get(function () {
   return this._id.toHexString();
 });
 
-photoSchema.set("toJSON", {
+photoSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("Photo", photoSchema);
+module.exports = mongoose.model('Photo', photoSchema);

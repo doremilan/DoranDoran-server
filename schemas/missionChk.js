@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const missionChkSchema = mongoose.Schema({
   missionId: {
@@ -9,22 +9,22 @@ const missionChkSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  // familyId: {
-  //   type: String,
-  //   required: true,
-  // },
-  // familyMemberId: {
-  //   type: String,
-  //   required: true,
-  // },
+  familyMemberId: {
+    type: String,
+    required: true,
+  },
+  familyId: {
+    type: String,
+    required: true,
+  },
 });
 
-missionChkSchema.virtual("missionChkId").get(function () {
+missionChkSchema.virtual('missionChkId').get(function () {
   return this._id.toHexString();
 });
 
-missionChkSchema.set("toJSON", {
+missionChkSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("MissionChk", missionChkSchema);
+module.exports = mongoose.model('MissionChk', missionChkSchema);
