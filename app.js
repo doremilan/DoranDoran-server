@@ -16,7 +16,7 @@ connect();
 // 각종 미들웨어
 app.use(cors());
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(helmet()); //보안에 필요한 헤더 추가 미들웨어
 app.use(morgan("tiny")); // 서버 요청 모니터링 미들웨어
 
@@ -27,6 +27,7 @@ app.use(indexRouter);
 app.use((req, res, next) => {
   res.sendStatus(404);
 });
+
 
 // error handler
 app.use((error, req, res, next) => {

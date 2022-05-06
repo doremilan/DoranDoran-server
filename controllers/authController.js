@@ -5,11 +5,15 @@ const jwt = require("jsonwebtoken");
 const fs = require("fs");
 require("dotenv").config();
 
-const authMiddleware = require("../middlewares/authMiddleware");
+// const authMiddleware = require("../middlewares/authMiddleware");
+//테스트 위해서 authMiddleware 제거, 
+//profileImg, todayMood 는 임의의 string 값으로 할 예정
+
 
 //유저가 회원가입 요청시 사용하는 API입니다.
+//api 테스트 성공
 const signup = async (req, res) => {
-  let { email, password, passwordCheck, nickName, profileImg } = req.body;
+  let { email, password, passwordCheck, nickname, profileImg, todayMood } = req.body;
 
   //const userProfile = initProfile;
   const existUsers = await User.findOne({ email });
@@ -40,35 +44,36 @@ const signup = async (req, res) => {
   }
 
   //회원 가입 성공 시의 메시지 호출.
-  await User.create({ email, password, nickName, profileImg });
+  await User.create({ email, password, nickname, profileImg, todayMood });
   console.log(`${email} 님이 가입하셨습니다.`);
 
-  res.status(201).send({ msg: "회원가입이 완료되었습니다." });
+  res.status(201).json({ msg: "회원가입이 완료되었습니다." });
 };
 
 //유저가 로그인 요청 시 사용하는 API입니다.
+//api 테스트 성공. 하지만 userId(_id)에는 토큰이 안 들어감.
 const login = async (req, res) => {
   const { email, password } = req.body;
   const user = await User.findOne({ email, password });
 
-  if (!email || !password) {
-    console.log("유저 로그인 요청에서 오류!", error);
-
-    res.status(400).send({ msg: "입력한 정보를 다시 확인해 주세요." });
-
+  if (!user) {
+    res.status(400).send({
+      msg:"입력한 정보를 다시 확인해 주세요.",
+    });
     return;
   }
 
   const payload = { email };
-  const JWTKEY = process.env.SECRET_KEY;
+  const secretKey = process.env.SECRET_KEY;
   const options = {
     issuer: "백엔드 개발자", // 발행자
-    expiresIn: "99d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+    expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
   };
-  const token = jwt.sign(payload, JWTKEY, options);
-  res.status(200).send({ msg: "로그인이 완료되었습니다.", token: token });
+  const token = jwt.sign(payload, secretKey, options);
+  res.status(201).json({ msg: "로그인이 완료되었습니다.", logInToken: token });
   //토큰 발급.
 };
+
 //https 적용 부분에 있어서 액세스 토큰과 리프레쉬 토큰이 들어가야 하는데, 이건 로컬 테스트가 불가능하다.
 //이유: 애초에 https 인증키가 없기 때문에. 그럼 USER API를 실현할 때, 따로 적용을 못하는가?
 //이후 https 적용을 완료한 상태에서 배포를 한 뒤에

@@ -8,8 +8,8 @@
 // // 앨범생성
 // const postPhotoAlbums = async (req, res) => {
 //   const { familyId } = req.params;
-//   const { userId } = res.locals.user;
-//   const { photoAlbumName } = req.body;
+// //   const { userId } = res.locals.user;
+//   const { photoAlbumName, userId } = req.body;
 //   const createdAt = new Date();
 
 //   try {

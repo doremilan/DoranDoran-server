@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const familyMemberSchema = mongoose.Schema({
   familyId: {
     type: String,
-    required: true,
+    // required: true,
   },
   familyMemberNickname: {
     type: String,

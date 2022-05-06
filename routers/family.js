@@ -5,7 +5,7 @@ const authMiddleware = require("../middlewares/authMiddleware");
 const {
   createFamily,
   createFamilyMember,
-  familyMemberCheckmodal,
+  searchUser,
   getfamilyMember,
   editFamilyTitle,
   editFamilyMember,
@@ -14,23 +14,20 @@ const {
 } = require("../controllers/familyController");
 
 //가족 생성 API
-router.post("/family", authMiddleware, createFamily);
+router.post("/", authMiddleware, createFamily);
 
 //가족 구성원 생성 api
-router.post("/family/:familyId", authMiddleware, createFamilyMember);
+router.post("/:familyId", authMiddleware, createFamilyMember);
 
-//멤버 이메일 검색 API
-router.get(
-  'family/search/keyword?keyword="email"',
-  authMiddleware,
-  familyMemberCheckmodal
-);
+//멤버 검색 API
+router.get('/search', authMiddleware, searchUser);
+//router.get('search/keyword?keyword="email"' , authMiddleware, familyMemberCheckmodal);
 
 //가족구성원 조회 API
-router.get("/family/:familyId/familymember", authMiddleware, getfamilyMember);
+router.get("/:familyId/familyMember", authMiddleware, getfamilyMember);
 
 //가족 이름 수정  API
-router.put("/family/:familyId", authMiddleware, editFamilyTitle);
+router.put("/:familyId", authMiddleware, editFamilyTitle);
 
 //가족 구성원 수정 API
 router.put("/:familyId/:familyMemberId", authMiddleware, editFamilyMember);
@@ -39,6 +36,6 @@ router.put("/:familyId/:familyMemberId", authMiddleware, editFamilyMember);
 router.delete("/:familyId", authMiddleware, deleteFamily);
 
 //가족 구성원 삭제 API
-router.delete("/:familyMemberId", authMiddleware, deleteFamilyMember);
+router.delete("/familyMember/:familyMemberId/", authMiddleware, deleteFamilyMember);
 
 module.exports = router;
