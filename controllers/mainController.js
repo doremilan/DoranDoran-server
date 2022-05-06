@@ -10,7 +10,6 @@ const VoiceFile = require('../schemas/voiceFile');
 const Comment = require('../schemas/comment');
 const Event = require('../schemas/event');
 const LandomMsg = require('../schemas/randomMsg');
-const user = require('../schemas/user');
 
 // 메인화면 조회
 const getMainPage = async (req, res) => {
@@ -34,19 +33,20 @@ const getMainPage = async (req, res) => {
     const voiceFiles = await VoiceFile.find({ familyId }).sort('-createdAt');
     const recentVoiceFile = voiceFiles[0];
     // 이번달 일정 추출
-    // const yearmonth = new Date()
-    //   .toISOString()
-    //   .substring(0, 7)
-    //   .replace(/-/g, '');
-    // console.log(1, yearmonth);
-
-    // 이번달 미션 달성률 계산(YYYY-MM)
     const thisMonth = new Date()
       .toISOString()
       .substring(0, 7)
       .replace(/-/g, '');
+    const thisMonthEventList = [];
+    const events = await Event.find({ familyId }).sort('-createdAt');
+    for (let event of events) {
+      if (event.startDate.split('-').splice(0, 2).join('') === thisMonth) {
+        thisMonthEventList.push(event);
+      }
+    }
+    // 이번달 미션 달성률 계산
     const missions = await Mission.find({ familyId }).sort('-createdAt');
-    // 이번달 미션 리스트 & 전체 미션 수 계산
+    // 이번달 미션 리스트 추출 & 전체 미션 수 계산
     const thisMonthMissionList = [];
     let totalMission = 0;
     for (let mission of missions) {
@@ -100,8 +100,7 @@ const getMainPage = async (req, res) => {
       // 3번 배지 획득 여부 체크
       if (badge.badgeTitle === '정겨운 목소리') {
         const existVoiceFile = await VoiceFile.find({ familyId });
-        if (existVoiceFile.length >= 3) {
-          //10
+        if (existVoiceFile.length >= 10) {
           checkedbadges.push(badge);
         }
       }
@@ -139,7 +138,7 @@ const getMainPage = async (req, res) => {
       completePercentage,
       recentPhoto,
       recentVoiceFile,
-      // callendar, // thisMonthEvent
+      thisMonthEventList,
       recentMission,
       randomBadge,
     });
