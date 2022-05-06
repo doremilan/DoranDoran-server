@@ -24,6 +24,12 @@ const eventSchema = mongoose.Schema({
   color: {
     type: String,
   },
+  familyMemberNickname: {
+    type: String,
+  },
+  profileImg: {
+    type: String,
+  }
 });
 
 eventSchema.virtual("eventId").get(function () {

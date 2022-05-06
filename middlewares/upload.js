@@ -11,8 +11,6 @@ const s3 = new AWS.S3({
 });
 
 
-
-
 const upload = multer({
     storage: multerS3({
         s3: s3,
@@ -31,6 +29,26 @@ const upload = multer({
     }),
 });
 
+//삭제코드
+// var s3 = AWS.S3(awsCredentials);
+// s3.deleteObject({
+//   Bucket: MY_BUCKET,
+//   Key: 'some/subfolders/nameofthefile1.extension'
+// },function (err,data){})
+
+// const deleteProfile = (url) => {
+//     if (url === 'https://www.snsboom.co.kr/common/img/default_profile.png')
+//         return;
+//     const filename = url.split('/')[4];
+
+//     s3.deleteObject(
+//         {
+//             Bucket: process.env.AWS_S3_BUCKET_PROFILE,
+//             Key: filename,
+//         },
+//         function (err, data) {}
+//     );
+// };
 
 
 module.exports = upload;

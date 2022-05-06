@@ -8,7 +8,8 @@ const {
     deleteEvent,
     getEvent,
     getPhotoEvent,
-    getPhotoEventDetail
+    getPhotoEventDetail,
+    getEventDetail
 } = require('../controllers/eventController')
 
 
@@ -20,6 +21,9 @@ router.get('/:familyId/photocalendar/:date', getPhotoEvent)
 
 //추억 상세보기 API
 router.get('/:familyId/photocalendar/detail/:date', getPhotoEventDetail)
+
+//일정 상세보기 API
+router.get('/:familyId/eventcalendar/detail/:date', getEventDetail)
 
 //일정 작성 API
 router.post('/:familyId', createEvent)
