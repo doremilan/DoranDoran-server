@@ -20,6 +20,10 @@ const missionMemberSchema = mongoose.Schema({
   myMissionChk: {
     type: Boolean,
   },
+  familyId: {
+    type: String,
+    required: true,
+  },
 });
 
 missionMemberSchema.virtual('missionMemberId').get(function () {

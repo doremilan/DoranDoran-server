@@ -9,7 +9,6 @@ const Like = require('../schemas/like');
 const postPhoto = async (req, res) => {
   const { familyId, photoAlbumId } = req.params;
   const { userId } = res.locals.user;
-  const { photoName, content } = req.body;
   const photoFile = req.files.photoFile[0].location; //업로드 미들웨어 확인필요
   const createdAt = new Date();
 
@@ -24,9 +23,8 @@ const postPhoto = async (req, res) => {
     ) {
       const createdPhoto = await Photo.create({
         familyId,
+        photoAlbumId,
         userId,
-        photoName,
-        content,
         photoFile,
         createdAt,
       });
@@ -56,19 +54,20 @@ const getPhoto = async (req, res) => {
 
   try {
     const photoList = await Photo.find({ photoAlbumId }).sort('-createdAt');
-    // 각 사진별 좋아요 체크
-    let likeChk = false;
-    let userLike = await Like.find({ userId });
-    for (let photo of photoList) {
-      if (photo.photoId === userLike.photoId) {
-        likeChk = true;
-        photo.likeChk = likeChk;
-      } else {
-        photo.likeChk = likeChk;
-      }
-    }
 
-    // 작성자 정보 필요여부 확인필요
+    // 각 사진별 좋아요 체크 (기능삭제)
+    // let likeChk = false;
+    // let userLike = await Like.find({ userId });
+    // for (let photo of photoList) {
+    //   if (photo.photoId === userLike.photoId) {
+    //     likeChk = true;
+    //     photo.likeChk = likeChk;
+    //   } else {
+    //     photo.likeChk = likeChk;
+    //   }
+    // }
+
+    // //작성자 정보 필요여부 확인필요
     // for (let photo of photoList) {
     //   let userInfo = await User.findOne({ userId: photo.userId });
     //   userInfo.userPw = "";

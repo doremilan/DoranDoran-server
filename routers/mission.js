@@ -15,7 +15,7 @@ const {
 router.post('/:familyId', postMission);
 
 // 미션 완료 체크
-router.post('/missionChk/:missionId', completeMission);
+router.post('/:familyId/:missionId', completeMission);
 
 // 이번달 미션 대시보드 & 목록조회
 router.get('/:familyId', getMission);

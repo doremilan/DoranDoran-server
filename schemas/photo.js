@@ -1,12 +1,6 @@
 const mongoose = require('mongoose');
 
 const photoSchema = mongoose.Schema({
-  photoName: {
-    type: String,
-  },
-  content: {
-    type: String,
-  },
   photoFile: {
     type: String,
   },

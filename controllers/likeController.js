@@ -3,7 +3,7 @@ const Like = require('../schemas/like');
 
 // 좋아요
 const postLike = async (req, res) => {
-  const { photoId } = req.params;
+  const { photoId, familyId } = req.params;
   // const { userId } = res.locals.user;
   const { likeChk, userId } = req.body;
 
@@ -17,7 +17,7 @@ const postLike = async (req, res) => {
       });
     } else {
       await Photo.updateOne({ _id: photoId }, { $inc: { totalLike: 1 } });
-      await Like.create({ photoId, userId });
+      await Like.create({ photoId, userId, familyId });
       let likeChk = true;
       res.status(200).json({
         likeChk,

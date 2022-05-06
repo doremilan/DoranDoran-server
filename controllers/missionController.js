@@ -35,6 +35,7 @@ const postMission = async (req, res) => {
         // 공백 체크
         if (missionMember) {
           await MissionMember.create({
+            familyId,
             missionId: createdMission.missionId,
             familyMemberId,
             familyMemberNickname,
@@ -62,7 +63,7 @@ const postMission = async (req, res) => {
 
 // 미션 완료 체크
 const completeMission = async (req, res) => {
-  const { missionId } = req.params;
+  const { familyId, missionId } = req.params;
   // const { userId } = res.locals.user;
   const { completedAt, userId } = req.body;
   let { myMissionChk, familyMissionChk } = req.body;
@@ -78,6 +79,7 @@ const completeMission = async (req, res) => {
     } else {
       const familyMemberId = await FamilyMember.findOne({ userId });
       const missionChk = await MissionChk.create({
+        familyId,
         missionId,
         userId,
         familyMemberId: familyMemberId.familyMemberId,
