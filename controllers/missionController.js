@@ -104,19 +104,25 @@ const completeMission = async (req, res) => {
   }
 };
 
-// 이번달 미션 목록조회 (접속자의 패밀리멤버아이디)
+// 이번달 미션 목록조회
 const getMission = async (req, res) => {
   const { familyId } = req.params;
 
   try {
     // 이번달 미션 리스트 & 전체 미션 수 추출
-    const thisMonth = new Date().getMonth() + 1;
-    const Missions = await Mission.find({ familyId }).sort('-createdAt');
+    const thisMonth = new Date()
+      .toISOString()
+      .substring(0, 7)
+      .replace(/-/g, '');
+    const missions = await Mission.find({ familyId }).sort('-createdAt');
     const thisMonthMissionList = [];
     let totalMission = 0;
     let completedMission = 0;
-    for (let mission of Missions) {
-      if (mission.createdAt.getMonth() + 1 === thisMonth) {
+    for (let mission of missions) {
+      if (
+        mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
+        thisMonth
+      ) {
         thisMonthMissionList.push(mission);
         totalMission++;
       }
@@ -244,12 +250,18 @@ const getPastMission = async (req, res) => {
   const { familyId } = req.params;
 
   try {
-    // 지난 미션 리스트 조회
-    const thisMonth = new Date().getMonth() + 1;
-    const Missions = await Mission.find({ familyId }).sort('-createdAt');
+    // 지난미션 리스트 조회
+    const thisMonth = new Date()
+      .toISOString()
+      .substring(0, 7)
+      .replace(/-/g, '');
+    const missions = await Mission.find({ familyId }).sort('-createdAt');
     const pastMissionList = [];
-    for (let mission of Missions) {
-      if (mission.createdAt.getMonth() + 1 !== thisMonth) {
+    for (let mission of missions) {
+      if (
+        mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') !==
+        thisMonth
+      ) {
         pastMissionList.push(mission);
       }
     }
@@ -342,12 +354,18 @@ const deleteMission = async (req, res) => {
       await MissionMember.deleteMany({ _id: missionId });
       await MissionChk.deleteMany({ _id: missionId });
       // 이번달 전체 미션 수 추출
-      const thisMonth = new Date().getMonth() + 1;
-      const Missions = await Mission.find({ familyId }).sort('-createdAt');
+      const thisMonth = new Date()
+        .toISOString()
+        .substring(0, 7)
+        .replace(/-/g, '');
+      const missions = await Mission.find({ familyId }).sort('-createdAt');
       let totalMission = 0;
       let completedMission = 0;
-      for (let mission of Missions) {
-        if (mission.createdAt.getMonth() + 1 === thisMonth) {
+      for (let mission of missions) {
+        if (
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
+          thisMonth
+        ) {
           totalMission += 1;
           // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
           const completedMembers = await MissionChk.find({

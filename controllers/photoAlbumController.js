@@ -40,7 +40,7 @@ const postPhotoAlbums = async (req, res) => {
   }
 };
 
-// 앨범조회
+// 앨범조회 ***앨범 커버사진 랜덤추출***
 const getPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
 

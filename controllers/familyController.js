@@ -20,6 +20,7 @@ const createFamily = async (req, res) => {
     //   profileImg: user.profileImg,
     // });
 
+    // 배지 자동생성
     const newBadge = await badge.create({
       familyId: newFamily.familyId,
       badge: [

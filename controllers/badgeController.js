@@ -17,12 +17,10 @@ const getBadge = async (req, res) => {
     let badgeChk = false;
     let badgeCnt = 0;
     for (let badge of badges) {
-      // 자동획득
+      // 자동획득 (count 생략)
       if (badge.badgeTitle === '단란한 시작') {
         badgeChk = true;
         badge.badgeChk = badgeChk;
-        badgeCnt = 1;
-        badge.badgeCnt = badgeCnt;
       }
       // 2번 배지 상태조회
       if (badge.badgeTitle === '추억의 발자국') {
@@ -87,7 +85,6 @@ const getBadge = async (req, res) => {
       // 5번 배지 상태조회
       if (badge.badgeTitle === '소통의 기쁨') {
         const existComment = await Comment.find({ familyId });
-        console.log(existComment);
         //달성 시 count 생략
         if (existComment.length >= 50) {
           badgeChk = true;
@@ -101,7 +98,6 @@ const getBadge = async (req, res) => {
         } else {
           badgeChk = false;
           badge.badgeChk = badgeChk;
-          console.log(2, badge.badgeChk);
           badgeCnt = existComment.length;
           badge.badgeCnt = badgeCnt;
         }
