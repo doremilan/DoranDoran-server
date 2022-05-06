@@ -197,18 +197,18 @@ const deleteFamily = async (req, res) => {
     console.log("삭제 familyId-->", familyId)
 
     await Family.deleteOne({ _id:familyId });
-    await FamilyMember.deleteOne({ _id:familyId })
-    await Mission.deleteOne({ _id:familyId }) 
+    await FamilyMember.deleteMany({ _id:familyId })
+    await Mission.deleteMany({ _id:familyId }) 
     await Badge.deleteOne({ _id:familyId }) 
-    await Comment.deleteOne({ _id:familyId }) 
-    await Event.deleteOne({ _id:familyId }) 
-    await Photo.deleteOne({ _id:familyId }) 
-    await PhotoAlbum.deleteOne({ _id:familyId }) 
-    await VoiceAlbum.deleteOne({ _id:familyId })
-    await VoiceFile.deleteOne({ _id:familyId })
-    await Like.deleteOne({ _id:familyId })
-    await MissionMember.deleteOne({ _id:familyId })
-    await MissionChk.deleteOne({ _id:familyId })
+    await Comment.deleteMany({ _id:familyId }) 
+    await Event.deleteMany({ _id:familyId }) 
+    await Photo.deleteMany({ _id:familyId }) 
+    await PhotoAlbum.deleteMany({ _id:familyId }) 
+    await VoiceAlbum.deleteMany({ _id:familyId })
+    await VoiceFile.deleteMany({ _id:familyId })
+    await Like.deleteMany({ _id:familyId })
+    await MissionMember.deleteMany({ _id:familyId })
+    await MissionChk.deleteMany({ _id:familyId })
 
     res.status(200).json({ msg: "가족이 삭제됐습니다." });
   } catch (error) {
