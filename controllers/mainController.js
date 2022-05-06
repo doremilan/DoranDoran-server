@@ -9,7 +9,7 @@ const Photo = require('../schemas/photo');
 const VoiceFile = require('../schemas/voiceFile');
 const Comment = require('../schemas/comment');
 const Event = require('../schemas/event');
-const LandomMsg = require('../schemas/randomMsg');
+const RandomMsg = require('../schemas/randomMsg');
 
 // 메인화면 조회
 const getMainPage = async (req, res) => {
@@ -19,7 +19,7 @@ const getMainPage = async (req, res) => {
 
   try {
     // 랜덤메시지 랜덤추출
-    const randomMsg = await LandomMsg.aggregate([{ $sample: { size: 1 } }]);
+    const randomMsg = await RandomMsg.aggregate([{ $sample: { size: 1 } }]);
     // 유저정보 추출
     const userInfo = await User.findOne({ _id: userId });
     // 가족정보 추출
@@ -128,7 +128,7 @@ const getMainPage = async (req, res) => {
     }
     // 획득배지 랜덤추출
     let randomValue = Math.floor(Math.random() * checkedbadges.length);
-    randomBadge = checkedbadges[randomValue];
+    const randomBadge = checkedbadges[randomValue];
 
     res.status(200).json({
       randomMsg,

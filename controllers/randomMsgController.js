@@ -1,14 +1,14 @@
-const LandomMsg = require('../schemas/randomMsg');
+const RandomMsg = require('../schemas/randomMsg');
 
 // 랜덤메시지 작성(내부용)
-const postLandomMsg = async (req, res) => {
+const postRandomMsg = async (req, res) => {
   const { randomMsg } = req.body;
   const createdAt = new Date();
 
   try {
     // 공백 체크
     if (randomMsg !== null && randomMsg !== '') {
-      await LandomMsg.create({
+      await randomMsg.create({
         randomMsg,
         createdAt,
       });
@@ -31,13 +31,13 @@ const postLandomMsg = async (req, res) => {
 };
 
 // 랜덤메시지 삭제(내부용)
-const deleteLandomMsg = async (req, res) => {
-  const { landomMsgId } = req.params;
+const deleteRandomMsg = async (req, res) => {
+  const { randomMsgId } = req.params;
 
   try {
-    const existLandomMsg = await LandomMsg.findOne({ _id: landomMsgId });
-    if (existLandomMsg) {
-      await LandomMsg.deleteOne({ _id: landomMsgId });
+    const existRandomMsg = await RandomMsg.findOne({ _id: randomMsgId });
+    if (existRandomMsg) {
+      await RandomMsg.deleteOne({ _id: randomMsgId });
       res.status(204).json({});
     }
   } catch (error) {
@@ -50,6 +50,6 @@ const deleteLandomMsg = async (req, res) => {
 };
 
 module.exports = {
-  postLandomMsg,
-  deleteLandomMsg,
+  postRandomMsg,
+  deleteRandomMsg,
 };

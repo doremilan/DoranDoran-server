@@ -40,7 +40,7 @@ const postPhotoAlbums = async (req, res) => {
   }
 };
 
-// 앨범조회 ***앨범 커버사진 랜덤추출***
+// 앨범조회
 const getPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
 
@@ -48,14 +48,25 @@ const getPhotoAlbums = async (req, res) => {
     const photoAlbums = await PhotoAlbum.find({ familyId }).sort('-createdAt');
     //요청한 값만 추출
     let photoAlbumList = [{}];
-    photoAlbums.map((list, idx) => {
+    photoAlbums.map((photoAlbum, idx) => {
       photoAlbumList[idx] = [
         {
-          photoAlbumName: list.photoAlbumName,
-          photoAlbumId: list.photoAlbumId,
+          photoAlbumName: photoAlbum.photoAlbumName,
+          photoAlbumId: photoAlbum.photoAlbumId,
         },
       ];
     });
+    // 각 앨범의 랜덤 이미지 추출 후 배열에 삽입
+    for (let photoAlbum of photoAlbumList) {
+      const photos = await Photo.find({
+        photoAlbumId: photoAlbum[0].photoAlbumId,
+      });
+      if (photos) {
+        const randomValue = Math.floor(Math.random() * photos.length);
+        const randomPhoto = photos[randomValue];
+        photoAlbum[0].randomPhoto = randomPhoto;
+      }
+    }
     res.status(200).json({
       photoAlbumList,
     });

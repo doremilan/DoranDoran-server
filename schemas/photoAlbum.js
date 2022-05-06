@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const photoAlbumSchema = mongoose.Schema({
   photoAlbumName: {
@@ -16,14 +16,17 @@ const photoAlbumSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  randomPhoto: {
+    type: Object,
+  },
 });
 
-photoAlbumSchema.virtual("photoAlbumId").get(function () {
+photoAlbumSchema.virtual('photoAlbumId').get(function () {
   return this._id.toHexString();
 });
 
-photoAlbumSchema.set("toJSON", {
+photoAlbumSchema.set('toJSON', {
   virtuals: true,
 });
 
-module.exports = mongoose.model("PhotoAlbum", photoAlbumSchema);
+module.exports = mongoose.model('PhotoAlbum', photoAlbumSchema);
