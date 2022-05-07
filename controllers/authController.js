@@ -4,7 +4,7 @@ require('dotenv').config();
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
-  let { email, password, passwordCheck, nickName, profileImg } = req.body;
+  let { email, password, passwordCheck, nickname, profileImg } = req.body;
 
   //const userProfile = initProfile;
   const existUsers = await User.findOne({ email });
@@ -35,7 +35,7 @@ const signup = async (req, res) => {
   }
 
   //회원 가입 성공 시의 메시지 호출.
-  await User.create({ email, password, nickName, profileImg });
+  await User.create({ email, password, nickname, profileImg });
   console.log(`${email} 님이 가입하셨습니다.`);
 
   res.status(201).send({ msg: '회원가입이 완료되었습니다.' });

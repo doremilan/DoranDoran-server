@@ -2,13 +2,15 @@ const Event = require("../schemas/event");
 const Photo = require("../schemas/photo");
 const User = require("../schemas/user")
 const FamilyMember = require("../schemas/familyMember")
+
+
 //일정 작성
 const createEvent = async (req, res) => {
 
-  // const { userId } = res.locals.user;
-  //console.log(userId)
+  const { userId } = res.locals.user;
+  console.log(userId)
   const { familyId } = req.params;
-  const { userId, event, startDate, endDate, color } = req.body;
+  const { event, startDate, endDate, color } = req.body;
   // console.log(familyId)
   // console.log(req.body)
   try {
@@ -41,13 +43,14 @@ const updateEvent = async (req, res) => {
 
   try {
     const putEvent = Event.findOne({ eventId });
+    // console.log(putEvent)
     if (!putEvent) {
       return res.status(400).send({
         msg: "수정실패",
       });
     } else {
       await Event.updateOne(
-        { eventId },
+        { _id: eventId },
         {
           $set: {
             event,
@@ -79,7 +82,7 @@ const deleteEvent = async (req, res) => {
   try {
     const existtEvent = await Event.findOne({ eventId });
     if (existtEvent) {
-      await Event.deleteOne({ eventId });
+      await Event.deleteOne({ _id: eventId });
 
       res.status(204).json({
         result: true,
@@ -244,9 +247,6 @@ const getEventDetail = async (req, res) => {
     console.log(error)
   }
 }
-
-
-
 
 
 
