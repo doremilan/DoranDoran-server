@@ -1,6 +1,6 @@
 const FamilyMember = require('../schemas/familyMember')
 const Mission = require('../schemas/mission')
-const MissionMember = require('../schemas/missionmember')
+const MissionMember = require('../schemas/missionMember')
 const MissionChk = require('../schemas/missionChk')
 const Badge = require('../schemas/badge')
 const Photo = require('../schemas/photo')
