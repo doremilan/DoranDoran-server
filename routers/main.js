@@ -2,9 +2,9 @@ const express = require('express');
 const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleWare');
 
-const { postLike } = require('../controllers/likeController');
+const { getMainPage } = require('../controllers/mainController');
 
-// 좋아요
-router.post('/:familyId/:photoId', authMiddleware, postLike);
+// 메인화면 조회
+router.get('/:familyId', authMiddleware, getMainPage);
 
 module.exports = router;

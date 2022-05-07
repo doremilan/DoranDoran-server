@@ -1,11 +1,15 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const missionChkSchema = mongoose.Schema({
   missionId: {
     type: String,
     required: true,
   },
-  email: {
+  userId: {
+    type: String,
+    required: true,
+  },
+  familyMemberId: {
     type: String,
     required: true,
   },
@@ -15,4 +19,12 @@ const missionChkSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("MissionChk", missionChkSchema);
+missionChkSchema.virtual('missionChkId').get(function () {
+  return this._id.toHexString();
+});
+
+missionChkSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('MissionChk', missionChkSchema);

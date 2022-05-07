@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const eventSchema = mongoose.Schema({
   event: {
     type: String,
     required: true,
   },
-  email: {
+  userId: {
     type: String,
     required: true,
   },
@@ -18,12 +18,26 @@ const eventSchema = mongoose.Schema({
     required: true,
   },
   endDate: {
-    type: Date,
+    type: String,
     required: true,
   },
   color: {
-    type: Date,
+    type: String,
+  },
+  familyMemberNickname: {
+    type: String,
+  },
+  profileImg: {
+    type: String,
   },
 });
 
-module.exports = mongoose.model("Event", eventSchema);
+eventSchema.virtual('eventId').get(function () {
+  return this._id.toHexString();
+});
+
+eventSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('Event', eventSchema);

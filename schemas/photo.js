@@ -1,23 +1,22 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const photoSchema = mongoose.Schema({
-  photoName: {
-    type: String,
-    required: true,
-  },
-  content: {
-    type: String,
-    required: true,
-  },
   photoFile: {
     type: String,
-    required: true,
   },
   photoAlbumId: {
     type: String,
     required: true,
   },
   totalLike: {
+    type: Number,
+    default: 0,
+  },
+  familyId: {
+    type: String,
+    required: true,
+  },
+  userId: {
     type: String,
     required: true,
   },
@@ -25,9 +24,17 @@ const photoSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-  // email:{
-  //   type:String,
-  // }
+  userInfo: {
+    type: Object,
+  },
 });
 
-module.exports = mongoose.model("Photo", photoSchema);
+photoSchema.virtual('photoId').get(function () {
+  return this._id.toHexString();
+});
+
+photoSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('Photo', photoSchema);

@@ -1,11 +1,11 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const missionSchema = mongoose.Schema({
   missionTitle: {
     type: String,
     required: true,
   },
-  email: {
+  userId: {
     type: String,
     required: true,
   },
@@ -13,10 +13,24 @@ const missionSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  dueDate: {
+  createdAt: {
     type: Date,
     required: true,
   },
+  missionMemberList: {
+    type: Object,
+  },
+  familyMissionChk: {
+    type: Boolean,
+  },
 });
 
-module.exports = mongoose.model("Mission", missionSchema);
+missionSchema.virtual('missionId').get(function () {
+  return this._id.toHexString();
+});
+
+missionSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('Mission', missionSchema);

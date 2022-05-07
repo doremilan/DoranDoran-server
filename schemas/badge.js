@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const badgeSchema = mongoose.Schema({
   familyId: {
@@ -11,4 +11,12 @@ const badgeSchema = mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Badge", badgeSchema);
+badgeSchema.virtual('badgeId').get(function () {
+  return this._id.toHexString();
+});
+
+badgeSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('Badge', badgeSchema);

@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+const mongoose = require('mongoose');
 
 const commentSchema = mongoose.Schema({
   comment: {
@@ -13,7 +13,11 @@ const commentSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-  email: {
+  userId: {
+    type: String,
+    required: true,
+  },
+  photoAlbumId: {
     type: String,
     required: true,
   },
@@ -21,6 +25,17 @@ const commentSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  userInfo: {
+    type: Object,
+  },
 });
 
-module.exports = mongoose.model("Comment", commentSchema);
+commentSchema.virtual('commentId').get(function () {
+  return this._id.toHexString();
+});
+
+commentSchema.set('toJSON', {
+  virtuals: true,
+});
+
+module.exports = mongoose.model('Comment', commentSchema);
