@@ -12,8 +12,8 @@ const User = require('../schemas/user');
 // 미션등록
 const postMission = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals.user;
-  const { missionTitle, familyMemberId, userId } = req.body;
+  const { userId } = res.locals.user;
+  const { missionTitle, familyMemberId } = req.body;
   const createdAt = new Date();
 
   try {
@@ -26,23 +26,30 @@ const postMission = async (req, res) => {
         createdAt,
       });
       // 미션 멤버 db 생성
-      for (let MemberId of familyMemberId) {
-        const familyMemberId = MemberId.familyMemberId;
-        const missionMember = await FamilyMember.findOne({
-          _id: familyMemberId,
-        });
-        const familyMemberNickname = missionMember.familyMemberNickname;
-        const profileImg = missionMember.profileImg;
-        // 공백 체크
-        if (missionMember) {
-          await MissionMember.create({
-            familyId,
-            missionId: createdMission.missionId,
-            familyMemberId,
-            familyMemberNickname,
-            profileImg,
+      if (familyMemberId.length) {
+        for (let MemberId of familyMemberId) {
+          const familyMemberId = MemberId.familyMemberId;
+          const missionMember = await FamilyMember.findOne({
+            _id: familyMemberId,
           });
+          const familyMemberNickname = missionMember.familyMemberNickname;
+          const profileImg = missionMember.profileImg;
+          // 공백 체크
+          if (missionMember) {
+            await MissionMember.create({
+              familyId,
+              missionId: createdMission.missionId,
+              familyMemberId,
+              familyMemberNickname,
+              profileImg,
+            });
+          }
         }
+      } else {
+        res.status(400).send({
+          result: false,
+          msg: '미션 멤버를 등록해주세요.',
+        });
       }
       res.status(201).json({
         msg: '새로운 미션이 등록되었어요.',
@@ -65,8 +72,8 @@ const postMission = async (req, res) => {
 // 미션 완료 체크
 const completeMission = async (req, res) => {
   const { familyId, missionId } = req.params;
-  // const { userId } = res.locals.user;
-  const { completedAt, userId } = req.body;
+  const { userId } = res.locals.user;
+  const { completedAt } = req.body;
   let { myMissionChk, familyMissionChk } = req.body;
   try {
     //개인미션 체크
@@ -121,61 +128,67 @@ const getMission = async (req, res) => {
     const thisMonthMissionList = [];
     let totalMission = 0;
     let completedMission = 0;
-    for (let mission of missions) {
-      if (
-        mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
-        thisMonth
-      ) {
-        thisMonthMissionList.push(mission);
-        totalMission++;
+    if (missions.length) {
+      for (let mission of missions) {
+        if (
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
+          thisMonth
+        ) {
+          thisMonthMissionList.push(mission);
+          totalMission++;
+        }
       }
     }
     // 각 미션의 멤버 리스트 추출
-    for (let mission of thisMonthMissionList) {
-      const missionMembers = await MissionMember.find({
-        missionId: mission.missionId,
-      });
-      const completedMembers = await MissionChk.find({
-        missionId: mission.missionId,
-      });
-      mission.missionMemberList = missionMembers;
-
-      // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
-      let familyMissionChk = false;
-      if (missionMembers.length === completedMembers.length) {
-        familyMissionChk = true;
-        mission.familyMissionChk = familyMissionChk;
-        completedMission++;
-      } else {
-        familyMissionChk = false;
-        mission.familyMissionChk = familyMissionChk;
-      }
-
-      // 각 멤버의 미션완료 여부 체크
-      let myMissionChk = false;
-      // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
-      if (Object.keys(completedMembers).length === 0) {
-        missionMembers.map((missionMember) => {
-          myMissionChk = false;
-          missionMember.myMissionChk = myMissionChk;
+    if (thisMonthMissionList.length) {
+      for (let mission of thisMonthMissionList) {
+        const missionMembers = await MissionMember.find({
+          missionId: mission.missionId,
         });
-      }
-      missionMembers.filter((missionMember) => {
-        completedMembers.forEach((completedMember) => {
-          if (completedMember.familyMemberId === missionMember.familyMemberId) {
-            myMissionChk = true;
-            missionMember.myMissionChk = myMissionChk;
-            // 중복체크 예외처리
-          } else if (missionMember.myMissionChk === true) {
-            missionMember.myMissionChk === true;
-          } else if (
-            completedMember.familyMemberId !== missionMember.familyMemberId
-          ) {
+        const completedMembers = await MissionChk.find({
+          missionId: mission.missionId,
+        });
+        mission.missionMemberList = missionMembers;
+
+        // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
+        let familyMissionChk = false;
+        if (missionMembers.length === completedMembers.length) {
+          familyMissionChk = true;
+          mission.familyMissionChk = familyMissionChk;
+          completedMission++;
+        } else {
+          familyMissionChk = false;
+          mission.familyMissionChk = familyMissionChk;
+        }
+
+        // 각 멤버의 미션완료 여부 체크
+        let myMissionChk = false;
+        // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
+        if (Object.keys(completedMembers).length === 0) {
+          missionMembers.map((missionMember) => {
             myMissionChk = false;
             missionMember.myMissionChk = myMissionChk;
-          }
+          });
+        }
+        missionMembers.filter((missionMember) => {
+          completedMembers.forEach((completedMember) => {
+            if (
+              completedMember.familyMemberId === missionMember.familyMemberId
+            ) {
+              myMissionChk = true;
+              missionMember.myMissionChk = myMissionChk;
+              // 중복체크 예외처리
+            } else if (missionMember.myMissionChk === true) {
+              missionMember.myMissionChk === true;
+            } else if (
+              completedMember.familyMemberId !== missionMember.familyMemberId
+            ) {
+              myMissionChk = false;
+              missionMember.myMissionChk = myMissionChk;
+            }
+          });
         });
-      });
+      }
     }
 
     // 미션 달성률 계산
@@ -260,59 +273,66 @@ const getPastMission = async (req, res) => {
       .replace(/-/g, '');
     const missions = await Mission.find({ familyId }).sort('-createdAt');
     const pastMissionList = [];
-    for (let mission of missions) {
-      if (
-        mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') !==
-        thisMonth
-      ) {
-        pastMissionList.push(mission);
+    if (missions.length) {
+      for (let mission of missions) {
+        if (
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') !==
+          thisMonth
+        ) {
+          pastMissionList.push(mission);
+        }
       }
     }
+
     // 각 미션의 멤버 리스트 추출
-    for (let mission of pastMissionList) {
-      const missionMembers = await MissionMember.find({
-        missionId: mission.missionId,
-      });
-      const completedMembers = await MissionChk.find({
-        missionId: mission.missionId,
-      });
-      mission.missionMemberList = missionMembers;
-
-      // 각 미션 전체 달성완료 여부 체크
-      let familyMissionChk = false;
-      if (missionMembers.length === completedMembers.length) {
-        familyMissionChk = true;
-        mission.familyMissionChk = familyMissionChk;
-      } else {
-        familyMissionChk = false;
-        mission.familyMissionChk = familyMissionChk;
-      }
-
-      // 각 멤버의 미션완료 여부 체크
-      let myMissionChk = false;
-      // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
-      if (Object.keys(completedMembers).length === 0) {
-        missionMembers.map((missionMember) => {
-          myMissionChk = false;
-          missionMember.myMissionChk = myMissionChk;
+    if (pastMissionList.length) {
+      for (let mission of pastMissionList) {
+        const missionMembers = await MissionMember.find({
+          missionId: mission.missionId,
         });
-      }
-      missionMembers.filter((missionMember) => {
-        completedMembers.forEach((completedMember) => {
-          if (completedMember.familyMemberId === missionMember.familyMemberId) {
-            myMissionChk = true;
-            missionMember.myMissionChk = myMissionChk;
-            // 중복체크 예외처리
-          } else if (missionMember.myMissionChk === true) {
-            missionMember.myMissionChk === true;
-          } else if (
-            completedMember.familyMemberId !== missionMember.familyMemberId
-          ) {
+        const completedMembers = await MissionChk.find({
+          missionId: mission.missionId,
+        });
+        mission.missionMemberList = missionMembers;
+
+        // 각 미션 전체 달성완료 여부 체크
+        let familyMissionChk = false;
+        if (missionMembers.length === completedMembers.length) {
+          familyMissionChk = true;
+          mission.familyMissionChk = familyMissionChk;
+        } else {
+          familyMissionChk = false;
+          mission.familyMissionChk = familyMissionChk;
+        }
+
+        // 각 멤버의 미션완료 여부 체크
+        let myMissionChk = false;
+        // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
+        if (Object.keys(completedMembers).length === 0) {
+          missionMembers.map((missionMember) => {
             myMissionChk = false;
             missionMember.myMissionChk = myMissionChk;
-          }
+          });
+        }
+        missionMembers.filter((missionMember) => {
+          completedMembers.forEach((completedMember) => {
+            if (
+              completedMember.familyMemberId === missionMember.familyMemberId
+            ) {
+              myMissionChk = true;
+              missionMember.myMissionChk = myMissionChk;
+              // 중복체크 예외처리
+            } else if (missionMember.myMissionChk === true) {
+              missionMember.myMissionChk === true;
+            } else if (
+              completedMember.familyMemberId !== missionMember.familyMemberId
+            ) {
+              myMissionChk = false;
+              missionMember.myMissionChk = myMissionChk;
+            }
+          });
         });
-      });
+      }
     }
     res.status(200).json({
       pastMissionList,
@@ -349,7 +369,7 @@ const getfamilyMemberList = async (req, res) => {
 
 // 미션삭제
 const deleteMission = async (req, res) => {
-  const { missionId, familyId } = req.params;
+  const { familyId, missionId } = req.params;
 
   try {
     const existMission = await Mission.findOne({ _id: missionId });
@@ -358,6 +378,7 @@ const deleteMission = async (req, res) => {
       await Mission.deleteOne({ _id: missionId });
       await MissionMember.deleteMany({ _id: missionId });
       await MissionChk.deleteMany({ _id: missionId });
+
       // 이번달 전체 미션 수 추출
       const thisMonth = new Date()
         .toISOString()
@@ -366,21 +387,27 @@ const deleteMission = async (req, res) => {
       const missions = await Mission.find({ familyId }).sort('-createdAt');
       let totalMission = 0;
       let completedMission = 0;
-      for (let mission of missions) {
-        if (
-          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
-          thisMonth
-        ) {
-          totalMission += 1;
-          // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
-          const completedMembers = await MissionChk.find({
-            missionId: mission.missionId,
-          });
-          const missionMembers = await MissionMember.find({
-            missionId: mission.missionId,
-          });
-          if (missionMembers.length === completedMembers.length) {
-            completedMission += 1;
+      if (missions.length) {
+        for (let mission of missions) {
+          if (
+            mission.createdAt
+              .toISOString()
+              .substring(0, 7)
+              .replace(/-/g, '') === thisMonth
+          ) {
+            totalMission += 1;
+            // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
+            const completedMembers = await MissionChk.find({
+              missionId: mission.missionId,
+            });
+            const missionMembers = await MissionMember.find({
+              missionId: mission.missionId,
+            });
+            if (missionMembers.length !== 0) {
+              if (missionMembers.length === completedMembers.length) {
+                completedMission += 1;
+              }
+            }
           }
         }
       }

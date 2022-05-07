@@ -4,7 +4,7 @@ require('dotenv').config();
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
-  let { email, password, passwordCheck, nickName, profileImg } = req.body;
+  let { email, password, passwordCheck, nickname, profileImg } = req.body;
 
   //const userProfile = initProfile;
   const existUsers = await User.findOne({ email });

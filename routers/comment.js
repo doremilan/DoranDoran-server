@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-// const authMiddleware = require("../middlewares/authMiddleWare");
+const authMiddleware = require('../middlewares/authMiddleWare');
 
 const {
   postComment,
@@ -8,9 +8,9 @@ const {
 } = require('../controllers/commentController');
 
 // 댓글생성
-router.post('/:photoAlbumId/:photoId', postComment);
+router.post('/:familyId/:photoAlbumId/:photoId', authMiddleware, postComment);
 
 // 댓글삭제
-router.delete('/:commentId', deleteComment);
+router.delete('/:commentId', authMiddleware, deleteComment);
 
 module.exports = router;
