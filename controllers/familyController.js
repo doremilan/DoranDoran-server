@@ -50,7 +50,7 @@ const createFamily = async (req, res) => {
     })
 
     // 배지 자동생성
-    await badge.create({
+    await Badge.create({
       familyId: newFamily.familyId,
       badge: [
         {
