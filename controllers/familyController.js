@@ -12,7 +12,6 @@ const VoiceFile = require('../schemas/voiceFile');
 const Like = require('../schemas/like');
 const MissionMember = require('../schemas/missionMember');
 const MissionChk = require('../schemas/missionChk');
-const badge = require('../schemas/badge');
 const Joi = require('joi');
 
 
