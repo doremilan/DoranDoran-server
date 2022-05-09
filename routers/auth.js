@@ -1,7 +1,14 @@
 const express = require('express');
 const router = express.Router();
+// const passport = require('passport')
+// const KakaoStrategy = require('passport-kakao').Strategy
 
-const { signup, login } = require('../controllers/authController');
+const { 
+    signup, 
+    login, 
+    // kakao,
+    // kakaoCallback
+} = require('../controllers/authController');
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 //썬더 클론 - 더미 데이터로 테스트 완료.
@@ -16,5 +23,10 @@ router.post('/login', login);
 //이후 https 적용을 완료한 상태에서 배포를 한 뒤에
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
+
+// router.get('oauth/kakao', passport.authenticate('kakao'), kakao)
+
+// router.get("oauth/kakao/callback", kakaoCallback);
+
 
 module.exports = router;

@@ -13,6 +13,24 @@ const Like = require('../schemas/like');
 const MissionMember = require('../schemas/missionMember');
 const MissionChk = require('../schemas/missionChk');
 const badge = require('../schemas/badge');
+const Joi = require('joi');
+
+
+const familySchema = Joi.object({
+
+  familyTitle: Joi.string().max(8)
+  .pattern(new RegExp(
+    '^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$'
+    )).required()
+})
+// 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
+
+const familyMemberSchema = Joi.object({
+
+  familyMemberNickname: Joi.string().min(2).max(8).required()
+
+})
+// 2~8자 
 
 
 //가족 생성 API
@@ -20,8 +38,12 @@ const badge = require('../schemas/badge');
 const createFamily = async (req, res) => {
   try {
     const { user } = res.locals;
+
     console.log('가족 생성의 user-->', user);
-    const { familyTitle } = req.body;
+
+    let { 
+      familyTitle
+    } = await familySchema.validateAsync(req.body)
 
     const newFamily = await Family.create({
       familyTitle,
@@ -36,7 +58,7 @@ const createFamily = async (req, res) => {
     });
 
     // 배지 자동생성
-    const newBadge = await badge.create({
+      await badge.create({
       familyId: newFamily.familyId,
       badge: [
         {
@@ -87,7 +109,9 @@ const createFamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params;
     const { user } = res.locals;
-    const { email, familyMemberNickname } = req.body;
+    const { email} = req.body;
+    let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
+
     const findMmemberUser = await User.findOne({ email });
     const userId = findMmemberUser.userId;
     const profileImg = findMmemberUser.profileImg;
@@ -99,7 +123,6 @@ const createFamilyMember = async (req, res) => {
 
     await FamilyMember.insertMany({
       familyId: familyId,
-      //email: email, FamilMember의 schema에 추가할 지..? 추가한다면 가족 생성할 때도 넣어야 함.
       familyMemberNickname: familyMemberNickname,
       userId: userId,
       profileImg: profileImg,
@@ -116,9 +139,6 @@ const createFamilyMember = async (req, res) => {
 //api 테스트 성공.
 const searchUser = async (req, res) => {
   try {
-    // validation  영어 대 소문자에 관한 if 문 추가하면 되나? --> 수정자의 $options: "i"
-    // 를 넣음으로써 해결. 수정자의 i는 대소문자를 구분 안 하고 일치하는 조건을 말한다.
-    // RegExp() 이 정규식 함수는 두 개 이상 실행이 안 되는 건가?
     const { search } = req.query;
     console.log('req.query-->', search);
 
@@ -170,7 +190,7 @@ const getfamilyMember = async (req, res) => {
 const editFamilyTitle = async (req, res) => {
   try {
     const { familyId } = req.params;
-    const { familyTitle } = req.body;
+    const { familyTitle} = await familySchema.validateAsync(req.body)
     const { email } = res.locals.user;
 
     await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } });
@@ -194,7 +214,7 @@ const editFamilyTitle = async (req, res) => {
 const editFamilyMember = async (req, res) => {
   try {
     const { familyId, familyMemberId } = req.params;
-    const { familyMemberNickname } = req.body;
+    let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
     const { email } = res.locals.user;
 
     await FamilyMember.updateOne(
@@ -228,18 +248,18 @@ const deleteFamily = async (req, res) => {
     console.log('삭제 familyId-->', familyId);
 
     await Family.deleteOne({ _id: familyId });
-    await FamilyMember.deleteOne({ _id: familyId });
-    await Mission.deleteOne({ _id: familyId });
-    await Badge.deleteOne({ _id: familyId });
-    await Comment.deleteOne({ _id: familyId });
-    await Event.deleteOne({ _id: familyId });
-    await Photo.deleteOne({ _id: familyId });
-    await PhotoAlbum.deleteOne({ _id: familyId });
-    await VoiceAlbum.deleteOne({ _id: familyId });
-    await VoiceFile.deleteOne({ _id: familyId });
-    await Like.deleteOne({ _id: familyId });
-    await MissionMember.deleteOne({ _id: familyId });
-    await MissionChk.deleteOne({ _id: familyId });
+    await FamilyMember.deleteMany({ _id: familyId });
+    await Mission.deleteMany({ _id: familyId });
+    await Badge.deleteMany({ _id: familyId });
+    await Comment.deleteMany({ _id: familyId });
+    await Event.deleteMany({ _id: familyId });
+    await Photo.deleteMany({ _id: familyId });
+    await PhotoAlbum.deleteMany({ _id: familyId });
+    await VoiceAlbum.deleteMany({ _id: familyId });
+    await VoiceFile.deleteMany({ _id: familyId });
+    await Like.deleteMany({ _id: familyId });
+    await MissionMember.deleteMany({ _id: familyId });
+    await MissionChk.deleteMany({ _id: familyId });
 
     res.status(200).json({ msg: '가족이 삭제됐습니다.' });
   } catch (error) {
