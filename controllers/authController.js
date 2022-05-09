@@ -92,29 +92,38 @@ const signup = async (req, res) => {
 
 //유저가 로그인 요청 시 사용하는 API입니다.
 const login = async (req, res) => {
-  const { email, password } = await userSchema.validateAsync(req.body)
-  const user = await User.findOne({ email })
+  console.log(req.body)
+  try {
+    console.log(req.body)
+    const { email, password } = await userSchema.validateAsync(req.body)
+    const user = await User.findOne({ email })
+    console.log(user)
 
-  //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
-  const unHashPw = await bcrypt.compareSync(password, user.password)
+    //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
+    const unHashPw = await bcrypt.compareSync(password, user.password)
 
-  if (user.email !== email || unHashPw == false) {
-    res.status(400).send({
-      msg: '아이디 또는 비밀번호가 틀렸습니다.',
-    })
-    return
+    if (user.email !== email || unHashPw == false) {
+      res.status(400).send({
+        msg: '아이디 또는 비밀번호가 틀렸습니다.',
+      })
+      return
+    }
+
+    const payload = { email }
+    const secret = process.env.SECRET_KEY
+    const options = {
+      issuer: '백엔드 개발자', // 발행자
+      expiresIn: '10d', // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+    }
+    const token = jwt.sign(payload, secret, options)
+    res.status(200).send({ msg: '로그인이 완료되었습니다.', logIntoken: token })
+    //토큰 발급.
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({ msg: '로그인 실패' })
   }
-
-  const payload = { email }
-  const secret = process.env.SECRET_KEY
-  const options = {
-    issuer: '백엔드 개발자', // 발행자
-    expiresIn: '10d', // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
-  }
-  const token = jwt.sign(payload, secret, options)
-  res.status(200).send({ msg: '로그인이 완료되었습니다.', logIntoken: token })
-  //토큰 발급.
 }
+
 //https 적용 부분에 있어서 액세스 토큰과 리프레쉬 토큰이 들어가야 하는데, 이건 로컬 테스트가 불가능하다.
 //이유: 애초에 https 인증키가 없기 때문에. 그럼 USER API를 실현할 때, 따로 적용을 못하는가?
 //이후 https 적용을 완료한 상태에서 배포를 한 뒤에
