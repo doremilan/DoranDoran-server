@@ -5,7 +5,6 @@ const Mission = require('../schemas/mission')
 const Badge = require('../schemas/badge')
 const Comment = require('../schemas/comment')
 const Event = require('../schemas/event')
-;-y
 const Photo = require('../schemas/photo')
 const PhotoAlbum = require('../schemas/photoAlbum')
 const VoiceAlbum = require('../schemas/voiceAlbum')
