@@ -92,10 +92,9 @@ const signup = async (req, res) => {
 
 //유저가 로그인 요청 시 사용하는 API입니다.
 const login = async (req, res) => {
+  const { email, password } = req.body
   console.log(req.body)
   try {
-    console.log(req.body)
-    const { email, password } = await userSchema.validateAsync(req.body)
     const user = await User.findOne({ email })
     console.log(user)
 
