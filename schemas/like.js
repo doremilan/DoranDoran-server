@@ -13,6 +13,10 @@ const likeSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  photoAlbumId: {
+    type: String,
+    required: true,
+  },
 });
 
 likeSchema.virtual('likeId').get(function () {

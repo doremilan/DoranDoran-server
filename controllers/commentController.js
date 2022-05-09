@@ -3,8 +3,8 @@ const Comment = require('../schemas/comment');
 // 댓글 작성
 const postComment = async (req, res) => {
   const { familyId, photoId, photoAlbumId } = req.params;
-  // const { userId } = res.locals.user;
-  const { comment, userId } = req.body;
+  const { userId } = res.locals.user;
+  const { comment } = req.body;
   const createdAt = new Date();
 
   try {

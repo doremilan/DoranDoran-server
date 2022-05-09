@@ -3,8 +3,8 @@ const router = express.Router();
 // const passport = require("passport");
 // const KakaoStrategy = require("passport-kakao").Strategy;
 
-const authRouter = require("./auth");
-const userRouter = require("./user");
+const authRouter = require('./auth');
+const userRouter = require('./user');
 const mainRouter = require('./main');
 const familyRouter = require('./family');
 const photoAlbumRouter = require('./photoAlbum');

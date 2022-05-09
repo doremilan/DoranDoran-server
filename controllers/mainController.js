@@ -2,7 +2,7 @@ const User = require('../schemas/user');
 const Family = require('../schemas/family');
 const FamilyMember = require('../schemas/familyMember');
 const Mission = require('../schemas/mission');
-const MissionMember = require('../schemas/missionmember');
+const MissionMember = require('../schemas/missionMember');
 const MissionChk = require('../schemas/missionChk');
 const Badge = require('../schemas/badge');
 const Photo = require('../schemas/photo');
@@ -14,8 +14,7 @@ const RandomMsg = require('../schemas/randomMsg');
 // 메인화면 조회
 const getMainPage = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals.user;
-  const { userId } = req.body;
+  const { userId } = res.locals.user;
 
   try {
     // 랜덤메시지 랜덤추출
@@ -27,11 +26,17 @@ const getMainPage = async (req, res) => {
     // 가족 멤버리스트 추출
     const familyMemberList = await FamilyMember.find({ familyId });
     // 최신사진 추출
+    let recentPhoto = [];
     const photos = await Photo.find({ familyId }).sort('-createdAt');
-    const recentPhoto = photos[0];
+    if (photos.length) {
+      recentPhoto = photos[0];
+    }
     // 최신음성메시지 추출
+    let recentVoiceFile = [];
     const voiceFiles = await VoiceFile.find({ familyId }).sort('-createdAt');
-    const recentVoiceFile = voiceFiles[0];
+    if (voiceFiles.length) {
+      recentVoiceFile = voiceFiles[0];
+    }
     // 이번달 일정 추출
     const thisMonth = new Date()
       .toISOString()
@@ -39,37 +44,47 @@ const getMainPage = async (req, res) => {
       .replace(/-/g, '');
     const thisMonthEventList = [];
     const events = await Event.find({ familyId }).sort('-createdAt');
-    for (let event of events) {
-      if (event.startDate.split('-').splice(0, 2).join('') === thisMonth) {
-        thisMonthEventList.push(event);
+    if (events.length) {
+      for (let event of events) {
+        if (event.startDate.split('-').splice(0, 2).join('') === thisMonth) {
+          thisMonthEventList.push(event);
+        }
       }
     }
+
     // 이번달 미션 달성률 계산
     const missions = await Mission.find({ familyId }).sort('-createdAt');
     // 이번달 미션 리스트 추출 & 전체 미션 수 계산
     const thisMonthMissionList = [];
+    let recentMission = {};
     let totalMission = 0;
-    for (let mission of missions) {
-      if (
-        mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
-        thisMonth
-      ) {
-        thisMonthMissionList.push(mission);
-        totalMission++;
+    if (missions.length) {
+      for (let mission of missions) {
+        if (
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
+          thisMonth
+        ) {
+          thisMonthMissionList.push(mission);
+          totalMission++;
+        }
       }
     }
-    const recentMission = thisMonthMissionList[0];
+    if (thisMonthMissionList.length) {
+      recentMission = thisMonthMissionList[0];
+    }
     // 각 미션의 멤버 리스트 추출 후 달성 완료된 미션 수 계산
     let completedMission = 0;
-    for (let mission of thisMonthMissionList) {
-      const missionMembers = await MissionMember.find({
-        missionId: mission.missionId,
-      });
-      const completedMembers = await MissionChk.find({
-        missionId: mission.missionId,
-      });
-      if (missionMembers.length === completedMembers.length) {
-        completedMission++;
+    if (thisMonthMissionList.length) {
+      for (let mission of thisMonthMissionList) {
+        const missionMembers = await MissionMember.find({
+          missionId: mission.missionId,
+        });
+        const completedMembers = await MissionChk.find({
+          missionId: mission.missionId,
+        });
+        if (missionMembers.length === completedMembers.length) {
+          completedMission++;
+        }
       }
     }
 
