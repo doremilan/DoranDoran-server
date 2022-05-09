@@ -35,7 +35,7 @@ const createVoiceFile = async (req, res) => {
       createdAt,
     });
     res.status(201).json({
-      createVoice,
+      voiceFileId: createVoice._id,
       msg: '음성메세지 추가되었습니다.',
     });
   } catch (error) {

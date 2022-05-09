@@ -24,7 +24,7 @@ const createEvent = async (req, res) => {
     });
     // console.log(addEvent)
     res.status(201).json({
-      addEvent,
+      eventId: addEvent._id,
       msg: "일정 등록 완료",
     });
   } catch (error) {
@@ -61,6 +61,7 @@ const updateEvent = async (req, res) => {
         }
       );
       res.status(200).json({
+        putEvent,
         msg: "수정 완료되었습니다.",
       });
     }

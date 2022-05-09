@@ -24,7 +24,7 @@ const createVoiceAlbum = async (req, res) => {
         _id: createdvoiceAlbum._id,
       });
       res.status(201).json({
-        newvoiceAlbumId,
+        voiceAlbumId: newvoiceAlbumId._id,
         msg: '새로운 앨범이 생성되었어요.',
       });
     } else {
@@ -70,11 +70,11 @@ const updateVoiceAlbum = async (req, res) => {
   // console.log(voiceAlbumId, voiceAlbumName);
   try {
     if (voiceAlbumName !== null && voiceAlbumName !== '') {
-      const existVoiceAlbum = await VoiceAlbum.findOne({ voiceAlbumId });
+      const existVoiceAlbum = await VoiceAlbum.findOne({ _id: voiceAlbumId });
       console.log(existVoiceAlbum);
       if (existVoiceAlbum) {
         await VoiceAlbum.updateOne(
-          { voiceAlbumId },
+          { _id: voiceAlbumId },
           { $set: { voiceAlbumName } }
         );
       }
