@@ -6,10 +6,10 @@ const User = require('../schemas/user');
 //보이스 앨범 생성
 const createVoiceAlbum = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals;
-  const { userId, voiceAlbumName } = req.body;
+  const { userId } = res.locals.user;
+  const { voiceAlbumName } = req.body;
   const createdAt = new Date();
-  console.log(familyId, userId, voiceAlbumName);
+  // console.log(familyId, userId, voiceAlbumName);
 
   try {
     // 공백 체크
@@ -67,7 +67,7 @@ const getVoiceAlbum = async (req, res) => {
 const updateVoiceAlbum = async (req, res) => {
   const { voiceAlbumId } = req.params;
   const { voiceAlbumName } = req.body;
-  console.log(voiceAlbumId, voiceAlbumName);
+  // console.log(voiceAlbumId, voiceAlbumName);
   try {
     if (voiceAlbumName !== null && voiceAlbumName !== '') {
       const existVoiceAlbum = await VoiceAlbum.findOne({ voiceAlbumId });
