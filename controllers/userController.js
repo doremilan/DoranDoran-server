@@ -8,16 +8,11 @@ require('dotenv').config()
 //유저 데이터 get API
 const getUser = async (req, res) => {
   try {
-    const { email } = res.locals.user
-    email.password = ''
-    const userInfo = await User.findOne({ email })
-    const nickname = userInfo.nickname
-    const profileImg = userInfo.profileImg
+    const { user } = res.locals
+    user.password = ''
 
     res.status(200).json({
-      email: email,
-      nickname: nickname,
-      profileImg: profileImg,
+      user,
     })
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`)

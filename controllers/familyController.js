@@ -27,11 +27,9 @@ const familyMemberSchema = Joi.object({
   // 2~8자
 })
 
-//모든 추가를 위한 method: post 의 res 값에 해당 Id 도 포함해서 같이 보내드리기.
-
 // ***가족 목록 GET API
 // API 완료
-const getFamilyList = async (req, res) => {
+const getFamilylist = async (req, res) => {
   try {
     const { userId } = res.locals.user
     const family = await FamilyMember.findOne({ userId })
@@ -313,7 +311,7 @@ const deleteFamilyMember = async (req, res) => {
 }
 
 module.exports = {
-  getFamilyList,
+  getFamilylist,
   createFamily,
   createFamilyMember,
   searchUser,

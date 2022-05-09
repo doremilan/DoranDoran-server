@@ -82,6 +82,8 @@ const signup = async (req, res) => {
 
     console.log('가입 시의 user-->', user)
 
+    user.profileImg = null
+
     await user.save()
 
     //회원 가입 성공 시의 메시지 호출.
@@ -131,7 +133,7 @@ const login = async (req, res) => {
     const token = jwt.sign(payload, secret, options)
 
     //토큰 발급.
-    res.status(200).json({ msg: '로그인이 완료되었습니다.', logIntoken: token })
+    res.status(200).send({ msg: '로그인이 완료되었습니다.', logIntoken: token })
   } catch (error) {
     res.status(400).send({ result: false })
   }
