@@ -15,7 +15,7 @@ const {
 } = require('../controllers/familyController')
 
 //가족 리스트 조회 API
-router.get('/familyList', authMiddleware, getFamilyList)
+router.get('/familylist', authMiddleware, getFamilyList)
 
 //가족 생성 API
 router.post('/', authMiddleware, createFamily)
