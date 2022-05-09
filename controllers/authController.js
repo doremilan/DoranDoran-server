@@ -122,6 +122,7 @@ const login = async (req, res) => {
     console.log(error)
     res.status(400).send({ msg: '로그인 실패' })
   }
+  console.log(error)
 }
 
 //https 적용 부분에 있어서 액세스 토큰과 리프레쉬 토큰이 들어가야 하는데, 이건 로컬 테스트가 불가능하다.
