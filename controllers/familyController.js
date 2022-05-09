@@ -29,7 +29,7 @@ const familyMemberSchema = Joi.object({
 
 // ***가족 목록 GET API
 // API 완료
-const getFamilylist = async (req, res) => {
+const getFamilyList = async (req, res) => {
   try {
     const { userId } = res.locals.user
     const family = await FamilyMember.findOne({ userId })
@@ -311,7 +311,7 @@ const deleteFamilyMember = async (req, res) => {
 }
 
 module.exports = {
-  getFamilylist,
+  getFamilyList,
   createFamily,
   createFamilyMember,
   searchUser,
