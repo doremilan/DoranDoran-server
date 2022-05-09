@@ -107,3 +107,9 @@ const deleteVoiceFile = async (req, res) => {
     console.log(error)
   }
 }
+
+module.exports = {
+  createVoiceFile,
+  getVoiceFile,
+  deleteVoiceFile,
+}
