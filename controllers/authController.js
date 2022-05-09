@@ -16,7 +16,11 @@ const userSchema = Joi.object({
   // 이메일 양식 /
 
   password: Joi.string()
-    .pattern(new RegExp('^(?=.*[a-zA-Z])((?=.*d)|(?=.*W)).{8,20}$'))
+    .pattern(
+      new RegExp(
+        '^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}'
+      )
+    )
     .required(),
 
   //조건1. 8~20 영문 대소문자
