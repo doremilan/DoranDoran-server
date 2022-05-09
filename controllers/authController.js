@@ -31,15 +31,12 @@ const userSchema = Joi.object({
     .pattern(new RegExp('^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$')),
 
   //3-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
-
-  profileImg: Joi.string(),
-  todayMood: Joi.string(),
 })
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
   try {
-    const { email, password, passwordCheck, nickname, profileImg, todayMood } =
+    const { email, password, passwordCheck, nickname } =
       await userSchema.validateAsync(req.body)
 
     console.log('req.body-->', req.body)
@@ -72,8 +69,6 @@ const signup = async (req, res) => {
       email,
       password: hashed,
       nickname,
-      profileImg,
-      todayMood,
     })
 
     console.log('가입 시의 user-->', user)
@@ -85,6 +80,7 @@ const signup = async (req, res) => {
 
     res.status(201).json({ msg: '회원가입이 완료되었습니다.', user: user })
   } catch (error) {
+    console.log(error)
     res.status(400).send({ msg: '요청한 조건 형식이 올바르지 않습니다.' })
   }
 }
