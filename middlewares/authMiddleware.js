@@ -24,7 +24,10 @@ module.exports = (req, res, next) => {
         //로컬의 DB에 있는 유저 정보를 가지고 있음.
         res.locals.token = logInToken
         //로컬에 존재하는 로그인 토큰
+
+        console.log("authemiddleware 의 user", user)
         console.log("authemiddleware 무사히 통과")
+
 
         next();
       });

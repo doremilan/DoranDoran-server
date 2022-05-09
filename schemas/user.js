@@ -19,6 +19,9 @@ const userSchema = mongoose.Schema({
   todayMood: {
     type: String,
   },
+  provider:{
+    type: String
+  }
 });
 
 userSchema.virtual('userId').get(function () {

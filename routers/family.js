@@ -3,6 +3,7 @@ const router = express.Router();
 const authMiddleware = require('../middlewares/authMiddleware');
 
 const {
+  getFamilyList,
   createFamily,
   createFamilyMember,
   searchUser,
@@ -12,6 +13,9 @@ const {
   deleteFamily,
   deleteFamilyMember,
 } = require('../controllers/familyController');
+
+//가족 리스트 조회 API
+router.get('/familyList', authMiddleware, getFamilyList);
 
 //가족 생성 API
 router.post('/', authMiddleware, createFamily);

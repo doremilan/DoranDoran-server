@@ -2,8 +2,7 @@ const User = require('../schemas/user');
 const jwt = require('jsonwebtoken');
 const Joi = require('joi');
 const bcrypt = require('bcrypt');
-// const passport = require('passport')
-// const KakaoStrategy = require('passport-kakao').Strategy
+const passport = require('passport')
 require('dotenv').config();
 
 
@@ -17,17 +16,20 @@ const userSchema = Joi.object({
 
   password: Joi.string()
     .pattern(new RegExp(
-      "^(?=.\d)(?=.[!@$%^+&-?#])([^\s]){8,20}$|^(?=.\d)(?=.[a-zA-Z])([^\s]){8,20}$|^(?=.[a-zA-Z])(?=.[!@$%^+&-?#])([^\s]){8,20}$"
+      "^(?=.*[a-zA-Z])((?=.*\d)|(?=.*\W)).{8,20}$"
+
     )).required(),
+  
+  //조건1. 8~20 영문 대소문자
 
-  //8-20자 /영문, 숫자, 특수문자 (!@$%^+&-?#) 중 2종류 이상 조합
+  //조건2. 최소 1개의 숫자 혹은 특수 문자를 포함해야 함
 
-  passwordCheck: Joi.string().required(),
+  passwordCheck: Joi.string(),
 
   nickname: Joi.string().min(3).max(15)
     .pattern(new RegExp(
       '^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$'
-    )).required(),
+    )),
 
   //3-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
@@ -73,8 +75,6 @@ const signup = async (req, res) => {
 
     }
 
-    // console.log("hash 이전 password-->", password)
-
     // bcrypt module -> 암호화
     // 10 --> saltOrRound --> salt를 10번 실행 (높을수록 강력) 대신 암호화 연산이 증가해서 속도가 느려짐.
     const hashed = await bcrypt.hash(password, 10);
@@ -84,13 +84,10 @@ const signup = async (req, res) => {
 
     await user.save();
 
-    // console.log("hash 이후 password-->", password)
-
-
     //회원 가입 성공 시의 메시지 호출.
     console.log(`${email} 님이 가입하셨습니다.`);
 
-    res.status(201).json({ msg: '회원가입이 완료되었습니다.' });
+    res.status(201).json({ msg: '회원가입이 완료되었습니다.', user: user });
 
   } catch (error) {
     res.status(400).send({ msg: "요청한 조건 형식이 올바르지 않습니다." })
@@ -102,10 +99,10 @@ const signup = async (req, res) => {
 //유저가 로그인 요청 시 사용하는 API입니다.
 const login = async (req, res) => {
   const { email, password } = await userSchema.validateAsync(req.body);
-  const user = await User.findOne({ email });
+  const user = await User.findOne({ email: req.body.email });
 
   //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
-  const unHashPw = await bcrypt.compareSync(password, user.password)
+  const unHashPw = await bcrypt.compareSync( req.body.password, user.password )
 
   if (user.email !== email || unHashPw == false) {
     res.status(400).send({
@@ -130,37 +127,35 @@ const login = async (req, res) => {
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
+const kakaoCallback = (req, res, next) => {
+  passport.authenticate(
+    "kakao",
+    { failureRedirect: "/" },
+    (err, user, info) => {
+      if (err) return next(err);
+      console.log("kakao 콜백!")
+      const { email, nickname } = user;
+      const options = {
+        issuer: '백엔드 개발자', // 발행자
+        expiresIn: '10d', // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+      };
+      const logIntoken = jwt.sign({email: email}, process.env.SECRET_KEY, options);
 
-// new kakaoStragegy({
-//   clientId: process.env.KAKAO_ID, //카카오 로그인에서 발급받은 REST 키
-//   callbackURL: "/oauth/kakao" // 카카오 로그인 Redirect URL 경로
-// })
+      result = {
+        token: logIntoken,
+        email: email,
+        nickname: nickname,
+      };
 
-// const kakaoCallback = (req, res, next) => {
-//   passport.authenticate(
-//     "kakao",
-//     { failureRedirect: "/" },
-//     (err, user, info) => {
-//       if (err) return next(err);
-//       console.log("콜백~~~")
-//       const { email, nickname } = user;
-//       const token = jwt.sign({email: email}, 'SECRET_KEY');
+      console.log("kakao authController result-->", result)
+      res.status(201).json({ user: result, msg: "카카오 소셜 로그인에 성공하셨습니다." });
+    }
+  )(req, res, next);  
 
-//       result = {
-//         token,
-//         email: email,
-//         nickname: nickname,
-//       };
-
-//       console.log(result)
-//       res.send({ user: result });
-//     }
-//   )(req, res, next);  
-
-// };
+};
 
 module.exports = {
   login,
   signup,
-  // kakaoCallback
+  kakaoCallback
 };

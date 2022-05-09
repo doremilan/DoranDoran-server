@@ -4,11 +4,13 @@ const connect = require('./schemas/index');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
+const passportConfig = require("./passport");
 const fs = require('fs');
 const port = 3000;
 const app = express();
 
 connect();
+passportConfig();
 
 // 각종 미들웨어
 app.use(cors());

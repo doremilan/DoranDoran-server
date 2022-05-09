@@ -27,13 +27,37 @@ const familySchema = Joi.object({
 const familyMemberSchema = Joi.object({
 
   familyMemberNickname: Joi.string().min(2).max(8).required()
-
+  // 2~8자 
 })
-// 2~8자 
+
+
+//모든 추가를 위한 method: post 의 res 값에 해당 Id 도 포함해서 같이 보내드리기.
+
+// ***가족 목록 GET API
+// API 완료
+const getFamilyList = async (req, res) => {
+  try {
+    const { userId } = res.locals.user;
+    const family  = await FamilyMember.findOne({ userId })
+
+    let familyList = [];
+    if (family) {
+      const familyList = await Family.find({ familyId: family.familyId })
+
+      res.status(200).json({ familyList });
+    } else {
+      res.status(200).json({ familyList })
+    }
+    
+  } catch (error) {
+    console.log('가족 리스트 조회에서 오류!', error);
+    res.status(400).send({ result: false });
+  }
+}
 
 
 //가족 생성 API
-//api 테스트 성공
+//api 테스트 성공`
 const createFamily = async (req, res) => {
   try {
     const { user } = res.locals;
@@ -57,7 +81,7 @@ const createFamily = async (req, res) => {
     });
 
     // 배지 자동생성
-      await badge.create({
+      await Badge.create({
       familyId: newFamily.familyId,
       badge: [
         {
@@ -95,7 +119,7 @@ const createFamily = async (req, res) => {
 
     console.log('familyHost-->', familyHost);
 
-    res.status(200).json({ msg: '가족이 생성되었습니다.' });
+    res.status(200).json({ msg: '가족이 생성되었습니다.' , familyId: newFamily.familyId });
   } catch (error) {
     console.log('가족 생성에서 오류!', error);
     res.status(400).send({ msg: '가족 생성에 실패했습니다.' });
@@ -120,14 +144,17 @@ const createFamilyMember = async (req, res) => {
     console.log('userId-->', userId);
     console.log('profileImg-->', profileImg);
 
-    await FamilyMember.insertMany({
+    const insertFamliyMember = await FamilyMember.insertMany({
       familyId: familyId,
-      familyMemberNickname: familyMemberNickname,
+      familyMemberNickname,
       userId: userId,
       profileImg: profileImg,
     });
 
-    res.status(201).json({ restult: true });
+    res.status(201).json({ 
+      restult: true, 
+      insertFamliyMember: insertFamliyMember
+    });
   } catch (error) {
     console.log('멤버 생성에서 오류!', error);
     res.status(400).send({ result: false });
@@ -150,15 +177,22 @@ const searchUser = async (req, res) => {
 
     const userRegex = regex(search);
 
-    const searchKeyword = await User.find({
-      $or: [{ email: { $regex: userRegex, $options: 'i' } }],
-    });
+    let searchKeyword = [];
+    if (searchKeyword) {
 
-    console.log('searchKeyword-->', searchKeyword);
+      let searchKeyword = await User.find({
+        $or: [{ email: { $regex: userRegex, $options: 'i' } }],
+      });
+
+      res.status(200).json({ searchKeyword });
+    } else {
+      res.status(200).json({ searchKeyword })
+    }
+    
 
     res.status(200).json({
-      email: searchKeyword[0].email,
-      nickname: searchKeyword[0].nickname,
+      email: searchKeyword.email,
+      nickname: searchKeyword.nickname,
     });
 
     // console.log("searchKeyword.email-->" , searchKeyword.email )
@@ -235,9 +269,6 @@ const editFamilyMember = async (req, res) => {
 
 //가족 삭제 API
 //api 테스트 성공
-//familyId 로 연관된 갤러리, 보이스, 미션 등등이 다 삭제되게 하기.
-//like, missionChk, MissionMember 세 개 다 familyId 따로 추가 예정.
-//user, randomMsg 데이터는 삭제 제외.
 const deleteFamily = async (req, res) => {
   try {
     const { familyId } = req.params;
@@ -247,18 +278,18 @@ const deleteFamily = async (req, res) => {
     console.log('삭제 familyId-->', familyId);
 
     await Family.deleteOne({ _id: familyId });
-    await FamilyMember.deleteMany({ _id: familyId });
-    await Mission.deleteMany({ _id: familyId });
-    await Badge.deleteMany({ _id: familyId });
-    await Comment.deleteMany({ _id: familyId });
-    await Event.deleteMany({ _id: familyId });
-    await Photo.deleteMany({ _id: familyId });
-    await PhotoAlbum.deleteMany({ _id: familyId });
-    await VoiceAlbum.deleteMany({ _id: familyId });
-    await VoiceFile.deleteMany({ _id: familyId });
-    await Like.deleteMany({ _id: familyId });
-    await MissionMember.deleteMany({ _id: familyId });
-    await MissionChk.deleteMany({ _id: familyId });
+    await FamilyMember.deleteMany({ familyId: familyId });
+    await Mission.deleteMany({ familyId: familyId });
+    await Badge.deleteMany({ familyId: familyId });
+    await Comment.deleteMany({ familyId: familyId });
+    await Event.deleteMany({ familyId: familyId });
+    await Photo.deleteMany({ familyId: familyId });
+    await PhotoAlbum.deleteMany({ familyId: familyId });
+    await VoiceAlbum.deleteMany({ familyId: familyId });
+    await VoiceFile.deleteMany({ familyId: familyId });
+    await Like.deleteMany({ familyId: familyId });
+    await MissionMember.deleteMany({ familyId: familyId });
+    await MissionChk.deleteMany({ familyId: familyId });
 
     res.status(200).json({ msg: '가족이 삭제됐습니다.' });
   } catch (error) {
@@ -286,6 +317,7 @@ const deleteFamilyMember = async (req, res) => {
 };
 
 module.exports = {
+  getFamilyList,
   createFamily,
   createFamilyMember,
   searchUser,
