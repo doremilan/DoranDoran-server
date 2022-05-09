@@ -26,6 +26,7 @@ const postMission = async (req, res) => {
         createdAt,
       })
       // 미션 멤버 db 생성
+      let createdMember = []
       if (familyMemberId.length) {
         for (let MemberId of familyMemberId) {
           const familyMemberId = MemberId.familyMemberId
@@ -36,13 +37,14 @@ const postMission = async (req, res) => {
           const profileImg = missionMember.profileImg
           // 공백 체크
           if (missionMember) {
-            await MissionMember.create({
+            const newMember = await MissionMember.create({
               familyId,
               missionId: createdMission.missionId,
               familyMemberId,
               familyMemberNickname,
               profileImg,
             })
+            createdMember.push(newMember)
           }
         }
       } else {
@@ -52,6 +54,8 @@ const postMission = async (req, res) => {
         })
       }
       res.status(201).json({
+        missionId: createdMission.missionId,
+        createdMember,
         msg: '새로운 미션이 등록되었어요.',
       })
     } else {
