@@ -171,12 +171,10 @@ const searchUser = async (req, res) => {
 
     const userRegex = regex(search)
 
-    let searchKeyword = []
+    let searchKeyword = await User.find({
+      $or: [{ email: { $regex: userRegex, $options: 'i' } }],
+    })
     if (searchKeyword) {
-      let searchKeyword = await User.find({
-        $or: [{ email: { $regex: userRegex, $options: 'i' } }],
-      })
-
       res.status(200).json({ searchKeyword })
     } else {
       res.status(200).json({})
