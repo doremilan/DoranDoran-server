@@ -1,13 +1,12 @@
 const VoiceAlbum = require('../schemas/voiceAlbum');
 const VoiceFile = require('../schemas/voiceFile');
-const FamilyMember = require('../schemas/familyMember');
-const User = require('../schemas/user');
+
 
 //보이스 앨범 생성
 const createVoiceAlbum = async (req, res) => {
   const { familyId } = req.params;
   const { userId } = res.locals.user;
-  const { voiceAlbumName } = req.body;
+  const { voiceAlbumName, voiceAlbumCover } = req.body;
   const createdAt = new Date();
   // console.log(familyId, userId, voiceAlbumName);
 
@@ -18,6 +17,7 @@ const createVoiceAlbum = async (req, res) => {
         familyId,
         userId,
         voiceAlbumName,
+        voiceAlbumCover,
         createdAt,
       });
       const newvoiceAlbumId = await VoiceAlbum.findOne({
@@ -75,11 +75,12 @@ const updateVoiceAlbum = async (req, res) => {
       if (existVoiceAlbum) {
         await VoiceAlbum.updateOne(
           { _id: voiceAlbumId },
-          { $set: { voiceAlbumName } }
+          { $set: { voiceAlbumName, voiceAlbumCover } }
         );
       }
       res.status(200).json({
         voiceAlbumName,
+        voiceAlbumCover,
         msg: '앨범이 수정되었습니다.',
       });
     } else {

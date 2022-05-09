@@ -134,7 +134,7 @@ const getPhotoEvent = async (req, res) => {
     let eventCalendarList = []
     let photoCalendarList = []
     const events = await Event.find({ familyId, date });
-    const photos = await Photo.find({ familyId, date })
+    const photos = await Photo.find({ familyId, date });
     // const a = photos.createdAt.toISOString() // toISOString 날짜를 2022-05-11 문자열로 변환 
     const thisMonth = date.split("-")
 

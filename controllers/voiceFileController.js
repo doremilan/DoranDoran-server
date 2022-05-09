@@ -53,7 +53,7 @@ const getVoiceFile = async (req, res) => {
   // console.log(11, voiceAlbumId);
   try {
     const albumName = await VoiceAlbum.findOne({ _id: voiceAlbumId });
-    const voiceFileList = await VoiceFile.find({});
+    const voiceFileList = await VoiceFile.find({ _id: voiceAlbumId });
     res.status(200).json({
       voiceAlbumName: albumName.voiceAlbumName,
       voiceFileList,
