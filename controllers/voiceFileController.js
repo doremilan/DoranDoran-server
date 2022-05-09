@@ -50,7 +50,7 @@ const createVoiceFile = async (req, res) => {
 const getVoiceFile = async (req, res) => {
   const { voiceAlbumId } = req.params;
   // const { userId } = res.locals.user;
-  console.log(11, voiceAlbumId);
+  // console.log(11, voiceAlbumId);
   try {
     const albumName = await VoiceAlbum.findOne({ _id: voiceAlbumId });
     const voiceFileList = await VoiceFile.find({});

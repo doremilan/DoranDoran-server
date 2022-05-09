@@ -9,7 +9,7 @@ const createVoiceAlbum = async (req, res) => {
   const { userId } = res.locals.user;
   const { voiceAlbumName } = req.body;
   const createdAt = new Date();
-  console.log(familyId, userId, voiceAlbumName);
+  // console.log(familyId, userId, voiceAlbumName);
 
   try {
     // 공백 체크
@@ -67,7 +67,7 @@ const getVoiceAlbum = async (req, res) => {
 const updateVoiceAlbum = async (req, res) => {
   const { voiceAlbumId } = req.params;
   const { voiceAlbumName } = req.body;
-  console.log(voiceAlbumId, voiceAlbumName);
+  // console.log(voiceAlbumId, voiceAlbumName);
   try {
     if (voiceAlbumName !== null && voiceAlbumName !== '') {
       const existVoiceAlbum = await VoiceAlbum.findOne({ voiceAlbumId });
