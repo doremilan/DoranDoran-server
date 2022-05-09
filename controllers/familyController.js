@@ -182,7 +182,7 @@ const searchUser = async (req, res) => {
       res.status(200).json({ searchKeyword })
     }
 
-    res.status(200).json({
+    return res.status(200).json({
       email: searchKeyword.email,
       nickname: searchKeyword.nickname,
     })
