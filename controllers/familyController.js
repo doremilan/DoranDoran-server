@@ -177,15 +177,13 @@ const searchUser = async (req, res) => {
         $or: [{ email: { $regex: userRegex, $options: 'i' } }],
       })
 
-      res.status(200).json({ searchKeyword })
+      res.status(200).json({
+        email: searchKeyword.email,
+        nickname: searchKeyword.nickname,
+      })
     } else {
-      res.status(200).json({ searchKeyword })
+      res.status(200).json({})
     }
-
-    return res.status(200).json({
-      email: searchKeyword.email,
-      nickname: searchKeyword.nickname,
-    })
 
     // console.log("searchKeyword.email-->" , searchKeyword.email )
     // console.log("searchKeyword.nickname-->" , searchKeyword.nickname )
