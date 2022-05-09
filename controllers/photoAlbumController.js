@@ -8,8 +8,8 @@ const Like = require('../schemas/like');
 // 앨범생성
 const postPhotoAlbums = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals.user;
-  const { photoAlbumName, userId } = req.body;
+  const { userId } = res.locals.user;
+  const { photoAlbumName } = req.body;
   const createdAt = new Date();
 
   try {
@@ -48,23 +48,25 @@ const getPhotoAlbums = async (req, res) => {
     const photoAlbums = await PhotoAlbum.find({ familyId }).sort('-createdAt');
     //요청한 값만 추출
     let photoAlbumList = [{}];
-    photoAlbums.map((photoAlbum, idx) => {
-      photoAlbumList[idx] = [
-        {
-          photoAlbumName: photoAlbum.photoAlbumName,
-          photoAlbumId: photoAlbum.photoAlbumId,
-        },
-      ];
-    });
-    // 각 앨범의 랜덤 이미지 추출 후 배열에 삽입
-    for (let photoAlbum of photoAlbumList) {
-      const photos = await Photo.find({
-        photoAlbumId: photoAlbum[0].photoAlbumId,
+    if (photoAlbums.length) {
+      photoAlbums.map((photoAlbum, idx) => {
+        photoAlbumList[idx] = [
+          {
+            photoAlbumName: photoAlbum.photoAlbumName,
+            photoAlbumId: photoAlbum.photoAlbumId,
+          },
+        ];
       });
-      if (photos) {
-        const randomValue = Math.floor(Math.random() * photos.length);
-        const randomPhoto = photos[randomValue];
-        photoAlbum[0].randomPhoto = randomPhoto;
+      // 각 앨범의 랜덤 이미지 추출 후 배열에 삽입
+      for (let photoAlbum of photoAlbumList) {
+        const photos = await Photo.find({
+          photoAlbumId: photoAlbum[0].photoAlbumId,
+        });
+        if (photos) {
+          const randomValue = Math.floor(Math.random() * photos.length);
+          const randomPhoto = photos[randomValue];
+          photoAlbum[0].randomPhoto = randomPhoto;
+        }
       }
     }
     res.status(200).json({
@@ -122,9 +124,9 @@ const deletePhotoAlbums = async (req, res) => {
     // 앨범, 사진, 댓글, 좋아요 모두 삭제
     if (existPhotoAlbum) {
       await PhotoAlbum.deleteOne({ _id: photoAlbumId });
-      await Photo.deleteMany({ _id: photoAlbumId });
-      await Comment.deleteMany({ _id: photoAlbumId });
-      await Like.deleteMany({ _id: photoAlbumId });
+      await Photo.deleteMany({ photoAlbumId });
+      await Comment.deleteMany({ photoAlbumId });
+      await Like.deleteMany({ photoAlbumId });
       res.status(200).json({
         result: true,
         msg: '앨범이 삭제되었어요.',

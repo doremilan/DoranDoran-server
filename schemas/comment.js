@@ -25,6 +25,9 @@ const commentSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  userInfo: {
+    type: Object,
+  },
 });
 
 commentSchema.virtual('commentId').get(function () {
