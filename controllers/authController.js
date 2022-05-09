@@ -38,6 +38,7 @@ const userSchema = Joi.object({
 
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
+<<<<<<< HEAD
 try{
 
 const { 
@@ -50,6 +51,9 @@ const {
 } = await userSchema.validateAsync(req.body);
 
   console.log("req.body-->", req.body)
+=======
+  let { email, password, passwordCheck, nickname, profileImg } = req.body;
+>>>>>>> YoungHo
 
   const existUsers = await User.findOne({ email });
 
@@ -88,6 +92,10 @@ const {
 
 
   //회원 가입 성공 시의 메시지 호출.
+<<<<<<< HEAD
+=======
+  await User.create({ email, password, nickname, profileImg });
+>>>>>>> YoungHo
   console.log(`${email} 님이 가입하셨습니다.`);
 
   res.status(201).json({ msg: '회원가입이 완료되었습니다.' });

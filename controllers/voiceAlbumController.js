@@ -6,8 +6,8 @@ const User = require('../schemas/user');
 //보이스 앨범 생성
 const createVoiceAlbum = async (req, res) => {
   const { familyId } = req.params;
-  // const { userId } = res.locals;
-  const { userId, voiceAlbumName } = req.body;
+  const { userId } = res.locals.user;
+  const { voiceAlbumName } = req.body;
   const createdAt = new Date();
   console.log(familyId, userId, voiceAlbumName);
 
