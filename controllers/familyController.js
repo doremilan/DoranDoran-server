@@ -159,12 +159,15 @@ const createFamilyMember = async (req, res) => {
 
 //멤버 검색 API
 //api 테스트 성공.
+// email은 @ 앞의 것만 검색하게 하기
 const searchUser = async (req, res) => {
   try {
     const { search } = req.query
     console.log('req.query-->', search)
 
     const regex = (pattern) => new RegExp(`.*${pattern}.*`)
+    //const regex = (pattern) => new RegExp();
+    console.log('regex-->', regex)
     //RegExp 생성자는 패턴을 사용해 텍스트를 판별할 때 사용
     //$ = 텍스트(문자열)의 끝과 일치하는 지.
     //^ = 텍스트의 첫 자와 일치하는 지를 보는 정규식 표현.
@@ -173,17 +176,23 @@ const searchUser = async (req, res) => {
 
     const userRegex = regex(search)
 
-    const searchKeyword = await User.find({
+    console.log('regex({search})-->', regex(search))
+
+    let searchKeyword = await User.find({
       $or: [{ email: { $regex: userRegex, $options: 'i' } }],
     })
 
-    res.status(200).json({
-      email: searchKeyword[0].email,
-      nickname: searchKeyword[0].nickname,
-    })
+    console.log('searchKeyword', searchKeyword)
 
-    // console.log("searchKeyword.email-->" , searchKeyword.email )
-    // console.log("searchKeyword.nickname-->" , searchKeyword.nickname )
+    let searchKeywordList = []
+    if (searchKeyword) {
+      let searchKeywordList = searchKeyword
+
+      res.status(200).json({ searchKeywordList })
+    } else {
+      res.status(200).json({ searchKeywordList })
+    }
+    console.log('searchKeywordList', searchKeywordList)
   } catch (error) {
     console.log('멤버 검색에서 오류!', error)
     res.status(400).send({ result: false })

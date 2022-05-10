@@ -55,7 +55,8 @@ const getPhotoAlbums = async (req, res) => {
         if (photos.length) {
           const randomValue = Math.floor(Math.random() * photos.length)
           const randomPhoto = photos[randomValue]
-          photoAlbum.randomPhoto = randomPhoto
+          photoFile = randomPhoto.photoFile
+          photoAlbum.randomPhoto = photoFile
         }
       }
     }
