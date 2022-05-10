@@ -107,13 +107,13 @@ const login = async (req, res) => {
     // const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
 
     if (email === "" || email === undefined || email === null) {
-      res.status(400).send({
+      res.status(400).json({
         msg: "아이디를 입력하세요.",
       })
 
       return
     } else if (password === "" || password === undefined || password === null) {
-      res.status(400).send({
+      res.status(400).json({
         msg: "비밀번호를 입력하세요.",
       })
 
@@ -124,7 +124,7 @@ const login = async (req, res) => {
     const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
 
     if (user.email !== email || unHashPw == false) {
-      res.status(400).send({
+      res.status(400).json({
         msg: "아이디 또는 비밀번호가 틀렸습니다.",
       })
 
