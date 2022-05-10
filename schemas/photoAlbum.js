@@ -17,7 +17,7 @@ const photoAlbumSchema = mongoose.Schema({
     required: true,
   },
   randomPhoto: {
-    type: Object,
+    type: String,
   },
 })
 
