@@ -138,9 +138,15 @@ const login = async (req, res) => {
       expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
     }
     const token = jwt.sign(payload, secret, options)
-
     const userChk = await User.findOne({ email })
     const familyChk = await FamilyMember.find({ userId: userChk._id })
+    const userInfoList = [
+      {
+        email: userChk.email,
+        nickname: userChk.nickname,
+        profileImg: userChk.profileImg,
+      },
+    ]
 
     let familyList = []
     if (familyChk.length) {
@@ -148,21 +154,23 @@ const login = async (req, res) => {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
         familyList.push(Checkedfamily)
       }
-      res.status(200).send({
+      res.status(200).json({
         logIntoken: token,
+        userInfoList: userInfoList,
         familyList,
         msg: "로그인이 완료되었습니다.",
       })
     } else {
-      res.status(200).send({
+      res.status(200).json({
         logIntoken: token,
+        userInfoList: userInfoList,
         familyList,
         msg: "로그인이 완료되었습니다.",
       })
     }
   } catch (error) {
     console.log(error)
-    res.status(400).send({ result: false })
+    res.status(400).json({ result: false })
   }
 }
 
