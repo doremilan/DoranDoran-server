@@ -209,14 +209,14 @@ const getPhotoEventDetail = async (req, res) => {
 
 //일정 상세보기
 const getEventDetail = async (req, res) => {
-  const { familyId, date } = req.params
+  const { familyId, date, eventId } = req.params
   // const { userId } = res.locals;
-  // console.log(familyId, date)
+  console.log(familyId, date, eventId)
   try {
     let eventModalList = []
-    const events = await Event.find({ familyId, date })
+    const events = await Event.find({ familyId, date, _id: eventId })
     const thisMonth = date.split('-')
-
+    console.log(111, events)
     for (let event of events) {
       const eventDate = event.startDate.split('-', 3)
       // console.log(eventDate)
