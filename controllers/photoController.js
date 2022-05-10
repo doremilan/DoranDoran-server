@@ -77,6 +77,10 @@ const getPhotoDetail = async (req, res) => {
   try {
     // 사진 등록 유저 정보 추출
     const detailPhoto = await Photo.findOne({ _id: photoId })
+    const photoAlbum = await PhotoAlbum.findOne({
+      _id: detailPhoto.photoAlbumId,
+    })
+    const PhotoAlbumName = photoAlbum.photoAlbumName
     if (detailPhoto) {
       const photoUser = await User.findOne({ _id: detailPhoto.userId })
       if (photoUser) {
@@ -122,6 +126,7 @@ const getPhotoDetail = async (req, res) => {
       likeChk = true
     }
     res.status(200).json({
+      PhotoAlbumName,
       detailPhoto,
       likeChk,
       totalComment,
