@@ -129,20 +129,27 @@ const createFamilyMember = async (req, res) => {
     let { email, familyMemberNickname } =
       await familyMemberSchema.validateAsync(req.body)
 
-    const findMmemberUser = await User.findOne({ email })
-    const userId = findMmemberUser.userId
-    const profileImg = findMmemberUser.profileImg
+    let profileImg
+    const newFamilyMember = await User.findOne({ email })
+    console.log(1, newFamilyMember)
+    const userId = newFamilyMember.userId
+    console.log(2, userId)
+    if (newFamilyMember.profileImg) {
+      profileImg = newFamilyMember.profileImg
+    } else {
+      profileImg = null
+    }
 
-    const insertFamliyMember = await FamilyMember.insertMany({
-      familyId: familyId,
+    const familyMember = await FamilyMember.insertMany({
+      familyId,
       familyMemberNickname,
-      userId: userId,
-      profileImg: profileImg,
+      userId,
+      profileImg,
     })
 
     res.status(201).json({
       restult: true,
-      insertFamliyMember: insertFamliyMember,
+      familyMember,
     })
   } catch (error) {
     console.log('멤버 생성에서 오류!', error)
