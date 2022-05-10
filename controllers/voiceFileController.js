@@ -13,12 +13,13 @@ const s3 = new AWS.S3({
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
   try {
+    console.log(11, req.file)
     const { familyId, voiceAlbumId } = req.params
     const { voiceTitle, voicePlayTime } = req.body
     const { userId } = res.locals.user
     const voiceFile = req.file.location
     const createdAt = new Date()
-    console.log(11, req.file)
+
     const userInfo = await FamilyMember.findOne({ userId })
     // console.log(22, userInfo)
     const familyMemberNickname = userInfo.familyMemberNickname
