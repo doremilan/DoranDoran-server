@@ -1,17 +1,17 @@
-const User = require('../schemas/user')
-const Family = require('../schemas/family')
-const FamilyMember = require('../schemas/familyMember')
-const jwt = require('jsonwebtoken')
-const Joi = require('joi')
-const bcrypt = require('bcrypt')
-const passport = require('passport')
-require('dotenv').config()
+const User = require("../schemas/user")
+const Family = require("../schemas/family")
+const FamilyMember = require("../schemas/familyMember")
+const jwt = require("jsonwebtoken")
+const Joi = require("joi")
+const bcrypt = require("bcrypt")
+const passport = require("passport")
+require("dotenv").config()
 
 const userSchema = Joi.object({
   email: Joi.string()
     .pattern(
       new RegExp(
-        '^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$'
+        "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
       )
     )
     .required(),
@@ -20,7 +20,7 @@ const userSchema = Joi.object({
   password: Joi.string()
     .pattern(
       new RegExp(
-        '^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}'
+        "^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}"
       )
     )
     .required(),
@@ -34,7 +34,7 @@ const userSchema = Joi.object({
   nickname: Joi.string()
     .min(3)
     .max(15)
-    .pattern(new RegExp('^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$')),
+    .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")),
 
   //3-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
@@ -48,24 +48,24 @@ const signup = async (req, res) => {
     const { email, password, passwordCheck, nickname, profileImg, todayMood } =
       await userSchema.validateAsync(req.body)
 
-    console.log('req.body-->', req.body)
+    console.log("req.body-->", req.body)
 
     const existUsers = await User.findOne({ email })
 
     //중복 아이디 체크 기능
     if (existUsers) {
-      console.log('중복 아이디 찾기에서 에러 발생', error)
+      console.log("중복 아이디 찾기에서 에러 발생", error)
       res.status(400).send({
-        msg: '중복된 아이디가 있습니다.',
+        msg: "중복된 아이디가 있습니다.",
       })
 
       return
 
       //비번 체크 기능
     } else if (password !== passwordCheck) {
-      console.log('비번 체크에서 오류!', error)
+      console.log("비번 체크에서 오류!", error)
       res.status(400).send({
-        errorMessage: '비밀번호가 일치하지 않습니다.',
+        errorMessage: "비밀번호가 일치하지 않습니다.",
       })
 
       return
@@ -82,7 +82,7 @@ const signup = async (req, res) => {
       todayMood,
     })
 
-    console.log('가입 시의 user-->', user)
+    console.log("가입 시의 user-->", user)
 
     user.profileImg = null
 
@@ -91,9 +91,9 @@ const signup = async (req, res) => {
     //회원 가입 성공 시의 메시지 호출.
     console.log(`${email} 님이 가입하셨습니다.`)
 
-    res.status(201).json({ msg: '회원가입이 완료되었습니다.', user: user })
+    res.status(201).json({ msg: "회원가입이 완료되었습니다.", user: user })
   } catch (error) {
-    res.status(400).send({ msg: '요청한 조건 형식이 올바르지 않습니다.' })
+    res.status(400).send({ msg: "요청한 조건 형식이 올바르지 않습니다." })
   }
 }
 
@@ -108,19 +108,19 @@ const login = async (req, res) => {
 
     if (user.email !== email || unHashPw == false) {
       res.status(400).send({
-        msg: '아이디 또는 비밀번호가 틀렸습니다.',
+        msg: "아이디 또는 비밀번호가 틀렸습니다.",
       })
 
       return
-    } else if (email == '' || email == undefined || email == null) {
+    } else if (email == "" || email == undefined || email == null) {
       res.status(400).send({
-        errorMessage: '아이디를 입력하세요.',
+        errorMessage: "아이디를 입력하세요.",
       })
 
       return
-    } else if (password == '' || password == undefined || password == null) {
+    } else if (password == "" || password == undefined || password == null) {
       res.status(400).send({
-        errorMessage: '비밀번호를 입력하세요.',
+        errorMessage: "비밀번호를 입력하세요.",
       })
 
       return
@@ -129,8 +129,8 @@ const login = async (req, res) => {
     const payload = { email }
     const secret = process.env.SECRET_KEY
     const options = {
-      issuer: '백엔드 개발자', // 발행자
-      expiresIn: '10d', // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+      issuer: "백엔드 개발자", // 발행자
+      expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
     }
     const token = jwt.sign(payload, secret, options)
 
@@ -146,13 +146,13 @@ const login = async (req, res) => {
       res.status(200).send({
         logIntoken: token,
         familyList,
-        msg: '로그인이 완료되었습니다.',
+        msg: "로그인이 완료되었습니다.",
       })
     } else {
       res.status(200).send({
         logIntoken: token,
         familyList,
-        msg: '로그인이 완료되었습니다.',
+        msg: "로그인이 완료되었습니다.",
       })
     }
   } catch (error) {
@@ -168,15 +168,15 @@ const login = async (req, res) => {
 
 const kakaoCallback = (req, res, next) => {
   passport.authenticate(
-    'kakao',
-    { failureRedirect: '/' },
+    "kakao",
+    { failureRedirect: "/" },
     (err, user, info) => {
       if (err) return next(err)
-      console.log('kakao 콜백!')
+      console.log("kakao 콜백!")
       const { email, nickname } = user
       const options = {
-        issuer: '백엔드 개발자', // 발행자
-        expiresIn: '10d', // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+        issuer: "백엔드 개발자", // 발행자
+        expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
       }
       const logIntoken = jwt.sign(
         { email: email },
@@ -190,10 +190,10 @@ const kakaoCallback = (req, res, next) => {
         nickname: nickname,
       }
 
-      console.log('kakao authController result-->', result)
+      console.log("kakao authController result-->", result)
       res
         .status(201)
-        .json({ user: result, msg: '카카오 소셜 로그인에 성공하셨습니다.' })
+        .json({ user: result, msg: "카카오 소셜 로그인에 성공하셨습니다." })
     }
   )(req, res, next)
 }
