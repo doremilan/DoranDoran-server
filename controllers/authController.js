@@ -1,4 +1,6 @@
 const User = require('../schemas/user')
+const Family = require('../schemas/family')
+const FamilyMember = require('../schemas/familyMember')
 const jwt = require('jsonwebtoken')
 const Joi = require('joi')
 const bcrypt = require('bcrypt')
@@ -132,9 +134,29 @@ const login = async (req, res) => {
     }
     const token = jwt.sign(payload, secret, options)
 
-    //토큰 발급.
-    res.status(200).send({ msg: '로그인이 완료되었습니다.', logIntoken: token })
+    const userChk = await User.findOne({ email })
+    const familyChk = await FamilyMember.find({ userId: userChk._id })
+
+    let familyList = []
+    if (familyChk.length) {
+      for (let family of familyChk) {
+        const Checkedfamily = await Family.findOne({ _id: family.familyId })
+        familyList.push(Checkedfamily)
+      }
+      res.status(200).send({
+        logIntoken: token,
+        familyList,
+        msg: '로그인이 완료되었습니다.',
+      })
+    } else {
+      res.status(200).send({
+        logIntoken: token,
+        familyList,
+        msg: '로그인이 완료되었습니다.',
+      })
+    }
   } catch (error) {
+    console.log(error)
     res.status(400).send({ result: false })
   }
 }

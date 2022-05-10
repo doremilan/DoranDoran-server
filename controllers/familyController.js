@@ -32,12 +32,14 @@ const familyMemberSchema = Joi.object({
 const getFamilyList = async (req, res) => {
   try {
     const { userId } = res.locals.user
-    const family = await FamilyMember.findOne({ userId })
+    const familyChk = await FamilyMember.find({ userId })
 
     let familyList = []
-    if (family) {
-      const familyList = await Family.find({ familyId: family.familyId })
-
+    if (familyChk.length) {
+      for (let family of familyChk) {
+        const Checkedfamily = await Family.findOne({ _id: family.familyId })
+        familyList.push(Checkedfamily)
+      }
       res.status(200).json({ familyList })
     } else {
       res.status(200).json({ familyList })
@@ -171,14 +173,14 @@ const searchUser = async (req, res) => {
 
     const userRegex = regex(search)
 
-    let searchKeyword = await User.find({
+    const searchKeyword = await User.find({
       $or: [{ email: { $regex: userRegex, $options: 'i' } }],
     })
-    if (searchKeyword) {
-      res.status(200).json({ searchKeyword })
-    } else {
-      res.status(200).json({})
-    }
+
+    res.status(200).json({
+      email: searchKeyword[0].email,
+      nickname: searchKeyword[0].nickname,
+    })
 
     // console.log("searchKeyword.email-->" , searchKeyword.email )
     // console.log("searchKeyword.nickname-->" , searchKeyword.nickname )
