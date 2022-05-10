@@ -13,7 +13,7 @@ const s3 = new AWS.S3({
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
   try {
-    // console.log(11, req.file)
+    console.log(11, req.body)
     const { familyId, voiceAlbumId } = req.params
     const { voiceTitle, voicePlayTime } = req.body
     const { userId } = res.locals.user
@@ -25,27 +25,27 @@ const createVoiceFile = async (req, res) => {
     const familyMemberNickname = userInfo.familyMemberNickname
     const profileImg = userInfo.profileImg
     // console.log(33, familyMemberNickname, profileImg);
-    if (voiceFile !== null) {
-      const createVoice = await VoiceFile.create({
-        voiceAlbumId,
-        voiceTitle,
-        // voiceFile,
-        voicePlayTime,
-        familyId,
-        familyMemberNickname,
-        profileImg,
-        createdAt,
-      })
-      res.status(201).json({
-        voiceFileId: createVoice._id,
-        msg: "음성메세지 추가되었습니다.",
-      })
-    } else {
-      res.status(400).send({
-        result: false,
-        msg: "음성메세지 파일에러",
-      })
-    }
+    // if (voiceFile !== null) {
+    const createVoice = await VoiceFile.create({
+      voiceAlbumId,
+      voiceTitle,
+      // voiceFile,
+      voicePlayTime,
+      familyId,
+      familyMemberNickname,
+      profileImg,
+      createdAt,
+    })
+    res.status(201).json({
+      voiceFileId: createVoice._id,
+      msg: "음성메세지 추가되었습니다.",
+    })
+    // } else {
+    //   res.status(400).send({
+    //     result: false,
+    //     msg: "음성메세지 파일에러",
+    //   })
+    // }
   } catch (error) {
     res.status(400).send({
       msg: "에러",
