@@ -13,12 +13,12 @@ require("dotenv").config()
 connect()
 passportConfig()
 
-// app.use(cors())
-app.use(cors({ origin: process.env.CORS }))
+app.use(cors())
+// app.use(cors({ origin: process.env.CORS }))
 
-app.get("/cors-test", (req, res) => {
-  res.send("hi")
-})
+// app.get("/cors-test", (req, res) => {
+//   res.send("hi")
+// })
 
 // 각종 미들웨어
 app.use(express.json())
