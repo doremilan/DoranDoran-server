@@ -6,7 +6,7 @@ const helmet = require("helmet")
 const morgan = require("morgan")
 const passportConfig = require("./passport")
 const fs = require("fs")
-const port = 5000
+const port = 3000
 const app = express()
 require("dotenv").config()
 
