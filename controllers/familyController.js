@@ -131,9 +131,7 @@ const createFamilyMember = async (req, res) => {
 
     let profileImg
     const newFamilyMember = await User.findOne({ email })
-    console.log(1, newFamilyMember)
     const userId = newFamilyMember.userId
-    console.log(2, userId)
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg
     } else {
