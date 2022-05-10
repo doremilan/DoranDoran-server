@@ -7,7 +7,7 @@ const voiceFileSchema = mongoose.Schema({
   },
   voiceFile: {
     type: String,
-    // required: true,
+    required: true,
   },
   voiceAlbumId: {
     type: String,
