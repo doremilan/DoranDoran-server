@@ -135,6 +135,24 @@ const createFamilyMember = async (req, res) => {
 
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
+    const existMember = await FamilyMember.findOne({
+      familyId: familyId,
+      userId: userId,
+    })
+    const existMemberNickname = await FamilyMember.findOne({
+      familyId: familyId,
+      familyMemberNickname,
+    })
+
+    if (existMember) {
+      res.status(400).send({
+        msg: "이미 추가되어 있는 구성원입니다.",
+      })
+    } else if (existMemberNickname) {
+      res.status(400).send({
+        msg: "중복된 호칭이 있습니다.",
+      })
+    }
 
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg
