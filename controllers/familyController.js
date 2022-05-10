@@ -23,6 +23,7 @@ const familySchema = Joi.object({
 // 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
 const familyMemberSchema = Joi.object({
+  email: Joi.string(),
   familyMemberNickname: Joi.string().min(2).max(8).required(),
   // 2~8자
 })
@@ -125,20 +126,12 @@ const createFamily = async (req, res) => {
 const createFamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params
-    const { user } = res.locals
-    const { email } = req.body
-    let { familyMemberNickname } = await familyMemberSchema.validateAsync(
-      req.body
-    )
+    let { email, familyMemberNickname } =
+      await familyMemberSchema.validateAsync(req.body)
 
     const findMmemberUser = await User.findOne({ email })
     const userId = findMmemberUser.userId
     const profileImg = findMmemberUser.profileImg
-
-    console.log('familyId-->', familyId)
-    console.log('familyMemberNickname-->', familyMemberNickname)
-    console.log('userId-->', userId)
-    console.log('profileImg-->', profileImg)
 
     const insertFamliyMember = await FamilyMember.insertMany({
       familyId: familyId,
