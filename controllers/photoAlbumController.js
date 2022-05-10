@@ -46,26 +46,19 @@ const getPhotoAlbums = async (req, res) => {
 
   try {
     const photoAlbums = await PhotoAlbum.find({ familyId })
-    //요청한 값만 추출
-    let photoAlbumList = [{}]
+    console.log(1, photoAlbums)
+    // 각 앨범의 랜덤 이미지 추출 후 배열에 삽입
+    let photoAlbumList = []
     if (photoAlbums.length) {
-      photoAlbums.map((photoAlbum, idx) => {
-        photoAlbumList[idx] = [
-          {
-            photoAlbumName: photoAlbum.photoAlbumName,
-            photoAlbumId: photoAlbum.photoAlbumId,
-          },
-        ]
-      })
-      // 각 앨범의 랜덤 이미지 추출 후 배열에 삽입
-      for (let photoAlbum of photoAlbumList) {
+      for (let photoAlbum of photoAlbums) {
         const photos = await Photo.find({
-          photoAlbumId: photoAlbum[0].photoAlbumId,
+          photoAlbumId: photoAlbum.photoAlbumId,
         })
-        if (photos) {
+        console.log(2, photos)
+        if (photos.length) {
           const randomValue = Math.floor(Math.random() * photos.length)
           const randomPhoto = photos[randomValue]
-          photoAlbum[0].randomPhoto = randomPhoto
+          photoAlbum.randomPhoto = randomPhoto
         }
       }
     }
