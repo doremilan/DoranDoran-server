@@ -161,16 +161,17 @@ const createFamilyMember = async (req, res) => {
 const searchUser = async (req, res) => {
   try {
     const { search } = req.query
-    console.log("req.query-->", search)
 
     const regex = (pattern) => new RegExp(`.*${pattern}.*`)
-    //const regex = (pattern) => new RegExp();
-    console.log("regex-->", regex)
+
     //RegExp 생성자는 패턴을 사용해 텍스트를 판별할 때 사용
     //$ = 텍스트(문자열)의 끝과 일치하는 지.
     //^ = 텍스트의 첫 자와 일치하는 지를 보는 정규식 표현.
     //세세한 패턴 수정 필요
     //산토끼를 완성 검색하면 토끼는 안 나옴. 토끼를 검색하면 산토끼는 나옴.
+    //문자 하나만 입력하면 특정 문자는 에러남.
+    // TypeError: Cannot read properties of undefined (reading 'toHexString')
+    // user DB에 _id 가 없는 데이터가 있어서 이를 더미값으로 판단해서 에러가 났던 것.
 
     const userRegex = regex(search)
 
@@ -180,8 +181,6 @@ const searchUser = async (req, res) => {
       $or: [{ email: { $regex: userRegex, $options: "i" } }],
     })
 
-    console.log("searchKeyword", searchKeyword)
-
     let searchKeywordList = []
     if (searchKeyword) {
       let searchKeywordList = searchKeyword
@@ -190,7 +189,6 @@ const searchUser = async (req, res) => {
     } else {
       res.status(200).json({ searchKeywordList })
     }
-    console.log("searchKeywordList", searchKeywordList)
   } catch (error) {
     console.log("멤버 검색에서 오류!", error)
     res.status(400).send({ result: false })
