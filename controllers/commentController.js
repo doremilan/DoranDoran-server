@@ -20,15 +20,16 @@ const postComment = async (req, res) => {
         createdAt,
       })
       // 댓글 작성자 정보 추출
-      const userInfo = await FamilyMember.findOne({ userId })
-      console.log(userInfo)
-      if (!userInfo.profileImg) {
-        userInfo.profileImg = null
+      let userInfo = await FamilyMember.findOne({ userId })
+      if (userInfo) {
+        if (!userInfo.profileImg) {
+          userInfo.profileImg = null
+        }
+        createdComment.userInfo = userInfo
       }
 
       res.status(201).json({
         createdComment,
-        userInfo,
         msg: "댓글이 등록되었어요.",
       })
     } else {
