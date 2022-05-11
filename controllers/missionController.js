@@ -86,10 +86,10 @@ const completeMission = async (req, res) => {
   const { userId } = res.locals.user
   const { completedAt } = req.body
   let { myMissionChk, familyMissionChk } = req.body
+  console.log(1, myMissionChk)
   try {
     //개인미션 체크
     if (myMissionChk) {
-      console.log(1, myMissionChk)
       await MissionChk.deleteOne({ missionId, userId })
       myMissionChk = false
       res.status(200).json({
@@ -97,7 +97,6 @@ const completeMission = async (req, res) => {
         familyMissionChk,
       })
     } else {
-      console.log(2, myMissionChk)
       const familyMemberId = await FamilyMember.findOne({ userId })
       const missionChk = await MissionChk.create({
         familyId,
