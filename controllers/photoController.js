@@ -1,4 +1,5 @@
 const User = require("../schemas/user")
+const Family = require("../schemas/family")
 const FamilyMember = require("../schemas/familyMember")
 const PhotoAlbum = require("../schemas/photoAlbum")
 const Photo = require("../schemas/photo")
@@ -75,7 +76,7 @@ const getPhotoDetail = async (req, res) => {
   const { userId } = res.locals.user
 
   try {
-    // 사진 등록 유저 정보 추출
+    // 사진 등록한 유저 정보 추출
     const detailPhoto = await Photo.findOne({ _id: photoId })
     const photoAlbum = await PhotoAlbum.findOne({
       _id: detailPhoto.photoAlbumId,
@@ -108,6 +109,8 @@ const getPhotoDetail = async (req, res) => {
       }
     }
     // 좋아요 누른 멤버
+    const checkId = await Family.findOne({ _id: detailPhoto.familyId })
+    const familyId = checkId._id
     let likeMemberList = []
     const likedMembers = await Like.find({ photoId })
     if (!likedMembers) {
@@ -116,7 +119,9 @@ const getPhotoDetail = async (req, res) => {
       for (let likedMember of likedMembers) {
         likeMemberList = await FamilyMember.find({
           userId: likedMember.userId,
+          familyId,
         })
+        console.log(2, likeMemberList)
       }
     }
     // 좋아요 체크
