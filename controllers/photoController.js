@@ -117,11 +117,11 @@ const getPhotoDetail = async (req, res) => {
       likeMemberList = []
     } else {
       for (let likedMember of likedMembers) {
-        likeMemberList = await FamilyMember.find({
+        const likeMember = await FamilyMember.findOne({
           userId: likedMember.userId,
           familyId,
         })
-        console.log(2, likeMemberList)
+        likeMemberList.push(likeMember)
       }
     }
     // 좋아요 체크

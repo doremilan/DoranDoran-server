@@ -1,4 +1,5 @@
 const Comment = require("../schemas/comment")
+const FamilyMember = require("../schemas/familyMember")
 
 // 댓글 작성
 const postComment = async (req, res) => {
@@ -18,8 +19,16 @@ const postComment = async (req, res) => {
         comment,
         createdAt,
       })
+      // 댓글 작성자 정보 추출
+      const userInfo = await FamilyMember.findOne({ userId })
+      console.log(userInfo)
+      if (!userInfo.profileImg) {
+        userInfo.profileImg = null
+      }
+
       res.status(201).json({
         createdComment,
+        userInfo,
         msg: "댓글이 등록되었어요.",
       })
     } else {
