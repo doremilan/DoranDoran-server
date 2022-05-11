@@ -90,7 +90,7 @@ const deleteVoiceFile = async (req, res) => {
     const key1 = "voice/" + decodeURI(deleteVoiceFile).replaceAll("+", " ")
     // console.log(44, key1)
     await VoiceFile.findOne({ voiceFileId, userId })
-    await VoiceFile.deleteOne({ voiceFileId })
+    await VoiceFile.deleteOne({ _id: voiceFileId })
     s3.deleteObject(
       {
         Bucket: "family-8",
