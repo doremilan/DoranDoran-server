@@ -1,9 +1,9 @@
-const User = require('../schemas/user')
-const FamilyMember = require('../schemas/familyMember')
-const PhotoAlbum = require('../schemas/photoAlbum')
-const Photo = require('../schemas/photo')
-const Comment = require('../schemas/comment')
-const Like = require('../schemas/like')
+const User = require("../schemas/user")
+const FamilyMember = require("../schemas/familyMember")
+const PhotoAlbum = require("../schemas/photoAlbum")
+const Photo = require("../schemas/photo")
+const Comment = require("../schemas/comment")
+const Like = require("../schemas/like")
 
 // 앨범생성
 const postPhotoAlbums = async (req, res) => {
@@ -14,7 +14,7 @@ const postPhotoAlbums = async (req, res) => {
 
   try {
     // 공백 체크
-    if (photoAlbumName !== null && photoAlbumName !== '') {
+    if (photoAlbumName !== null && photoAlbumName !== "") {
       const createdPhotoAlbum = await PhotoAlbum.create({
         familyId,
         userId,
@@ -23,19 +23,19 @@ const postPhotoAlbums = async (req, res) => {
       })
       res.status(201).json({
         photoAlbumId: createdPhotoAlbum.photoAlbumId,
-        msg: '새로운 앨범이 생성되었어요.',
+        msg: "새로운 앨범이 생성되었어요.",
       })
     } else {
       res.status(400).send({
         result: false,
-        msg: '앨범 이름을 작성해주세요.',
+        msg: "앨범 이름을 작성해주세요.",
       })
     }
   } catch (error) {
-    console.log('갤러리 앨범 생성 오류', error)
+    console.log("갤러리 앨범 생성 오류", error)
     res.status(400).send({
       result: false,
-      msg: '갤러리 앨범 생성 실패',
+      msg: "갤러리 앨범 생성 실패",
     })
   }
 }
@@ -64,10 +64,10 @@ const getPhotoAlbums = async (req, res) => {
       photoAlbumList,
     })
   } catch (error) {
-    console.log('갤러리 앨범 조회 오류', error)
+    console.log("갤러리 앨범 조회 오류", error)
     res.status(400).send({
       result: false,
-      msg: '갤러리 앨범 조회 실패',
+      msg: "갤러리 앨범 조회 실패",
     })
   }
 }
@@ -79,7 +79,7 @@ const putPhotoAlbums = async (req, res) => {
 
   try {
     // 공백 체크
-    if (photoAlbumName !== null && photoAlbumName !== '') {
+    if (photoAlbumName !== null && photoAlbumName !== "") {
       const existPhotoAlbum = await PhotoAlbum.findOne({ _id: photoAlbumId })
       if (existPhotoAlbum) {
         await PhotoAlbum.updateOne(
@@ -88,20 +88,20 @@ const putPhotoAlbums = async (req, res) => {
         )
         res.status(200).json({
           photoAlbumName,
-          msg: '앨범이 수정되었어요.',
+          msg: "앨범이 수정되었어요.",
         })
       }
     } else {
       res.status(400).send({
         result: false,
-        msg: '앨범 이름을 작성해주세요.',
+        msg: "앨범 이름을 작성해주세요.",
       })
     }
   } catch (error) {
-    console.log('갤러리 앨범 수정 오류', error)
+    console.log("갤러리 앨범 수정 오류", error)
     res.status(400).send({
       result: false,
-      msg: '갤러리 앨범 수정 실패',
+      msg: "갤러리 앨범 수정 실패",
     })
   }
 }
@@ -120,14 +120,14 @@ const deletePhotoAlbums = async (req, res) => {
       await Like.deleteMany({ photoAlbumId })
       res.status(200).json({
         result: true,
-        msg: '앨범이 삭제되었어요.',
+        msg: "앨범이 삭제되었어요.",
       })
     }
   } catch (error) {
-    console.log('갤러리 앨범 삭제 오류', error)
+    console.log("갤러리 앨범 삭제 오류", error)
     res.status(400).send({
       result: false,
-      msg: '갤러리 앨범 삭제 실패',
+      msg: "갤러리 앨범 삭제 실패",
     })
   }
 }
