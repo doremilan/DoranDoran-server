@@ -88,34 +88,58 @@ const completeMission = async (req, res) => {
   let { myMissionChk, familyMissionChk } = req.body
   console.log(1, myMissionChk)
   try {
-    //개인미션 체크
-    if (myMissionChk) {
-      await MissionChk.deleteOne({ missionId, userId })
-      myMissionChk = false
-      res.status(200).json({
-        myMissionChk,
-        familyMissionChk,
-      })
-    } else {
-      const familyMemberId = await FamilyMember.findOne({ userId })
-      const missionChk = await MissionChk.create({
-        familyId,
-        missionId,
-        userId,
-        familyMemberId: familyMemberId.familyMemberId,
-      })
-      console.log(3, missionChk)
-      let myMissionChk = true
-      //전체미션 체크
-      const missionMember = await MissionMember.find({ missionId })
-      const completedMember = await MissionChk.find({ missionId })
-      if (missionMember.length === completedMember.length) {
-        familyMissionChk = true
+    const memberChk = await MissionMember.findOne({ userId, missionId })
+    console.log(memberChk)
+    if (memberChk) {
+      //개인미션 체크
+      if (myMissionChk) {
+        console.log(2, myMissionChk)
+        await MissionChk.deleteOne({ missionId, userId })
+        myMissionChk = false
+        //전체미션 체크
+        const missionMember = await MissionMember.find({ missionId })
+        const completedMember = await MissionChk.find({ missionId })
+        console.log(2.1, missionMember)
+        console.log(2.2, completedMember)
+        if (missionMember.length === completedMember.length) {
+          familyMissionChk = true
+        } else {
+          familyMissionChk = false
+        }
+        console.log(2.3, myMissionChk, familyMissionChk)
+        res.status(200).json({
+          myMissionChk,
+          familyMissionChk,
+        })
+      } else {
+        const familyMemberId = await FamilyMember.findOne({ userId })
+        const missionChk = await MissionChk.create({
+          familyId,
+          missionId,
+          userId,
+          familyMemberId: familyMemberId.familyMemberId,
+        })
+        console.log(3, missionChk)
+        let myMissionChk = true
+        //전체미션 체크
+        const missionMember = await MissionMember.find({ missionId })
+        const completedMember = await MissionChk.find({ missionId })
+        console.log(4, missionMember)
+
+        if (missionMember.length === completedMember.length) {
+          familyMissionChk = true
+        }
+        console.log(6, myMissionChk, familyMissionChk)
+        res.status(200).json({
+          myMissionChk,
+          familyMissionChk,
+          completedAt,
+        })
       }
-      res.status(200).json({
-        myMissionChk,
-        familyMissionChk,
-        completedAt,
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "해당 미션의 멤버가 아니에요!",
       })
     }
   } catch (error) {
