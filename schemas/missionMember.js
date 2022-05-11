@@ -23,6 +23,10 @@ const missionMemberSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  userId: {
+    type: String,
+    required: true,
+  },
 })
 
 missionMemberSchema.virtual("missionMemberId").get(function () {

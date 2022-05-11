@@ -33,10 +33,9 @@ const postMission = async (req, res) => {
           const missionMember = await FamilyMember.findOne({
             _id: familyMemberId,
           })
+          const userId = missionMember.userId
           const familyMemberNickname = missionMember.familyMemberNickname
-          console.log(missionMember.profileImg)
           if (missionMember.profileImg !== null) {
-            console.log(missionMember.profileImg)
             profileImg = missionMember.profileImg
           } else {
             profileImg = null
@@ -50,6 +49,7 @@ const postMission = async (req, res) => {
               familyMemberId,
               familyMemberNickname,
               profileImg,
+              userId,
             })
             createdMember.push(newMember)
           }
