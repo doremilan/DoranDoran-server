@@ -186,7 +186,7 @@ const login = async (req, res) => {
 const kakaoCallback = (req, res, next) => {
   passport.authenticate(
     "kakao",
-    { failureRedirect: "/" },
+    { failureRedirect: "https://doremilan.shop" },
     (err, user, info) => {
       if (err) return next(err)
       console.log("kakao 콜백!")
