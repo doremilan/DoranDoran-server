@@ -9,7 +9,7 @@ module.exports = () => {
       {
         clientID: process.env.KAKAO_ID, // 카카오 로그인에서 발급받은 REST API 키
         clientSecret: process.env.KAKAO_SECRET, //카카오 로그인 보안에서 발급받은 Client Secret 키
-        callbackURL: process.env.KAKAO_URL, // 카카오 로그인 Redirect URI 경로
+        callbackURI: process.env.KAKAO_URI, // 카카오 로그인 Redirect URI 경로
       },
 
       // clientID에 카카오 앱 아이디 추가
@@ -23,12 +23,12 @@ module.exports = () => {
         try {
           const exUser = await User.findOne({
             // 카카오 플랫폼에서 로그인 했고 & snsId필드에 카카오 아이디가 일치할경우
-            email: profile._json && profile._json.kakao_account_email,
+            email: profile._json.kakao_account.email,
             snsId: profile.id,
             provider: "kakao",
           })
 
-          console.log("kakao email 확인-->", exUser)
+          console.log("kakao exUser 확인-->", exUser)
 
           // 이미 가입된 카카오 프로필이면 성공
           if (exUser) {
@@ -36,8 +36,9 @@ module.exports = () => {
           } else {
             // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
             const newUser = await User.create({
-              email: profile._json && profile._json.kakao_account_email,
-              nickname: profile.displayName,
+              email: profile._json.kakao_account.email,
+              nickname: profile._json.properties.nickname,
+              profileImg: profile._json.properties.profile_image,
               snsId: profile.id,
               provider: "kakao",
             })

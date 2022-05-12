@@ -1,10 +1,10 @@
 const User = require("../schemas/user")
-const Family = require("../schemas/family")
-const FamilyMember = require("../schemas/familyMember")
 const jwt = require("jsonwebtoken")
 const Joi = require("joi")
 const bcrypt = require("bcrypt")
 const passport = require("passport")
+const FamilyMember = require("../schemas/familyMember")
+const Family = require("../schemas/family")
 require("dotenv").config()
 
 const userSchema = Joi.object({
@@ -55,7 +55,7 @@ const signup = async (req, res) => {
     //중복 아이디 체크 기능
     if (existUsers) {
       console.log("중복 아이디 찾기에서 에러 발생", error)
-      res.status(400).send({
+      res.status(400).json({
         msg: "중복된 아이디가 있습니다.",
       })
 
@@ -64,7 +64,7 @@ const signup = async (req, res) => {
       //비번 체크 기능
     } else if (password !== passwordCheck) {
       console.log("비번 체크에서 오류!", error)
-      res.status(400).send({
+      res.status(400).json({
         errorMessage: "비밀번호가 일치하지 않습니다.",
       })
 
@@ -93,7 +93,7 @@ const signup = async (req, res) => {
 
     res.status(201).json({ msg: "회원가입이 완료되었습니다.", user: user })
   } catch (error) {
-    res.status(400).send({ msg: "요청한 조건 형식이 올바르지 않습니다." })
+    res.status(400).json({ msg: "요청한 조건 형식이 올바르지 않습니다." })
   }
 }
 
@@ -132,12 +132,20 @@ const login = async (req, res) => {
     }
 
     const payload = { email }
+    const userpaylod = {
+      profileImg: user.profileImg,
+      nickname: user.nickname,
+    }
+    //토큰에 프로필 이미지, 닉네임 담아서.. 보내드리기.
+
+    console.log("userpaylod-->", userpaylod)
+
     const secret = process.env.SECRET_KEY
     const options = {
       issuer: "백엔드 개발자", // 발행자
       expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
     }
-    const token = jwt.sign(payload, secret, options)
+    const token = jwt.sign(payload, userpaylod, secret, options)
     const userChk = await User.findOne({ email })
     const familyChk = await FamilyMember.find({ userId: userChk._id })
     const userInfoList = [
@@ -152,6 +160,7 @@ const login = async (req, res) => {
     if (familyChk.length) {
       for (let family of familyChk) {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
+
         familyList.push(Checkedfamily)
       }
       res.status(200).json({
@@ -180,14 +189,15 @@ const login = async (req, res) => {
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
+//카카오 소셜 로그인 api + 콜백 및 토큰 부여
 const kakaoCallback = (req, res, next) => {
   passport.authenticate(
     "kakao",
-    { failureRedirect: "/" },
+    { failureRedirect: "/family" },
     (err, user, info) => {
       if (err) return next(err)
       console.log("kakao 콜백!")
-      const { email, nickname } = user
+      const { email, nickname, profileImg, snsId, provider } = user
       const options = {
         issuer: "백엔드 개발자", // 발행자
         expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
@@ -202,6 +212,9 @@ const kakaoCallback = (req, res, next) => {
         token: logIntoken,
         email: email,
         nickname: nickname,
+        profileImg: profileImg,
+        snsId: snsId,
+        provider: provider,
       }
 
       console.log("kakao authController result-->", result)

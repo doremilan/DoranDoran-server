@@ -1,26 +1,39 @@
-const express = require('express')
+const express = require("express")
 const router = express.Router()
-const User = require('../schemas/user')
-const jwt = require('jsonwebtoken')
-const fs = require('fs')
-require('dotenv').config()
+const User = require("../schemas/user")
+const jwt = require("jsonwebtoken")
+const fs = require("fs")
+require("dotenv").config()
 
 //유저 데이터 get API
 const getUser = async (req, res) => {
   try {
     const { user } = res.locals
-    user.password = ''
+    user.password = ""
+    const { userId } = res.locals.user
+    const familyChk = await FamilyMember.find({ userId })
 
-    res.status(200).json({
-      user,
-    })
+    let familyList = []
+
+    if (familyChk.length) {
+      for (let family of familyChk) {
+        const Checkedfamily = await Family.findOne({ _id: family.familyId })
+        familyList.push(Checkedfamily)
+      }
+      res.status(200).json({ user, familyList })
+    } else if (familyListUnique) {
+      new Set(familyList)
+      res.status(200).json({ user, familyListUnique })
+    } else {
+      res.status(200).json({ user, familyList })
+    }
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`)
-    console.log('유저 데이터 GET에서 오류 발생!', error)
+    console.log("유저 데이터 GET에서 오류 발생!", error)
 
     res
       .status(400)
-      .send({ errorMessage: '사용자 정보를 가져오지 못하였습니다.' })
+      .send({ errorMessage: "사용자 정보를 가져오지 못하였습니다." })
     return
   }
 }
@@ -42,7 +55,7 @@ const getProfile = async (req, res) => {
 
     await getMyprofile
   } catch (error) {
-    console.log('프로필 조회에서 오류!', error)
+    console.log("프로필 조회에서 오류!", error)
     res.status(400).send({ result: false })
   }
 }
@@ -68,7 +81,7 @@ const editProfile = async (req, res) => {
       profileImg,
     })
   } catch (error) {
-    console.log('프로필 수정에서 오류!', error)
+    console.log("프로필 수정에서 오류!", error)
     res.status(400).send({ result: false })
   }
 }
@@ -84,7 +97,7 @@ const editTodayMood = async (req, res) => {
       todayMood,
     })
   } catch (error) {
-    console.log('오늘의기분 수정에서 오류!', error)
+    console.log("오늘의기분 수정에서 오류!", error)
     res.status(400).send({ result: false })
   }
 }
