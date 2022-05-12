@@ -1,19 +1,14 @@
-const Event = require('../schemas/event')
-const Photo = require('../schemas/photo')
-const User = require('../schemas/user')
-const FamilyMember = require('../schemas/familyMember')
+const Event = require("../schemas/event")
+const Photo = require("../schemas/photo")
+const User = require("../schemas/user")
+const FamilyMember = require("../schemas/familyMember")
 
 //일정 작성
 const createEvent = async (req, res) => {
   const { userId } = res.locals.user
-  // console.log(userId)
   const { familyId } = req.params
-  console.log(0, req.body)
-  console.log(1, req.body.data)
-  console.log(2, req.body.data.event)
-  const { event, startDate, endDate, color } = req.body.data
-  // console.log(familyId)
-  // console.log(req.body)
+  const { event, startDate, endDate, color } = req.body
+
   try {
     const addEvent = await Event.create({
       userId,
@@ -26,11 +21,11 @@ const createEvent = async (req, res) => {
     // console.log(addEvent)
     res.status(201).json({
       eventId: addEvent._id,
-      msg: '일정 등록 완료',
+      msg: "일정 등록 완료",
     })
   } catch (error) {
     res.status(400).send({
-      msg: '에러',
+      msg: "에러",
     })
     console.log(error)
   }
@@ -46,7 +41,7 @@ const updateEvent = async (req, res) => {
     // console.log(putEvent)
     if (!putEvent) {
       return res.status(400).send({
-        msg: '수정실패',
+        msg: "수정실패",
       })
     } else {
       await Event.updateOne(
@@ -62,13 +57,13 @@ const updateEvent = async (req, res) => {
       )
       res.status(200).json({
         putEvent,
-        msg: '수정 완료되었습니다.',
+        msg: "수정 완료되었습니다.",
       })
     }
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '수정을 실패했습니다.',
+      msg: "수정을 실패했습니다.",
     })
     console.log(error)
   }
@@ -85,13 +80,13 @@ const deleteEvent = async (req, res) => {
 
       res.status(204).json({
         result: true,
-        msg: '삭제되었습니다.',
+        msg: "삭제되었습니다.",
       })
     }
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '삭제를 실패했습니다.',
+      msg: "삭제를 실패했습니다.",
     })
   }
 }
@@ -103,9 +98,9 @@ const getEvent = async (req, res) => {
   try {
     let eventCalendarList = []
     const events = await Event.find({ familyId, date })
-    const thisMonth = date.split('-')
+    const thisMonth = date.split("-")
     for (let event of events) {
-      const eventDate = event.startDate.split('-', 2)
+      const eventDate = event.startDate.split("-", 2)
       if (thisMonth[0] === eventDate[0] && thisMonth[1] === eventDate[1]) {
         eventCalendarList.push(event)
       }
@@ -117,7 +112,7 @@ const getEvent = async (req, res) => {
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '일정조회 실패',
+      msg: "일정조회 실패",
     })
   }
 }
@@ -125,25 +120,24 @@ const getEvent = async (req, res) => {
 //추억 조회
 const getPhotoEvent = async (req, res) => {
   const { familyId, date } = req.params
-  // const { userId } = res.locals;
-  // console.log(familyId, date)
+
   try {
     let eventCalendarList = []
     let photoCalendarList = []
     const events = await Event.find({ familyId, date })
     const photos = await Photo.find({ familyId, date })
     // const a = photos.createdAt.toISOString() // toISOString 날짜를 2022-05-11 문자열로 변환
-    const thisMonth = date.split('-')
+    const thisMonth = date.split("-")
 
     for (let event of events) {
-      const eventDate = event.startDate.split('-', 2)
+      const eventDate = event.startDate.split("-", 2)
       if (thisMonth[0] === eventDate[0] && thisMonth[1] === eventDate[1]) {
         eventCalendarList.push(event)
       }
     }
     for (let photo of photos) {
-      const photoString = photo.createdAt.toISOString()
-      const photoDate = photoString.split('-', 2)
+      const photoString = photo.createdAt
+      const photoDate = photoString.split("-", 2)
       if (thisMonth[0] === photoDate[0] && thisMonth[1] === photoDate[1]) {
         photoCalendarList.push(photo)
       }
@@ -156,7 +150,7 @@ const getPhotoEvent = async (req, res) => {
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '일정조회 실패',
+      msg: "일정조회 실패",
     })
     console.log(error)
   }
@@ -165,27 +159,15 @@ const getPhotoEvent = async (req, res) => {
 //추억상세보기
 const getPhotoEventDetail = async (req, res) => {
   const { familyId, date } = req.params
-  // const { userId } = res.locals;
-  // console.log(familyId, date)
+
   try {
     let photoModalList = []
     const photos = await Photo.find({ familyId, date })
-    const thisMonth = date.split('-')
-    // console.log(thisMonth)
+    const thisMonth = date.split("-")
 
     for (let photo of photos) {
-      // const photoString = photo.createdAt.toISOString().slice(0, 10).split("-")
-      const photoDate = photo.createdAt.toISOString().slice(0, 10).split('-')
-      // const [fintPhotoDay] = photoDate.slice(2)
-      // const photoDay = fintPhotoDay.split('', 2).join('')
-      // const a = photoDay.split('T')
-      // const photoDate = photoString.split("-", 3)
+      const photoDate = photo.createdAt.slice(0, 10).split("-")
 
-      // console.log(11, photoString)
-      // console.log(22, photoDate)
-      // console.log(33, photoDay)
-      // console.log(44, a)
-      // console.log(33, photoDateDay)
       if (
         thisMonth[0] === photoDate[0] &&
         thisMonth[1] === photoDate[1] &&
@@ -201,7 +183,7 @@ const getPhotoEventDetail = async (req, res) => {
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '일정조회 실패',
+      msg: "일정조회 실패",
     })
     console.log(error)
   }
@@ -210,16 +192,14 @@ const getPhotoEventDetail = async (req, res) => {
 //일정 상세보기
 const getEventDetail = async (req, res) => {
   const { familyId, date, eventId } = req.params
-  // const { userId } = res.locals;
 
   try {
     let eventModalList = []
     const events = await Event.find({ familyId, date, _id: eventId })
-    const thisMonth = date.split('-')
+    const thisMonth = date.split("-")
 
     for (let event of events) {
-      const eventDate = event.startDate.split('-', 3)
-
+      const eventDate = event.startDate.split("-", 3)
       let MemberInfo = await FamilyMember.findOne({ userId: events.userId })
       const familyMemberNickname = MemberInfo.familyMemberNickname
       const profileImg = MemberInfo.profileImg
@@ -233,8 +213,6 @@ const getEventDetail = async (req, res) => {
         event.profileImg = profileImg
         eventModalList.push(event)
       }
-
-      // console.log(22, eventModalList)
     }
 
     res.status(200).json({
@@ -243,7 +221,7 @@ const getEventDetail = async (req, res) => {
   } catch (error) {
     res.status(400).send({
       result: false,
-      msg: '일정조회 실패',
+      msg: "일정조회 실패",
     })
     console.log(error)
   }

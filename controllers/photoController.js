@@ -18,7 +18,9 @@ const postPhoto = async (req, res) => {
   const { familyId, photoAlbumId } = req.params
   const { userId } = res.locals.user
   const photoFile = req.file.location
-  const createdAt = new Date()
+  const createdAt = new Date(+new Date() + 3240 * 10000)
+    .toISOString()
+    .split("T")[0]
 
   try {
     // 공백 체크
