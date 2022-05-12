@@ -28,14 +28,14 @@ const familyMemberSchema = Joi.object({
   // 2~8자
 })
 
-// ***가족 목록 GET API
-// API 완료
+//가족 목록 GET API
 const getFamilyList = async (req, res) => {
   try {
     const { userId } = res.locals.user
     const familyChk = await FamilyMember.find({ userId })
 
     let familyList = []
+    const familyListUnique = new Set(familyList)
 
     if (familyChk.length) {
       for (let family of familyChk) {
@@ -44,8 +44,7 @@ const getFamilyList = async (req, res) => {
       }
       res.status(200).json({ familyList })
     } else if (familyListUnique) {
-      new Set(familyList)
-      res.status(200).json({ familyListUnique })
+      res.status(200).json({ familyListUnique: familyListUnique })
     } else {
       res.status(200).json({ familyList })
     }
