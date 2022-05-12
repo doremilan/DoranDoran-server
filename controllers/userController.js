@@ -16,7 +16,6 @@ const getUser = async (req, res) => {
     const familyChk = await FamilyMember.find({ userId })
 
     let familyList = []
-    const familyListUnique = new Set(familyList)
     if (familyChk.length) {
       for (let family of familyChk) {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
@@ -24,7 +23,8 @@ const getUser = async (req, res) => {
       }
       res.status(200).json({ user, familyList })
     } else if (familyListUnique) {
-      res.status(200).json({ user, familyListUnique: familyListUnique })
+      new Set(familyList)
+      res.status(200).json({ user, familyList })
     } else {
       res.status(200).json({ user, familyList })
     }

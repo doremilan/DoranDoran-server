@@ -35,7 +35,6 @@ const getFamilyList = async (req, res) => {
     const familyChk = await FamilyMember.find({ userId })
 
     let familyList = []
-    const familyListUnique = new Set(familyList)
 
     if (familyChk.length) {
       for (let family of familyChk) {
@@ -44,7 +43,8 @@ const getFamilyList = async (req, res) => {
       }
       res.status(200).json({ familyList })
     } else if (familyListUnique) {
-      res.status(200).json({ familyListUnique: familyListUnique })
+      new Set(familyList)
+      res.status(200).json({ familyList })
     } else {
       res.status(200).json({ familyList })
     }
