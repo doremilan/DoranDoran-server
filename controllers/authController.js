@@ -133,8 +133,6 @@ const login = async (req, res) => {
 
     const payload = { email }
 
-    console.log("userpaylod-->", userpaylod)
-
     const secret = process.env.SECRET_KEY
     const options = {
       issuer: "백엔드 개발자", // 발행자
