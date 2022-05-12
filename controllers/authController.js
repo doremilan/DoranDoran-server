@@ -132,11 +132,6 @@ const login = async (req, res) => {
     }
 
     const payload = { email }
-    const userpaylod = {
-      profileImg: user.profileImg,
-      nickname: user.nickname,
-    }
-    //토큰에 프로필 이미지, 닉네임 담아서.. 보내드리기.
 
     console.log("userpaylod-->", userpaylod)
 
@@ -145,7 +140,7 @@ const login = async (req, res) => {
       issuer: "백엔드 개발자", // 발행자
       expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
     }
-    const token = jwt.sign(payload, userpaylod, secret, options)
+    const token = jwt.sign(payload, secret, options)
     const userChk = await User.findOne({ email })
     const familyChk = await FamilyMember.find({ userId: userChk._id })
     const userInfoList = [
@@ -193,7 +188,7 @@ const login = async (req, res) => {
 const kakaoCallback = (req, res, next) => {
   passport.authenticate(
     "kakao",
-    { failureRedirect: "/family" },
+    { failureRedirect: "/" },
     (err, user, info) => {
       if (err) return next(err)
       console.log("kakao 콜백!")
