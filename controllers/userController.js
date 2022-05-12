@@ -22,9 +22,6 @@ const getUser = async (req, res) => {
         familyList.push(Checkedfamily)
       }
       res.status(200).json({ user, familyList })
-    } else if (familyListUnique) {
-      new Set(familyList)
-      res.status(200).json({ user, familyList })
     } else {
       res.status(200).json({ user, familyList })
     }
