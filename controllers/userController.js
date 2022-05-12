@@ -1,6 +1,8 @@
 const express = require("express")
 const router = express.Router()
 const User = require("../schemas/user")
+const Family = require("../schemas/family")
+const FamilyMember = require("../schemas/familyMember")
 const jwt = require("jsonwebtoken")
 const fs = require("fs")
 require("dotenv").config()
