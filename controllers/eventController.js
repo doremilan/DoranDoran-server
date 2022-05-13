@@ -7,7 +7,7 @@ const FamilyMember = require("../schemas/familyMember")
 const createEvent = async (req, res) => {
   const { userId } = res.locals.user
   const { familyId } = req.params
-  const { event, startDate, endDate, color } = req.body
+  const { event, startDate, endDate, color } = req.body.data
   console.log(1, req.body)
   try {
     const addEvent = await Event.create({
