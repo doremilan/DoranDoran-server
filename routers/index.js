@@ -1,40 +1,37 @@
-const express = require('express');
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
 // const passport = require("passport");
 // const KakaoStrategy = require("passport-kakao").Strategy;
 
-const authRouter = require('./auth');
-const userRouter = require('./user');
-const mainRouter = require('./main');
-const familyRouter = require('./family');
-const photoAlbumRouter = require('./photoAlbum');
-const photoRouter = require('./photo');
-const commentRouter = require('./comment');
-const likeRouter = require('./like');
-const voiceRouter = require('./voiceAlbum');
-const voiceFileRouter = require('./voiceFile');
-const calendarRouter = require('./calendar');
-const missionRouter = require('./mission');
-const badgeRouter = require('./badge');
-const randomMsgRouter = require('./randomMsg');
+const authRouter = require('./auth')
+const userRouter = require('./user')
+const mainRouter = require('./main')
+const familyRouter = require('./family')
+const photoAlbumRouter = require('./photoAlbum')
+const photoRouter = require('./photo')
+const commentRouter = require('./comment')
+const likeRouter = require('./like')
+const voiceRouter = require('./voiceAlbum')
+const voiceFileRouter = require('./voiceFile')
+const calendarRouter = require('./calendar')
+const missionRouter = require('./mission')
+const badgeRouter = require('./badge')
+const randomMsgRouter = require('./randomMsg')
 
-const scheduleRouter = require('./schedule');
-router.use('/schedule', scheduleRouter);
-
-router.use('/auth', authRouter);
-router.use('/user', userRouter);
-router.use('/main', mainRouter);
-router.use('/family', familyRouter);
-router.use('/photoAlbum', photoAlbumRouter);
-router.use('/photo', photoRouter);
-router.use('/comment', commentRouter);
-router.use('/like', likeRouter);
-router.use('/voiceAlbum', voiceRouter);
-router.use('/voiceFile', voiceFileRouter);
-router.use('/calendar', calendarRouter);
-router.use('/mission', missionRouter);
-router.use('/badge', badgeRouter);
-router.use('/randomMsg', randomMsgRouter);
+router.use('/auth', authRouter)
+router.use('/user', userRouter)
+router.use('/main', mainRouter)
+router.use('/family', familyRouter)
+router.use('/photoAlbum', photoAlbumRouter)
+router.use('/photo', photoRouter)
+router.use('/comment', commentRouter)
+router.use('/like', likeRouter)
+router.use('/voiceAlbum', voiceRouter)
+router.use('/voiceFile', voiceFileRouter)
+router.use('/calendar', calendarRouter)
+router.use('/mission', missionRouter)
+router.use('/badge', badgeRouter)
+router.use('/randomMsg', randomMsgRouter)
 
 // module.exports = () => {
 //     passport.use(
@@ -62,7 +59,7 @@ router.use('/randomMsg', randomMsgRouter);
 //             if (exUser) {
 //               done(null, exUser); // 로그인 인증 완료
 //             } else {
-//               // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다              
+//               // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
 //               const newUser = await User.create({
 //                 nickname: profile.username,
 //                 email: profile.id,
@@ -79,4 +76,4 @@ router.use('/randomMsg', randomMsgRouter);
 //     );
 // }
 
-module.exports = router;
+module.exports = router
