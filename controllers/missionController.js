@@ -1,13 +1,13 @@
-const FamilyMember = require('../schemas/familyMember')
-const Mission = require('../schemas/mission')
-const MissionMember = require('../schemas/missionMember')
-const MissionChk = require('../schemas/missionChk')
-const Badge = require('../schemas/badge')
-const Photo = require('../schemas/photo')
-const VoiceFile = require('../schemas/voiceFile')
-const Comment = require('../schemas/comment')
-const Event = require('../schemas/event')
-const User = require('../schemas/user')
+const FamilyMember = require("../schemas/familyMember")
+const Mission = require("../schemas/mission")
+const MissionMember = require("../schemas/missionMember")
+const MissionChk = require("../schemas/missionChk")
+const Badge = require("../schemas/badge")
+const Photo = require("../schemas/photo")
+const VoiceFile = require("../schemas/voiceFile")
+const Comment = require("../schemas/comment")
+const Event = require("../schemas/event")
+const User = require("../schemas/user")
 
 // 미션등록
 const postMission = async (req, res) => {
@@ -18,7 +18,7 @@ const postMission = async (req, res) => {
 
   try {
     // 공백 체크 & 미션 db 생성
-    if (missionTitle !== null && missionTitle !== '') {
+    if (missionTitle !== null && missionTitle !== "") {
       const createdMission = await Mission.create({
         missionTitle,
         userId,
@@ -26,45 +26,56 @@ const postMission = async (req, res) => {
         createdAt,
       })
       // 미션 멤버 db 생성
+      let createdMember = []
       if (familyMemberId.length) {
         for (let MemberId of familyMemberId) {
           const familyMemberId = MemberId.familyMemberId
           const missionMember = await FamilyMember.findOne({
             _id: familyMemberId,
           })
+          const userId = missionMember.userId
           const familyMemberNickname = missionMember.familyMemberNickname
-          const profileImg = missionMember.profileImg
+          if (missionMember.profileImg !== null) {
+            profileImg = missionMember.profileImg
+          } else {
+            profileImg = null
+          }
+
           // 공백 체크
           if (missionMember) {
-            await MissionMember.create({
+            const newMember = await MissionMember.create({
               familyId,
               missionId: createdMission.missionId,
               familyMemberId,
               familyMemberNickname,
               profileImg,
+              userId,
             })
+            createdMember.push(newMember)
           }
         }
       } else {
         res.status(400).send({
           result: false,
-          msg: '미션 멤버를 등록해주세요.',
+          msg: "미션 멤버를 등록해주세요.",
         })
       }
       res.status(201).json({
-        msg: '새로운 미션이 등록되었어요.',
+        missionId: createdMission.missionId,
+        createdMember,
+        msg: "새로운 미션이 등록되었어요.",
       })
     } else {
       res.status(400).send({
         result: false,
-        msg: '미션 제목을 작성해주세요.',
+        msg: "미션 제목을 작성해주세요.",
       })
     }
   } catch (error) {
-    console.log('미션 등록 오류', error)
+    console.log("미션 등록 오류", error)
     res.status(400).send({
       result: false,
-      msg: '미션 등록 실패',
+      msg: "미션 등록 실패",
     })
   }
 }
@@ -75,41 +86,67 @@ const completeMission = async (req, res) => {
   const { userId } = res.locals.user
   const { completedAt } = req.body
   let { myMissionChk, familyMissionChk } = req.body
+  console.log(1, myMissionChk)
   try {
-    //개인미션 체크
-    if (myMissionChk) {
-      await MissionChk.deleteOne({ missionId, userId })
-      myMissionChk = false
-      res.status(200).json({
-        myMissionChk,
-        familyMissionChk,
-      })
-    } else {
-      const familyMemberId = await FamilyMember.findOne({ userId })
-      const missionChk = await MissionChk.create({
-        familyId,
-        missionId,
-        userId,
-        familyMemberId: familyMemberId.familyMemberId,
-      })
-      let myMissionChk = true
-      //전체미션 체크
-      const missionMember = await MissionMember.find({ missionId })
-      const completedMember = await MissionChk.find({ missionId })
-      if (missionMember.length === completedMember.length) {
-        familyMissionChk = true
+    const memberChk = await MissionMember.findOne({ userId, missionId })
+    console.log(memberChk)
+    if (memberChk) {
+      //개인미션 체크
+      if (myMissionChk) {
+        console.log(2, myMissionChk)
+        await MissionChk.deleteOne({ missionId, userId })
+        myMissionChk = false
+        //전체미션 체크
+        const missionMember = await MissionMember.find({ missionId })
+        const completedMember = await MissionChk.find({ missionId })
+        console.log(2.1, missionMember)
+        console.log(2.2, completedMember)
+        if (missionMember.length === completedMember.length) {
+          familyMissionChk = true
+        } else {
+          familyMissionChk = false
+        }
+        console.log(2.3, myMissionChk, familyMissionChk)
+        res.status(200).json({
+          myMissionChk,
+          familyMissionChk,
+        })
+      } else {
+        const familyMemberId = await FamilyMember.findOne({ userId })
+        const missionChk = await MissionChk.create({
+          familyId,
+          missionId,
+          userId,
+          familyMemberId: familyMemberId.familyMemberId,
+        })
+        console.log(3, missionChk)
+        let myMissionChk = true
+        //전체미션 체크
+        const missionMember = await MissionMember.find({ missionId })
+        const completedMember = await MissionChk.find({ missionId })
+        console.log(4, missionMember)
+
+        if (missionMember.length === completedMember.length) {
+          familyMissionChk = true
+        }
+        console.log(6, myMissionChk, familyMissionChk)
+        res.status(200).json({
+          myMissionChk,
+          familyMissionChk,
+          completedAt,
+        })
       }
-      res.status(200).json({
-        myMissionChk,
-        familyMissionChk,
-        completedAt,
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "해당 미션의 멤버가 아니에요!",
       })
     }
   } catch (error) {
-    console.log('미션체크 오류', error)
+    console.log("미션체크 오류", error)
     res.status(400).send({
       result: false,
-      msg: '미션체크 실패',
+      msg: "미션체크 실패",
     })
   }
 }
@@ -120,15 +157,15 @@ const getMission = async (req, res) => {
 
   try {
     // 이번달 미션 리스트 & 전체 미션 수 추출
-    const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, '')
-    const missions = await Mission.find({ familyId }).sort('-createdAt')
+    const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")
+    const missions = await Mission.find({ familyId }).sort("-createdAt")
     const thisMonthMissionList = []
     let totalMission = 0
     let completedMission = 0
     if (missions.length) {
       for (let mission of missions) {
         if (
-          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') ===
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, "") ===
           thisMonth
         ) {
           thisMonthMissionList.push(mission)
@@ -203,39 +240,39 @@ const getMission = async (req, res) => {
     let totalBadge = 0
     for (let badge of badges) {
       //1번 배지 상태조회
-      if (badge.badgeTitle === '단란한 시작') {
+      if (badge.badgeTitle === "단란한 시작") {
         totalBadge++
       }
       // 2번 배지 상태조회
-      if (badge.badgeTitle === '추억의 발자국') {
+      if (badge.badgeTitle === "추억의 발자국") {
         const existPhoto = await Photo.find({ familyId })
         if (existPhoto.length >= 15) {
           totalBadge++
         }
       }
       // 3번 배지 상태조회
-      if (badge.badgeTitle === '정겨운 목소리') {
+      if (badge.badgeTitle === "정겨운 목소리") {
         const existVoiceFile = await VoiceFile.find({ familyId })
         if (existVoiceFile.length >= 10) {
           totalBadge++
         }
       }
       // 4번 배지 상태조회
-      if (badge.badgeTitle === '협동의 즐거움') {
+      if (badge.badgeTitle === "협동의 즐거움") {
         const existMission = await Mission.find({ familyId })
         if (existMission.length >= 20) {
           totalBadge++
         }
       }
       // 5번 배지 상태조회
-      if (badge.badgeTitle === '소통의 기쁨') {
+      if (badge.badgeTitle === "소통의 기쁨") {
         const existComment = await Comment.find({ familyId })
         if (existComment.length >= 50) {
           totalBadge++
         }
       }
       // 6번 배지 상태조회
-      if (badge.badgeTitle === '함께하는 나날') {
+      if (badge.badgeTitle === "함께하는 나날") {
         const existEvent = await Event.find({ familyId })
         if (existEvent.length >= 5) {
           totalBadge++
@@ -250,10 +287,10 @@ const getMission = async (req, res) => {
       thisMonthMissionList,
     })
   } catch (error) {
-    console.log('미션 목록조회 오류', error)
+    console.log("미션 목록조회 오류", error)
     res.status(400).send({
       result: false,
-      msg: '미션 목록조회 실패',
+      msg: "미션 목록조회 실패",
     })
   }
 }
@@ -264,13 +301,13 @@ const getPastMission = async (req, res) => {
 
   try {
     // 지난미션 리스트 조회
-    const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, '')
-    const missions = await Mission.find({ familyId }).sort('-createdAt')
+    const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")
+    const missions = await Mission.find({ familyId }).sort("-createdAt")
     const pastMissionList = []
     if (missions.length) {
       for (let mission of missions) {
         if (
-          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, '') !==
+          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, "") !==
           thisMonth
         ) {
           pastMissionList.push(mission)
@@ -332,10 +369,10 @@ const getPastMission = async (req, res) => {
       pastMissionList,
     })
   } catch (error) {
-    console.log('지난미션 목록조회 오류', error)
+    console.log("지난미션 목록조회 오류", error)
     res.status(400).send({
       result: false,
-      msg: '지난미션 목록조회 실패',
+      msg: "지난미션 목록조회 실패",
     })
   }
 }
@@ -353,10 +390,10 @@ const getfamilyMemberList = async (req, res) => {
       familyMemberList,
     })
   } catch (error) {
-    console.log('멤버 조회 오류', error)
+    console.log("멤버 조회 오류", error)
     res.status(400).send({
       result: false,
-      msg: '멤버 조회 실패',
+      msg: "멤버 조회 실패",
     })
   }
 }
@@ -377,8 +414,8 @@ const deleteMission = async (req, res) => {
       const thisMonth = new Date()
         .toISOString()
         .substring(0, 7)
-        .replace(/-/g, '')
-      const missions = await Mission.find({ familyId }).sort('-createdAt')
+        .replace(/-/g, "")
+      const missions = await Mission.find({ familyId }).sort("-createdAt")
       let totalMission = 0
       let completedMission = 0
       if (missions.length) {
@@ -387,7 +424,7 @@ const deleteMission = async (req, res) => {
             mission.createdAt
               .toISOString()
               .substring(0, 7)
-              .replace(/-/g, '') === thisMonth
+              .replace(/-/g, "") === thisMonth
           ) {
             totalMission += 1
             // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
@@ -419,39 +456,39 @@ const deleteMission = async (req, res) => {
       let totalBadge = 0
       for (let badge of badges) {
         //1번 배지 상태조회
-        if (badge.badgeTitle === '단란한 시작') {
+        if (badge.badgeTitle === "단란한 시작") {
           totalBadge++
         }
         // 2번 배지 상태조회
-        if (badge.badgeTitle === '추억의 발자국') {
+        if (badge.badgeTitle === "추억의 발자국") {
           const existPhoto = await Photo.find({ familyId })
           if (existPhoto.length >= 15) {
             totalBadge++
           }
         }
         // 3번 배지 상태조회
-        if (badge.badgeTitle === '정겨운 목소리') {
+        if (badge.badgeTitle === "정겨운 목소리") {
           const existVoiceFile = await VoiceFile.find({ familyId })
           if (existVoiceFile.length >= 10) {
             totalBadge++
           }
         }
         // 4번 배지 상태조회
-        if (badge.badgeTitle === '협동의 즐거움') {
+        if (badge.badgeTitle === "협동의 즐거움") {
           const existMission = await Mission.find({ familyId })
           if (existMission.length >= 20) {
             totalBadge++
           }
         }
         // 5번 배지 상태조회
-        if (badge.badgeTitle === '소통의 기쁨') {
+        if (badge.badgeTitle === "소통의 기쁨") {
           const existComment = await Comment.find({ familyId })
           if (existComment.length >= 50) {
             totalBadge++
           }
         }
         // 6번 배지 상태조회
-        if (badge.badgeTitle === '함께하는 나날') {
+        if (badge.badgeTitle === "함께하는 나날") {
           const existEvent = await Event.find({ familyId })
           if (existEvent.length >= 5) {
             totalBadge++
@@ -466,10 +503,10 @@ const deleteMission = async (req, res) => {
       })
     }
   } catch (error) {
-    console.log('미션 삭제 오류', error)
+    console.log("미션 삭제 오류", error)
     res.status(400).send({
       result: false,
-      msg: '미션 삭제 실패',
+      msg: "미션 삭제 실패",
     })
   }
 }

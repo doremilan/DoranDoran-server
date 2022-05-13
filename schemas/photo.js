@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose")
 
 const photoSchema = mongoose.Schema({
   photoFile: {
@@ -21,20 +21,20 @@ const photoSchema = mongoose.Schema({
     required: true,
   },
   createdAt: {
-    type: Date,
+    type: String,
     required: true,
   },
   userInfo: {
     type: Object,
   },
-});
+})
 
-photoSchema.virtual('photoId').get(function () {
-  return this._id.toHexString();
-});
+photoSchema.virtual("photoId").get(function () {
+  return this._id.toHexString()
+})
 
-photoSchema.set('toJSON', {
+photoSchema.set("toJSON", {
   virtuals: true,
-});
+})
 
-module.exports = mongoose.model('Photo', photoSchema);
+module.exports = mongoose.model("Photo", photoSchema)

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose')
 
 const voiceAlbumSchema = mongoose.Schema({
   voiceAlbumName: {
@@ -13,18 +13,21 @@ const voiceAlbumSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  voiceAlbumCover: {
+    type: String,
+  },
   createdAt: {
     type: Date,
     required: true,
   },
-});
+})
 
 voiceAlbumSchema.virtual('voiceAlbumId').get(function () {
-  return this._id.toHexString();
-});
+  return this._id.toHexString()
+})
 
 voiceAlbumSchema.set('toJSON', {
   virtuals: true,
-});
+})
 
-module.exports = mongoose.model('VoiceAlbum', voiceAlbumSchema);
+module.exports = mongoose.model('VoiceAlbum', voiceAlbumSchema)
