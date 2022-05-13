@@ -32,7 +32,7 @@ router.get('/:familyId/familyMember', authMiddleware, getfamilyMember);
 //가족 이름 수정  API
 router.put('/:familyId', authMiddleware, editFamilyTitle);
 
-//가족 구성원 수정 API
+//가족 구성원 수정 API`
 router.put('/:familyId/:familyMemberId', authMiddleware, editFamilyMember);
 
 //가족 삭제 API
