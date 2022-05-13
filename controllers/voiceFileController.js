@@ -12,32 +12,38 @@ const s3 = new AWS.S3({
 
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
-  const { familyId, voiceAlbumId } = req.params;
-  const { voiceTitle, voicePlayTime } = req.body;
-  const { userId } = res.locals.user;
-  const voiceFile = req.file.location;
-  const createdAt = new Date();
-  // console.log(11, userId)
   try {
+    const { familyId, voiceAlbumId } = req.params;
+    const { voiceTitle, voicePlayTime } = req.body;
+    const { userId } = res.locals.user;
+    const voiceFile = req.file.location;
+    const createdAt = new Date();
+    console.log(11, req.file)
     const userInfo = await FamilyMember.findOne({ userId });
-    // console.log(22, userInfo)
     const familyMemberNickname = userInfo.familyMemberNickname;
     const profileImg = userInfo.profileImg;
     // console.log(33, familyMemberNickname, profileImg);
-    const createVoice = await VoiceFile.create({
-      voiceAlbumId,
-      voiceTitle,
-      voiceFile,
-      voicePlayTime,
-      familyId,
-      familyMemberNickname,
-      profileImg,
-      createdAt,
-    });
-    res.status(201).json({
-      voiceFileId: createVoice._id,
-      msg: '음성메세지 추가되었습니다.',
-    });
+    if (voiceFile !== null) {
+      const createVoice = await VoiceFile.create({
+        voiceAlbumId,
+        voiceTitle,
+        voiceFile,
+        voicePlayTime,
+        familyId,
+        familyMemberNickname,
+        profileImg,
+        createdAt,
+      });
+      res.status(201).json({
+        voiceFileId: createVoice._id,
+        msg: '음성메세지 추가되었습니다.',
+      });
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "음성메세지 파일에러"
+      })
+    }
   } catch (error) {
     res.status(400).send({
       msg: '에러',
@@ -53,7 +59,8 @@ const getVoiceFile = async (req, res) => {
   // console.log(11, voiceAlbumId);
   try {
     const albumName = await VoiceAlbum.findOne({ _id: voiceAlbumId });
-    const voiceFileList = await VoiceFile.find({ _id: voiceAlbumId });
+    const voiceFileList = await VoiceFile.find({ voiceAlbumId });
+    console.log(albumName, voiceFileList)
     res.status(200).json({
       voiceAlbumName: albumName.voiceAlbumName,
       voiceFileList,
@@ -82,7 +89,7 @@ const deleteVoiceFile = async (req, res) => {
     const key1 = 'voice/' + decodeURI(deleteVoiceFile).replaceAll('+', ' ');
     // console.log(44, key1)
     await VoiceFile.findOne({ voiceFileId, userId });
-    await VoiceFile.deleteOne({ voiceFileId });
+    await VoiceFile.deleteOne({ _id: voiceFileId });
     s3.deleteObject(
       {
         Bucket: 'family-8',

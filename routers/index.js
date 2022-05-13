@@ -18,6 +18,9 @@ const missionRouter = require('./mission');
 const badgeRouter = require('./badge');
 const randomMsgRouter = require('./randomMsg');
 
+const scheduleRouter = require('./schedule');
+router.use('/schedule', scheduleRouter);
+
 router.use('/auth', authRouter);
 router.use('/user', userRouter);
 router.use('/main', mainRouter);
@@ -41,13 +44,13 @@ router.use('/randomMsg', randomMsgRouter);
 //           clientSecret: clientSecret,
 //           callbackURL: 'http://localhost:3000/oauth/kakao/callback' // 카카오 로그인 Redirect URI 경로
 //         },
-    
+
 //         // clientID에 카카오 앱 아이디 추가
 //         // callbackURL: 카카오 로그인 후 카카오가 결과를 전송해줄 URL
 //         // accessToken, refreshToken: 로그인 성공 후 카카오가 보내준 토큰
 //         // profile: 카카오가 보내준 유저 정보. profile의 정보를 바탕으로 회원가입
 //         async (accessToken, refreshToken, profile, done) => {
-          
+
 //             console.log(accessToken,profile,)
 //           try {
 //             const exUser = await User.findOne({

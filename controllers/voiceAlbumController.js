@@ -66,7 +66,7 @@ const getVoiceAlbum = async (req, res) => {
 //보이스 앨범 수정
 const updateVoiceAlbum = async (req, res) => {
   const { voiceAlbumId } = req.params;
-  const { voiceAlbumName } = req.body;
+  const { voiceAlbumName, voiceAlbumCover } = req.body;
   // console.log(voiceAlbumId, voiceAlbumName);
   try {
     if (voiceAlbumName !== null && voiceAlbumName !== '') {

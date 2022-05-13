@@ -15,14 +15,15 @@ const {
 //일정보기 API
 router.get('/:familyId/eventcalendar/:date', authMiddleware, getEvent);
 
+//일정 상세보기 API
+router.get('/:familyId/eventcalendar/detail/:eventId/:date', authMiddleware, getEventDetail)
+
 //추억보기 API
 router.get('/:familyId/photocalendar/:date', authMiddleware, getPhotoEvent);
 
 //추억 상세보기 API
 router.get('/:familyId/photocalendar/detail/:date', authMiddleware, getPhotoEventDetail);
 
-//일정 상세보기 API
-router.get('/:familyId/eventcalendar/detail/:date', authMiddleware, getEventDetail)
 
 //일정 작성 API
 router.post('/:familyId', authMiddleware, createEvent);

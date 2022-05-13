@@ -18,8 +18,8 @@ const Joi = require('joi');
 const familySchema = Joi.object({
 
   familyTitle: Joi.string().max(8)
-  .pattern(new RegExp(
-    '^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$'
+    .pattern(new RegExp(
+      '^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$'
     )).required()
 })
 // 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
@@ -40,7 +40,7 @@ const createFamily = async (req, res) => {
 
     console.log('가족 생성의 user-->', user);
 
-    let { 
+    let {
       familyTitle
     } = await familySchema.validateAsync(req.body)
 
@@ -57,7 +57,7 @@ const createFamily = async (req, res) => {
     });
 
     // 배지 자동생성
-      await badge.create({
+    await badge.create({
       familyId: newFamily.familyId,
       badge: [
         {
@@ -108,7 +108,7 @@ const createFamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params;
     const { user } = res.locals;
-    const { email} = req.body;
+    const { email } = req.body;
     let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
 
     const findMmemberUser = await User.findOne({ email });
@@ -175,7 +175,8 @@ const getfamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params;
     const { user } = res.locals;
-    const familyMemberList = await FamilyMember.find({ _id: familyId });
+    const familyMemberList = await FamilyMember.find({ familyId: familyId });
+    console.log(familyMemberList)
 
     res.status(200).json({ familyMemberList });
   } catch (error) {
@@ -189,7 +190,7 @@ const getfamilyMember = async (req, res) => {
 const editFamilyTitle = async (req, res) => {
   try {
     const { familyId } = req.params;
-    const { familyTitle} = await familySchema.validateAsync(req.body)
+    const { familyTitle } = await familySchema.validateAsync(req.body)
     const { email } = res.locals.user;
 
     await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } });

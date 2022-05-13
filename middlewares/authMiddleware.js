@@ -4,7 +4,7 @@ const fs = require("fs")
 require("dotenv").config();
 
 module.exports = (req, res, next) => {
-  console.log("authMiddleware 들어온 처음")
+  // console.log("authMiddleware 들어온 처음")
   //헤더의 이름 authorization 은 프론트와 얘기해야 함.
   const Token = req.headers.authorization;
   const logInToken = Token.replace("Bearer ", "");
@@ -12,7 +12,7 @@ module.exports = (req, res, next) => {
   try {
     const token = jwt.verify(logInToken, process.env.SECRET_KEY);
     const email = token.email
-    console.log("authmiddleware에서의 token-->", token)
+    // console.log("authmiddleware에서의 token-->", token)
 
 
     //userId가 미들웨어 거칠 때는 _id 에서 userId로 변환이 안되어있기에, 토큰이 안 담김 -> email에 담았음.
@@ -20,11 +20,11 @@ module.exports = (req, res, next) => {
       .exec()
       .then((user) => {
         res.locals.user = user
-        console.log("authmiddleware의 user-->", user)
+        // console.log("authmiddleware의 user-->", user)
         //로컬의 DB에 있는 유저 정보를 가지고 있음.
         res.locals.token = logInToken
         //로컬에 존재하는 로그인 토큰
-        console.log("authemiddleware 무사히 통과")
+        // console.log("authemiddleware 무사히 통과")
 
         next();
       });
