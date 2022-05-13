@@ -8,7 +8,7 @@ const createEvent = async (req, res) => {
   const { userId } = res.locals.user
   const { familyId } = req.params
   const { event, startDate, endDate, color } = req.body.data
-  console.log(1, req.body)
+
   try {
     const addEvent = await Event.create({
       userId,
@@ -194,29 +194,26 @@ const getEventDetail = async (req, res) => {
   const { familyId, date, eventId } = req.params
 
   try {
-    let eventModalList = []
-    const events = await Event.find({ familyId, date, _id: eventId })
+    const event = await Event.findOne({ familyId, date, _id: eventId })
     const thisMonth = date.split("-")
-
-    for (let event of events) {
+    // 날짜 체크
+    if (event) {
       const eventDate = event.startDate.split("-", 3)
-      let MemberInfo = await FamilyMember.findOne({ userId: events.userId })
-      const familyMemberNickname = MemberInfo.familyMemberNickname
-      const profileImg = MemberInfo.profileImg
-
       if (
         thisMonth[0] === eventDate[0] &&
         thisMonth[1] === eventDate[1] &&
         thisMonth[2] === eventDate[2]
       ) {
+        // 작성자 정보 추출
+        const userInfo = await FamilyMember.findOne({ userId: event.userId })
+        const familyMemberNickname = userInfo.familyMemberNickname
+        const profileImg = userInfo.profileImg
         event.familyMemberNickname = familyMemberNickname
         event.profileImg = profileImg
-        eventModalList.push(event)
       }
     }
-
     res.status(200).json({
-      eventModalList,
+      event,
     })
   } catch (error) {
     res.status(400).send({
