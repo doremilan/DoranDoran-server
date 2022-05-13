@@ -8,7 +8,7 @@ const createEvent = async (req, res) => {
   const { userId } = res.locals.user
   const { familyId } = req.params
   const { event, startDate, endDate, color } = req.body
-
+  console.log(1, req.body)
   try {
     const addEvent = await Event.create({
       userId,
