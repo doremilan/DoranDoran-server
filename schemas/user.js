@@ -37,4 +37,6 @@ userSchema.set("toJSON", {
 //이 쪽이 문제(멤버 검색 api)
 //_id
 
+userSchema.index({ email: "text" })
+
 module.exports = mongoose.model("User", userSchema)
