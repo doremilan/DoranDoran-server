@@ -19,12 +19,12 @@ module.exports = (app) => {
           if (exUser) {
             done(null, exUser) // 로그인 인증 완료
           } else {
-            console.log(111, profile._json.profile_image)
+            console.log(111, profile._json.properties.profile_image)
             // 가입되지 않는 유저면 회원가입 시키고 로그인을 시킨다
             const newUser = await User.create({
               email: profile._json.kakao_account.email,
               nickname: profile.displayName,
-              profileImg: profile._json.profile_image,
+              profileImg: profile._json.properties.profile_image,
               snsId: profile.id,
               provider: "kakao",
             })
