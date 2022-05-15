@@ -182,40 +182,18 @@ const login = async (req, res) => {
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
-//카카오 소셜 로그인 api + 콜백 및 토큰 부여
 const kakaoCallback = (req, res, next) => {
-  passport.authenticate(
-    "kakao",
-    { failureRedirect: "https://doremilan.shop" },
-    (err, user, info) => {
-      if (err) return next(err)
-      console.log("kakao 콜백!")
-      const { email, nickname, profileImg, snsId, provider } = user
-      const options = {
-        issuer: "백엔드 개발자", // 발행자
-        expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
-      }
-      const logIntoken = jwt.sign(
-        { email: email },
-        process.env.SECRET_KEY,
-        options
-      )
+  passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
+    if (err) return next(err)
+    const token = jwt.sign({ snsId: user.snsId }, secret)
 
-      result = {
-        token: logIntoken,
-        email: email,
-        nickname: nickname,
-        profileImg: profileImg,
-        snsId: snsId,
-        provider: provider,
-      }
-
-      console.log("kakao authController result-->", result)
-      res
-        .status(201)
-        .json({ user: result, msg: "카카오 소셜 로그인에 성공하셨습니다." })
-    }
-  )(req, res, next)
+    res.json({
+      token,
+      nickname: user.nickname,
+      email: user.email,
+      snsId: user.snsId,
+    })
+  })(req, res, next)
 }
 
 module.exports = {

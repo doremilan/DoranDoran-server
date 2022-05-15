@@ -11,7 +11,7 @@ const app = express()
 require("dotenv").config()
 
 connect()
-passportConfig()
+passportConfig(app)
 
 app.use(cors())
 // app.use(cors({ origin: process.env.CORS }))
