@@ -191,6 +191,7 @@ const kakaoCallback = (req, res, next) => {
     res.json({
       token,
       nickname: user.nickname,
+      profileImg: user.profileImg,
       email: user.email,
       snsId: user.snsId,
     })
