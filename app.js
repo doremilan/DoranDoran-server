@@ -5,10 +5,9 @@ const cors = require("cors")
 const helmet = require("helmet")
 const morgan = require("morgan")
 const passportConfig = require("./passport")
-const fs = require("fs")
+// const fs = require("fs")
 const port = 3000
 const app = express()
-require("dotenv").config()
 
 connect()
 passportConfig(app)

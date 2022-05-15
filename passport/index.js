@@ -1,14 +1,15 @@
 const User = require("../schemas/user")
 const passport = require("passport")
 const KakaoStrategy = require("passport-kakao").Strategy
+const config = require("../config")
 
 module.exports = (app) => {
   app.use(passport.initialize())
   passport.use(
     new KakaoStrategy(
       {
-        clientID: process.env.KAKAO_ID,
-        callbackURL: process.env.KAKAO_URL,
+        clientID: config.kakao.kakaoId,
+        callbackURL: config.kakao.kakaoUrl,
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log("카카오에서 보낸 userInfo", profile)

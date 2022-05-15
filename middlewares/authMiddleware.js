@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken")
 const User = require("../schemas/user")
 const fs = require("fs")
-require("dotenv").config()
+const config = require("../config")
 
 module.exports = (req, res, next) => {
   //헤더의 이름 authorization 은 프론트와 얘기해야 함.
@@ -9,7 +9,7 @@ module.exports = (req, res, next) => {
   const logInToken = Token.replace("Bearer ", "")
 
   try {
-    const token = jwt.verify(logInToken, process.env.SECRET_KEY)
+    const token = jwt.verify(logInToken, config.jwt.secretKey)
     const email = token.email
 
     //userId가 미들웨어 거칠 때는 _id 에서 userId로 변환이 안되어있기에, 토큰이 안 담김 -> email에 담았음.
