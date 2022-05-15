@@ -184,6 +184,7 @@ const login = async (req, res) => {
 
 const kakaoCallback = (req, res, next) => {
   passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
+    console.log(33, user)
     if (err) return next(err)
     const token = jwt.sign({ snsId: user.snsId }, process.env.SECRET_KEY)
 
