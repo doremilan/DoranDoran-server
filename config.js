@@ -1,11 +1,11 @@
 require("dotenv").config()
 
-function required(key = undefined) {
-  const value = process.env[key]
-  if (value == null) {
-    throw new Error(`Key ${key} is undefined`)
-  }
-}
+// function required(key = undefined) {
+//   const value = process.env[key]
+//   if (value == null) {
+//     throw new Error(`Key ${key} is undefined`)
+//   }
+// }
 
 module.exports = {
   jwt: {
