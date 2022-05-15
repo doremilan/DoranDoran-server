@@ -17,6 +17,7 @@ module.exports = (app) => {
         try {
           const exUser = await User.findOne({
             snsId: profile._json.id,
+            provider: "kakao",
           })
           if (exUser) {
             done(null, exUser) // 로그인 인증 완료
