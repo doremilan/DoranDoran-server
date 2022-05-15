@@ -1,6 +1,10 @@
 require("dotenv").config()
 
 module.exports = {
+  rateLimit: {
+    windowMs: process.env.WINDOW_MS,
+    maxRequest: process.env.MAX_REQUEST,
+  },
   jwt: {
     secretKey: process.env.SECRET_KEY,
     expiresInSec: process.env.JWT_EXPIRES_SEC,

@@ -1,12 +1,13 @@
 const express = require("express")
-const indexRouter = require("./routers/index")
-const connect = require("./schemas/index")
 const cors = require("cors")
 const helmet = require("helmet")
 const morgan = require("morgan")
+const rateLimit = require("express-rate-limit")
+require("express-async-errors")
+const indexRouter = require("./routers/index")
+const connect = require("./schemas/index")
 const passportConfig = require("./passport")
-// const fs = require("fs")
-const port = 3000
+const config = require("./config")
 const app = express()
 
 connect()
@@ -24,6 +25,12 @@ app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
 app.use(helmet()) //보안에 필요한 헤더 추가 미들웨어
 app.use(morgan("tiny")) // 서버 요청 모니터링 미들웨어
+app.use(
+  rateLimit({
+    windowMs: config.rateLimit.windowMs,
+    max: config.rateLimit.maxRequest,
+  })
+)
 
 // 라우터 연결
 app.use(indexRouter)
@@ -40,6 +47,6 @@ app.use((error, req, res, next) => {
 })
 
 // 서버 열기
-app.listen(port, () => {
-  console.log(port, "Server is listening...")
+app.listen(config.host.port, () => {
+  console.log("Server is listening...")
 })
