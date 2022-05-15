@@ -40,8 +40,6 @@ module.exports = (app) => {
     done(null, user)
   })
   passport.deserializeUser((user, done) => {
-    User.findOne({ snsId: user.id })
-      .then((user) => done(null, user))
-      .catch((err) => done(err))
+    done(null, user)
   })
 }
