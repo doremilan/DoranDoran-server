@@ -1,6 +1,6 @@
+const User = require("../schemas/user")
 const passport = require("passport")
 const KakaoStrategy = require("passport-kakao").Strategy
-const { User } = require("../schemas")
 
 module.exports = (app) => {
   app.use(passport.initialize()) // passport를 초기화 하기 위해서 passport.initialize 미들웨어 사용
@@ -12,12 +12,9 @@ module.exports = (app) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         console.log(1, profile)
-        console.log(2, profile.id)
-        console.log(3, profile._json.id)
         try {
           const exUser = await User.findOne({
             snsId: profile.id,
-            provider: profile.provider,
           })
           if (exUser) {
             done(null, exUser) // 로그인 인증 완료
@@ -39,10 +36,10 @@ module.exports = (app) => {
       }
     )
   )
-  passport.serializeUser((user, done) => {
-    done(null, user)
-  })
-  passport.deserializeUser((user, done) => {
-    done(null, user)
-  })
+  // passport.serializeUser((user, done) => {
+  //   done(null, user)
+  // })
+  // passport.deserializeUser((user, done) => {
+  //   done(null, user)
+  // })
 }
