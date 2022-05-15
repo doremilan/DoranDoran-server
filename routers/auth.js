@@ -23,6 +23,6 @@ router.post("/login", login)
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
 router.get("/kakao", kakaoCallback)
-router.get("/kakao/callback", passport.authenticate("kakao"))
+router.get("/kakao/callback", passport("kakao"))
 
 module.exports = router
