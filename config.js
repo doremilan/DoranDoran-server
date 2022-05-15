@@ -1,33 +1,26 @@
 require("dotenv").config()
 
-// function required(key = undefined) {
-//   const value = process.env[key]
-//   if (value == null) {
-//     throw new Error(`Key ${key} is undefined`)
-//   }
-// }
-
 module.exports = {
   jwt: {
-    secretKey: required("SECRET_KEY"),
-    expiresInSec: parseInt(required("JWT_EXPIRES_SEC")),
+    secretKey: process.env.SECRET_KEY,
+    expiresInSec: process.env.JWT_EXPIRES_SEC,
   },
   bcrypt: {
-    saltRounds: parseInt(required("BCRYPT_SALT_ROUNDS")),
+    saltRounds: process.env.BCRYPT_SALT_ROUNDS,
   },
   host: {
-    port: parseInt(required("HOST_PORT")),
+    port: process.env.HOST_PORT,
   },
   db: {
-    DB_URL: required("DB_NAME"),
+    DB_URL: process.env.DB_NAME,
   },
   s3: {
-    accessKey: required("S3_ACCESS_KEY"),
-    secretKey: required("S3_SECRET_ACCESS_KEY"),
-    bucketRegion: required("S3_BUCKET_REGION"),
+    accessKey: process.env.S3_ACCESS_KEY,
+    secretKey: process.env.S3_SECRET_ACCESS_KEY,
+    bucketRegion: process.env.S3_BUCKET_REGION,
   },
   kakao: {
-    kakaoId: required("KAKAO_ID"),
-    kakaoUrl: required("KAKAO_URL"),
+    kakaoId: process.env.KAKAO_ID,
+    kakaoUrl: process.env.KAKAO_URL,
   },
 }
