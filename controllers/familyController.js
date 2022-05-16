@@ -13,10 +13,12 @@ const Like = require("../schemas/like")
 const MissionMember = require("../schemas/missionMember")
 const MissionChk = require("../schemas/missionChk")
 const Joi = require("joi")
-const { object } = require("joi")
 
 const familySchema = Joi.object({
-  familyTitle: Joi.string().max(8).pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")).required(),
+  familyTitle: Joi.string()
+    .max(8)
+    .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$"))
+    .required(),
 })
 // 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
@@ -26,16 +28,7 @@ const familyMemberSchema = Joi.object({
   // 2~8자
 })
 
-// ***가족 목록 GET API
-// API 완료
-//가족 구성원 추가 시,
-//가족 get 요청에서 똑같은 가족 이름 안에 하나가 더 플러스되어서 get이 온다.
-//죄측 상단의 가족 목록에 그 데이터가 보임...
-//DB에는 저장이 안 됨. ---> 그렇다면 같은 가족 리스트가 get 됐을 시, 막는 것으로.
-// 일단 push 이후의 if 문은 안 됨.
-//push로 붙여서 만든 familyList 배열이 이후에도 실행됐는데 이전의 배열과 똑같을 때,
-//get으로 불러오는 걸 막기.똑같은 배열이 들어왔을 때, false로 주면 됨.
-//이후에 push 값이 없으면 빈 배열 주기. (그냥 위의 로직을 실행 후 else로 하면 됨)
+//가족 목록 GET API
 const getFamilyList = async (req, res) => {
   try {
     const { userId } = res.locals.user
@@ -62,10 +55,7 @@ const getFamilyList = async (req, res) => {
 }
 
 //가족 생성 API
-//api 테스트 성공
-//familyHost 가 가족에서 나갔을 때는 어떡하나?
-//Host 에 memeber 중 한 명을 넣어야 한다?
-//Delete: 그렇다면 가족 구성원 삭제될 때도 나간 유저가 Host 에 대한 조건을 걸어야겠다.
+//api 테스트 성공`
 const createFamily = async (req, res) => {
   try {
     const { user } = res.locals
@@ -125,7 +115,9 @@ const createFamily = async (req, res) => {
 
     console.log("familyHost-->", familyHost)
 
-    res.status(200).json({ msg: "가족이 생성되었습니다.", familyId: newFamily.familyId })
+    res
+      .status(200)
+      .json({ msg: "가족이 생성되었습니다.", familyId: newFamily.familyId })
   } catch (error) {
     console.log("가족 생성에서 오류!", error)
     res.status(400).send({ msg: "가족 생성에 실패했습니다." })
@@ -134,12 +126,11 @@ const createFamily = async (req, res) => {
 
 //가족 구성원 생성 api
 //api 테스트 성공
-//  eamil이 같은 걸로 추가하면 계속 추가됨
-// (email 같을 시, 그 가족 안에서 그 email의 구성원이 더 이상 추가되지 못하도록 해야 함. - db에 들어감)
 const createFamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params
-    let { email, familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
+    let { email, familyMemberNickname } =
+      await familyMemberSchema.validateAsync(req.body)
 
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
@@ -185,10 +176,6 @@ const createFamilyMember = async (req, res) => {
   }
 }
 
-//멤버 검색 API
-//검색하는 거 닉네임으로 하고  schema의 필수값 및 고유값을 닉네임
-//회원가입에 닉네임 중복 걸어두기.
-//api 테스트 성공. 해결했다..!
 //멤버 검색 API
 const searchUser = async (req, res) => {
   try {
@@ -250,10 +237,15 @@ const editFamilyTitle = async (req, res) => {
 const editFamilyMember = async (req, res) => {
   try {
     const { familyId, familyMemberId } = req.params
-    let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
+    let { familyMemberNickname } = await familyMemberSchema.validateAsync(
+      req.body
+    )
     const { email } = res.locals.user
 
-    await FamilyMember.updateOne({ email, _id: familyId, _id: familyMemberId }, { $set: { familyMemberNickname } })
+    await FamilyMember.updateOne(
+      { email, _id: familyId, _id: familyMemberId },
+      { $set: { familyMemberNickname } }
+    )
 
     const modifyFamilyMemberList = await FamilyMember.find({
       _id: familyId,

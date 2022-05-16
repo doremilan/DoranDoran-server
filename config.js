@@ -1,0 +1,30 @@
+require("dotenv").config()
+
+module.exports = {
+  rateLimit: {
+    windowMs: process.env.WINDOW_MS,
+    maxRequest: process.env.MAX_REQUEST,
+  },
+  jwt: {
+    secretKey: process.env.SECRET_KEY,
+    expiresInSec: process.env.JWT_EXPIRES_SEC,
+  },
+  bcrypt: {
+    saltRounds: process.env.BCRYPT_SALT_ROUNDS,
+  },
+  host: {
+    port: process.env.HOST_PORT,
+  },
+  db: {
+    DB_URL: process.env.DB_NAME,
+  },
+  s3: {
+    accessKey: process.env.S3_ACCESS_KEY,
+    secretKey: process.env.S3_SECRET_ACCESS_KEY,
+    bucketRegion: process.env.S3_BUCKET_REGION,
+  },
+  kakao: {
+    kakaoId: process.env.KAKAO_ID,
+    kakaoUrl: process.env.KAKAO_URL,
+  },
+}
