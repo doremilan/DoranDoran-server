@@ -8,22 +8,10 @@ const Family = require("../schemas/family")
 const config = require("../config")
 
 const userSchema = Joi.object({
-  email: Joi.string()
-    .pattern(
-      new RegExp(
-        "^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$"
-      )
-    )
-    .required(),
+  email: Joi.string().pattern(new RegExp("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")).required(),
   // 이메일 양식 /
 
-  password: Joi.string()
-    .pattern(
-      new RegExp(
-        "^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}"
-      )
-    )
-    .required(),
+  password: Joi.string().pattern(new RegExp("^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}")).required(),
 
   //조건1. 8~20 영문 대소문자
 
@@ -31,10 +19,7 @@ const userSchema = Joi.object({
 
   passwordCheck: Joi.string(),
 
-  nickname: Joi.string()
-    .min(3)
-    .max(15)
-    .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")),
+  nickname: Joi.string().min(3).max(15).pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")),
 
   //3-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
@@ -45,8 +30,7 @@ const userSchema = Joi.object({
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
   try {
-    const { email, password, passwordCheck, nickname, profileImg, todayMood } =
-      await userSchema.validateAsync(req.body)
+    const { email, password, passwordCheck, nickname, profileImg, todayMood } = await userSchema.validateAsync(req.body)
 
     console.log("req.body-->", req.body)
 
