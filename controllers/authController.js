@@ -197,7 +197,7 @@ const kakaoCallback = (req, res, next) => {
       res.json({
         token,
         user,
-        // familyList,
+        familyList,
       })
     })(req, res, next)
   } catch (error) {
