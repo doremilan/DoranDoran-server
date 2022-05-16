@@ -9,7 +9,7 @@ const {
   editTodayMood,
 } = require("../controllers/userController");
 
-////유저 데이터 get API
+//유저 데이터 get API
 router.get("/me", authMiddleware, getUser);
 
 //프로필 조회 API
