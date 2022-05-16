@@ -202,12 +202,8 @@ const kakaoCallback = (req, res, next) => {
         .then((familyChk) => {
           if (familyChk.length) {
             for (let family of familyChk) {
-              Family.findOne({ _id: family.familyId })
-                .exec()
-                .then((Checkedfamily) => {
-                  familyList.push(Checkedfamily)
-                })
-              next()
+              const Checkedfamily = Family.findOne({ _id: family.familyId })
+              familyList.push(Checkedfamily)
             }
           }
           console.log("카카오로그인", token)
