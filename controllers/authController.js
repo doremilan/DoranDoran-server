@@ -185,19 +185,19 @@ const kakaoCallback = (req, res, next) => {
       console.log("카카오로그인 userInfo", user)
       if (err) return next(err)
       const token = jwt.sign({ snsId: user.snsId }, config.jwt.secretKey)
-      // 유저의 가족 리스트 추출
-      const familyChk = FamilyMember.find({ userId: user._id })
-      let familyList = []
-      if (familyChk.length) {
-        for (let family of familyChk) {
-          const Checkedfamily = Family.findOne({ _id: family.familyId })
-          familyList.push(Checkedfamily)
-        }
-      }
+      // // 유저의 가족 리스트 추출
+      // const familyChk = FamilyMember.find({ userId: user._id })
+      // let familyList = []
+      // if (familyChk.length) {
+      //   for (let family of familyChk) {
+      //     const Checkedfamily = Family.findOne({ _id: family.familyId })
+      //     familyList.push(Checkedfamily)
+      //   }
+      // }
       res.json({
         token,
         user,
-        familyList,
+        // familyList,
       })
     })(req, res, next)
   } catch (error) {
