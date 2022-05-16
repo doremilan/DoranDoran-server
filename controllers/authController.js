@@ -195,6 +195,7 @@ const kakaoCallback = (req, res, next) => {
       //     familyList.push(Checkedfamily)
       //   }
       // }
+      console.log(token)
       res.json({
         token,
         user,
