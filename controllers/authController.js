@@ -187,7 +187,7 @@ const kakaoCallback = (req, res, next) => {
       if (err) return next(err)
       console.log(11111, user._id)
       const options = {
-        issuer: "백엔드 개발자",
+        issuer: "백엔드 개발자", // 발행자
         expiresIn: config.jwt.expiresIn,
       }
       const token = jwt.sign(
@@ -196,18 +196,14 @@ const kakaoCallback = (req, res, next) => {
         options
       )
       // 유저의 가족 리스트 추출
+      const familyChk = FamilyMember.find({ userId: user._id })
       let familyList = []
-      FamilyMember.find({ userId: user._id })
-        .exec()
-        .then((familyChk) => {
-          if (familyChk.length) {
-            for (let family of familyChk) {
-              const Checkedfamily = Family.findOne({ _id: family.familyId })
-              familyList.push(Checkedfamily)
-            }
-          }
-          next()
-        })
+      if (familyChk.length) {
+        for (let family of familyChk) {
+          const Checkedfamily = Family.findOne({ _id: family.familyId })
+          familyList.push(Checkedfamily)
+        }
+      }
       console.log("카카오로그인", token)
       res.json({
         token,
@@ -223,17 +219,6 @@ const kakaoCallback = (req, res, next) => {
     })
   }
 }
-
-User.findOne({ email })
-  .exec()
-  .then((user) => {
-    res.locals.user = user
-    //로컬의 DB에 있는 유저 정보를 가지고 있음.
-    res.locals.token = logInToken
-    //로컬에 존재하는 로그인 토큰
-
-    next()
-  })
 
 module.exports = {
   login,
