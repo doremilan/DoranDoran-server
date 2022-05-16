@@ -31,10 +31,9 @@ const userSchema = Joi.object({
 
   passwordCheck: Joi.string(),
 
-  nickname: Joi.string()
-    .min(2)
-    .max(15)
-    .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")),
+  nickname: Joi.string().pattern(
+    new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$.{2, 15}")
+  ),
 
   //2-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
@@ -91,7 +90,11 @@ const signup = async (req, res) => {
 
     res.status(201).json({ msg: "회원가입이 완료되었습니다.", user: user })
   } catch (error) {
-    res.status(400).json({ msg: "요청한 조건 형식이 올바르지 않습니다." })
+    console.log(`${req.method} ${req.originalUrl} : ${error.message}`)
+    res.status(400).json({
+      msg: "요청한 조건 형식이 올바르지 않습니다.",
+      result: `${req.method} ${req.originalUrl} : ${error.message}`,
+    })
   }
 }
 
