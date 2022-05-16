@@ -40,7 +40,6 @@ const postMission = async (req, res) => {
           } else {
             profileImg = null
           }
-
           // 공백 체크
           if (missionMember) {
             const newMember = await MissionMember.create({
@@ -65,7 +64,6 @@ const postMission = async (req, res) => {
       res.status(201).json({
         missionId: createdMission.missionId,
         createdMember,
-        userFamilyName,
         msg: "새로운 미션이 등록되었어요.",
       })
     } else {
@@ -88,27 +86,12 @@ const completeMission = async (req, res) => {
   const { familyId, missionId } = req.params
   const { userId } = res.locals.user
   const { completedAt } = req.body
-  let { myMissionChk, familyMissionChk } = req.body
+  let { myMissionChk } = req.body
   try {
     const memberChk = await MissionMember.findOne({ userId, missionId })
     if (memberChk) {
       //개인미션 체크
       if (myMissionChk) {
-        await MissionChk.deleteOne({ missionId, userId })
-        myMissionChk = false
-        //전체미션 체크
-        const missionMember = await MissionMember.find({ missionId })
-        const completedMember = await MissionChk.find({ missionId })
-        if (missionMember.length === completedMember.length) {
-          familyMissionChk = true
-        } else {
-          familyMissionChk = false
-        }
-        res.status(200).json({
-          myMissionChk,
-          familyMissionChk,
-        })
-      } else {
         const familyMemberId = await FamilyMember.findOne({ userId })
         const missionChk = await MissionChk.create({
           familyId,
@@ -128,6 +111,14 @@ const completeMission = async (req, res) => {
           myMissionChk,
           familyMissionChk,
           completedAt,
+        })
+      } else {
+        await MissionChk.deleteOne({ missionId, userId })
+        myMissionChk = false
+        familyMissionChk = false
+        res.status(200).json({
+          myMissionChk,
+          familyMissionChk,
         })
       }
     } else {

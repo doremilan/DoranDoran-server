@@ -32,7 +32,7 @@ const userSchema = Joi.object({
   passwordCheck: Joi.string(),
 
   nickname: Joi.string().pattern(
-    new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$.{2, 15}")
+    new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*.{2, 15}$")
   ),
 
   //2-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
@@ -40,7 +40,6 @@ const userSchema = Joi.object({
   profileImg: Joi.string(),
   todayMood: Joi.string(),
 })
-
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
   try {
