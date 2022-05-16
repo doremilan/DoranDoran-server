@@ -71,7 +71,8 @@ const signup = async (req, res) => {
       return
     }
 
-    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds)
+    const hashed = await bcrypt.hash(password, 10)
+    // console.log(111, hashed)
     const user = new User({
       email,
       password: hashed,
@@ -91,6 +92,7 @@ const signup = async (req, res) => {
 
     res.status(201).json({ msg: "회원가입이 완료되었습니다.", user: user })
   } catch (error) {
+    console.log(error);
     res.status(400).json({ msg: "요청한 조건 형식이 올바르지 않습니다." })
   }
 }

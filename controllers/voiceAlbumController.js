@@ -46,9 +46,7 @@ const getVoiceAlbum = async (req, res) => {
   const { familyId } = req.params
 
   try {
-    const voiceAlbumList = await VoiceAlbum.find({ familyId }).sort(
-      "-createdAt"
-    )
+    const voiceAlbumList = await VoiceAlbum.find({ familyId })
 
     res.status(200).json({
       voiceAlbumList,
@@ -102,9 +100,9 @@ const deleteVoiceAlbum = async (req, res) => {
   const { voiceAlbumId } = req.params
 
   try {
-    const existVoiceAlbum = await VoiceAlbum.findOne({ voiceAlbumId })
+    const existVoiceAlbum = await VoiceAlbum.findOne({ _id: voiceAlbumId })
     if (existVoiceAlbum) {
-      await VoiceAlbum.deleteOne({ voiceAlbumId })
+      await VoiceAlbum.deleteOne({ _id: voiceAlbumId })
       await VoiceFile.deleteMany({
         voiceAlbumId: existVoiceAlbum.voiceAlbumId,
       })
