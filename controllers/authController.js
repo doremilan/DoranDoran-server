@@ -185,7 +185,15 @@ const kakaoCallback = (req, res, next) => {
       console.log("카카오로그인 userInfo", user)
       if (err) return next(err)
       console.log(11111, user._id)
-      const token = jwt.sign({ userId: user._id }, config.jwt.secretKey)
+      const options = {
+        issuer: "백엔드 개발자", // 발행자
+        expiresIn: config.jwt.expiresInSec,
+      }
+      const token = jwt.sign(
+        { userId: user._id },
+        config.jwt.secretKey,
+        options
+      )
       // // 유저의 가족 리스트 추출
       // const familyChk = FamilyMember.find({ userId: user._id })
       // let familyList = []
