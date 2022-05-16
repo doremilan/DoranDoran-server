@@ -7,7 +7,7 @@ module.exports = {
   },
   jwt: {
     secretKey: process.env.SECRET_KEY,
-    expiresInSec: process.env.JWT_EXPIRES_SEC,
+    expiresIn: process.env.JWT_EXPIRES,
   },
   bcrypt: {
     saltRounds: process.env.BCRYPT_SALT_ROUNDS,

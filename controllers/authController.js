@@ -133,7 +133,7 @@ const login = async (req, res) => {
 
     const options = {
       issuer: "백엔드 개발자", // 발행자
-      expiresIn: config.jwt.expiresInSec,
+      expiresIn: config.jwt.expiresIn,
     }
     const token = jwt.sign(payload, config.jwt.secretKey, options)
     const userChk = await User.findOne({ email })
@@ -188,7 +188,7 @@ const kakaoCallback = (req, res, next) => {
       console.log(11111, user._id)
       const options = {
         issuer: "백엔드 개발자", // 발행자
-        expiresIn: config.jwt.expiresInSec,
+        expiresIn: config.jwt.expiresIn,
       }
       const token = jwt.sign(
         { email: user.email },
