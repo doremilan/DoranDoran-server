@@ -15,7 +15,7 @@ module.exports = (app) => {
         console.log("카카오에서 보낸 userInfo", profile)
         try {
           const exUser = await User.findOne({
-            snsId: profile.id,
+            email: profile._json.kakao_account.email,
           })
           if (exUser) {
             done(null, exUser)
