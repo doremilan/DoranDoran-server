@@ -191,24 +191,20 @@ const kakaoCallback = (req, res, next) => {
     }
     const token = jwt.sign({ email: user.email }, config.jwt.secretKey, options)
     // 유저의 가족 리스트 추출
+    const familyChk = FamilyMember.find({ userId: user._id })
     let familyList = []
-    FamilyMember.find({ userId: user._id })
-      .exec()
-      .then((familyChk) => {
-        if (familyChk.length) {
-          for (let family of familyChk) {
-            const Checkedfamily = Family.findOne({ _id: family.familyId })
-            familyList.push(Checkedfamily)
-          }
-        }
-      })
+    if (familyChk.length) {
+      for (let family of familyChk) {
+        const Checkedfamily = Family.findOne({ _id: family.familyId })
+        familyList.push(Checkedfamily)
+      }
+    }
     res.json({
       token,
       user,
       familyList,
     })
   })(req, res, next)
-  next()
 }
 
 module.exports = {
