@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt")
 const passport = require("passport")
 const FamilyMember = require("../schemas/familyMember")
 const Family = require("../schemas/family")
-require("dotenv").config()
+const config = require("../config")
 
 const userSchema = Joi.object({
   email: Joi.string()
@@ -71,9 +71,7 @@ const signup = async (req, res) => {
       return
     }
 
-    // bcrypt module -> 암호화
-    // 10 --> saltOrRound --> salt를 10번 실행 (높을수록 강력) 대신 암호화 연산이 증가해서 속도가 느려짐.
-    const hashed = await bcrypt.hash(password, 10)
+    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds)
     const user = new User({
       email,
       password: hashed,
@@ -133,12 +131,11 @@ const login = async (req, res) => {
 
     const payload = { email }
 
-    const secret = process.env.SECRET_KEY
     const options = {
       issuer: "백엔드 개발자", // 발행자
-      expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
+      expiresIn: config.jwt.expiresInSec,
     }
-    const token = jwt.sign(payload, secret, options)
+    const token = jwt.sign(payload, config.jwt.secretKey, options)
     const userChk = await User.findOne({ email })
     const familyChk = await FamilyMember.find({ userId: userChk._id })
     const userInfoList = [
@@ -182,40 +179,20 @@ const login = async (req, res) => {
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
-//카카오 소셜 로그인 api + 콜백 및 토큰 부여
 const kakaoCallback = (req, res, next) => {
-  passport.authenticate(
-    "kakao",
-    { failureRedirect: "https://doremilan.shop" },
-    (err, user, info) => {
-      if (err) return next(err)
-      console.log("kakao 콜백!")
-      const { email, nickname, profileImg, snsId, provider } = user
-      const options = {
-        issuer: "백엔드 개발자", // 발행자
-        expiresIn: "10d", // 날짜: $$d, 시간: $$h, 분: $$m, 그냥 숫자만 넣으면 ms단위
-      }
-      const logIntoken = jwt.sign(
-        { email: email },
-        process.env.SECRET_KEY,
-        options
-      )
+  passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
+    console.log("카카오로그인 userInfo", user)
+    if (err) return next(err)
+    const token = jwt.sign({ snsId: user.snsId }, config.jwt.secretKey)
 
-      result = {
-        token: logIntoken,
-        email: email,
-        nickname: nickname,
-        profileImg: profileImg,
-        snsId: snsId,
-        provider: provider,
-      }
-
-      console.log("kakao authController result-->", result)
-      res
-        .status(201)
-        .json({ user: result, msg: "카카오 소셜 로그인에 성공하셨습니다." })
-    }
-  )(req, res, next)
+    res.json({
+      token,
+      nickname: user.nickname,
+      profileImg: user.profileImg,
+      email: user.email,
+      snsId: user.snsId,
+    })
+  })(req, res, next)
 }
 
 module.exports = {

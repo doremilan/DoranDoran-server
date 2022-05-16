@@ -177,42 +177,20 @@ const createFamilyMember = async (req, res) => {
 }
 
 //멤버 검색 API
-//api 테스트 성공.
-// email은 @ 앞의 것만 검색하게 하기
 const searchUser = async (req, res) => {
   try {
     const { search } = req.query
-
-    const regex = (pattern) => new RegExp(`.*${pattern}.*`)
-
-    //RegExp 생성자는 패턴을 사용해 텍스트를 판별할 때 사용
-    //$ = 텍스트(문자열)의 끝과 일치하는 지.
-    //^ = 텍스트의 첫 자와 일치하는 지를 보는 정규식 표현.
-    //세세한 패턴 수정 필요
-    //산토끼를 완성 검색하면 토끼는 안 나옴. 토끼를 검색하면 산토끼는 나옴.
-    //문자 하나만 입력하면 특정 문자는 에러남.
-    // TypeError: Cannot read properties of undefined (reading 'toHexString')
-    // user DB에 _id 가 없는 데이터가 있어서 이를 더미값으로 판단해서 에러가 났던 것.
-
-    const userRegex = regex(search)
-
-    console.log("regex({search})-->", regex(search))
-
-    let searchKeyword = await User.find({
-      $or: [{ email: { $regex: userRegex, $options: "i" } }],
+    let searchKeyword = await User.find({ $text: { $search: search } })
+    const userEmail = searchKeyword[0].email
+    res.status(200).json({
+      userEmail,
     })
-
-    let searchKeywordList = []
-    if (searchKeyword) {
-      let searchKeywordList = searchKeyword
-
-      res.status(200).json({ searchKeywordList })
-    } else {
-      res.status(200).json({ searchKeywordList })
-    }
   } catch (error) {
-    console.log("멤버 검색에서 오류!", error)
-    res.status(400).send({ result: false })
+    console.log("이메일 없음", error)
+    res.status(400).send({
+      result: false,
+      msg: "해당 이메일과 일치하는 정보가 없어요!",
+    })
   }
 }
 
