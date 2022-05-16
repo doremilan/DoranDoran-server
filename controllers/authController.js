@@ -206,15 +206,15 @@ const kakaoCallback = (req, res, next) => {
               familyList.push(Checkedfamily)
             }
           }
-          console.log("카카오로그인", token)
-          res.json({
-            token,
-            user,
-            familyList,
-          })
-        })(req, res, next)
-      next()
-    })
+          next()
+        })
+      console.log("카카오로그인", token)
+      res.json({
+        token,
+        user,
+        familyList,
+      })
+    })(req, res, next)
   } catch (error) {
     console.log("카카오로그인 오류", error)
     res.status(400).send({
