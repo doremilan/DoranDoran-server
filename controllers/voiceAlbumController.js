@@ -46,9 +46,7 @@ const getVoiceAlbum = async (req, res) => {
   const { familyId } = req.params
 
   try {
-    const voiceAlbumList = await VoiceAlbum.find({ familyId }).sort(
-      "-createdAt"
-    )
+    const voiceAlbumList = await VoiceAlbum.find({ familyId })
 
     res.status(200).json({
       voiceAlbumList,
