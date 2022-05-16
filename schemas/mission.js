@@ -23,6 +23,9 @@ const missionSchema = mongoose.Schema({
   familyMissionChk: {
     type: Boolean,
   },
+  myMissionChk: {
+    type: Boolean,
+  },
 })
 
 missionSchema.virtual("missionId").get(function () {

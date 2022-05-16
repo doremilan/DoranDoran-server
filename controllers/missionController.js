@@ -141,9 +141,10 @@ const completeMission = async (req, res) => {
   }
 }
 
-// 이번달 미션 목록조회
+// 이번달 미션 목록조회  (이번달 미션 목록 안에 각 미션들의 로그인한 유저의 미션 체크값 넣어주기)
 const getMission = async (req, res) => {
   const { familyId } = req.params
+  const { userId } = res.locals.user
 
   try {
     // 이번달 미션 리스트 & 전체 미션 수 추출
@@ -169,10 +170,19 @@ const getMission = async (req, res) => {
         const missionMembers = await MissionMember.find({
           missionId: mission.missionId,
         })
+        mission.missionMemberList = missionMembers
+        for (let missionMember of missionMembers) {
+          mission.myMissionChk = false
+        }
+        // 해당 유저의 각 미션 달성 여부 체크
         const completedMembers = await MissionChk.find({
           missionId: mission.missionId,
         })
-        mission.missionMemberList = missionMembers
+        for (let completedMember of completedMembers) {
+          if (completedMember.userId === userId) {
+            mission.myMissionChk = true
+          }
+        }
 
         // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
         let familyMissionChk = false
