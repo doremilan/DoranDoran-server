@@ -103,10 +103,13 @@ const completeMission = async (req, res) => {
         //전체미션 체크
         const missionMember = await MissionMember.find({ missionId })
         const completedMember = await MissionChk.find({ missionId })
-
+        let familyMissionChk = false
         if (missionMember.length === completedMember.length) {
           familyMissionChk = true
         }
+        console.log(1, missionMember)
+        console.log(2, completedMember)
+        console.log(3, familyMissionChk)
         res.status(200).json({
           myMissionChk,
           familyMissionChk,
@@ -116,6 +119,8 @@ const completeMission = async (req, res) => {
         await MissionChk.deleteOne({ missionId, userId })
         myMissionChk = false
         familyMissionChk = false
+        console.log(11, myMissionChk)
+        console.log(22, familyMissionChk)
         res.status(200).json({
           myMissionChk,
           familyMissionChk,
