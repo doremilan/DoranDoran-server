@@ -179,7 +179,7 @@ const login = async (req, res) => {
 //개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
-const kakaoCallback = (req, res, next) => {
+const kakaoCallback = async (req, res, next) => {
   passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
     console.log("카카오로그인 userInfo", user)
     if (err) return next(err)
