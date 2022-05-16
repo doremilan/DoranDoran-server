@@ -181,43 +181,34 @@ const login = async (req, res) => {
 //**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
 
 const kakaoCallback = (req, res, next) => {
-  try {
-    passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
-      console.log("카카오로그인 userInfo", user)
-      if (err) return next(err)
-      console.log(11111, user._id)
-      const options = {
-        issuer: "백엔드 개발자", // 발행자
-        expiresIn: config.jwt.expiresIn,
-      }
-      const token = jwt.sign(
-        { email: user.email },
-        config.jwt.secretKey,
-        options
-      )
-      // 유저의 가족 리스트 추출
-      const familyChk = FamilyMember.find({ userId: user._id })
-      let familyList = []
-      if (familyChk.length) {
-        for (let family of familyChk) {
-          const Checkedfamily = Family.findOne({ _id: family.familyId })
-          familyList.push(Checkedfamily)
+  passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
+    console.log("카카오로그인 userInfo", user)
+    if (err) return next(err)
+    console.log(11111, user._id)
+    const options = {
+      issuer: "백엔드 개발자",
+      expiresIn: config.jwt.expiresIn,
+    }
+    const token = jwt.sign({ email: user.email }, config.jwt.secretKey, options)
+    // 유저의 가족 리스트 추출
+    let familyList = []
+    FamilyMember.find({ userId: user._id })
+      .exec()
+      .then((familyChk) => {
+        if (familyChk.length) {
+          for (let family of familyChk) {
+            const Checkedfamily = Family.findOne({ _id: family.familyId })
+            familyList.push(Checkedfamily)
+          }
         }
-      }
-      console.log("카카오로그인", token)
-      res.json({
-        token,
-        user,
-        familyList,
       })
-    })(req, res, next)
-  } catch (error) {
-    console.log("카카오로그인 오류", error)
-    res.status(400).send({
-      result: false,
-      msg: "카카오로그인 실패",
+    res.json({
+      token,
+      user,
+      familyList,
     })
-  }
+  })(req, res, next)
+  next()
 }
 
 module.exports = {
