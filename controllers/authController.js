@@ -190,7 +190,7 @@ const kakaoCallback = (req, res, next) => {
         expiresIn: config.jwt.expiresInSec,
       }
       const token = jwt.sign(
-        { userId: user._id },
+        { email: user.email },
         config.jwt.secretKey,
         options
       )
