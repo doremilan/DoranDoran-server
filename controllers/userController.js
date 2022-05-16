@@ -21,6 +21,7 @@ const getUser = async (req, res) => {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
         familyList.push(Checkedfamily)
       }
+      console.log("유저정보", user, familyList)
       res.status(200).json({ user, familyList })
     } else {
       res.status(200).json({ user, familyList })

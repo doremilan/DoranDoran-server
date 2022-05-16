@@ -15,7 +15,7 @@ const RandomMsg = require("../schemas/randomMsg")
 const getMainPage = async (req, res) => {
   const { familyId } = req.params
   const { userId } = res.locals.user
-
+  console.log("유저정보2", res.locals.user)
   try {
     // 랜덤메시지 랜덤추출
     const randomMsg = await RandomMsg.aggregate([{ $sample: { size: 1 } }])
