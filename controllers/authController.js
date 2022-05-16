@@ -153,6 +153,7 @@ const login = async (req, res) => {
 
         familyList.push(Checkedfamily)
       }
+      console.log("일반로그인", token)
       res.status(200).json({
         logIntoken: token,
         userInfoList: userInfoList,
@@ -203,7 +204,7 @@ const kakaoCallback = (req, res, next) => {
       //     familyList.push(Checkedfamily)
       //   }
       // }
-      console.log(token)
+      console.log("카카오로그인", token)
       res.json({
         token,
         user,
