@@ -60,9 +60,12 @@ const postMission = async (req, res) => {
           msg: "미션 멤버를 등록해주세요.",
         })
       }
+      const userInfo = await FamilyMember.findOne({ userId })
+      const userFamilyName = userInfo.familyMemberNickname
       res.status(201).json({
         missionId: createdMission.missionId,
         createdMember,
+        userFamilyName,
         msg: "새로운 미션이 등록되었어요.",
       })
     } else {
@@ -86,27 +89,21 @@ const completeMission = async (req, res) => {
   const { userId } = res.locals.user
   const { completedAt } = req.body
   let { myMissionChk, familyMissionChk } = req.body
-  console.log(1, myMissionChk)
   try {
     const memberChk = await MissionMember.findOne({ userId, missionId })
-    console.log(memberChk)
     if (memberChk) {
       //개인미션 체크
       if (myMissionChk) {
-        console.log(2, myMissionChk)
         await MissionChk.deleteOne({ missionId, userId })
         myMissionChk = false
         //전체미션 체크
         const missionMember = await MissionMember.find({ missionId })
         const completedMember = await MissionChk.find({ missionId })
-        console.log(2.1, missionMember)
-        console.log(2.2, completedMember)
         if (missionMember.length === completedMember.length) {
           familyMissionChk = true
         } else {
           familyMissionChk = false
         }
-        console.log(2.3, myMissionChk, familyMissionChk)
         res.status(200).json({
           myMissionChk,
           familyMissionChk,
@@ -119,17 +116,14 @@ const completeMission = async (req, res) => {
           userId,
           familyMemberId: familyMemberId.familyMemberId,
         })
-        console.log(3, missionChk)
         let myMissionChk = true
         //전체미션 체크
         const missionMember = await MissionMember.find({ missionId })
         const completedMember = await MissionChk.find({ missionId })
-        console.log(4, missionMember)
 
         if (missionMember.length === completedMember.length) {
           familyMissionChk = true
         }
-        console.log(6, myMissionChk, familyMissionChk)
         res.status(200).json({
           myMissionChk,
           familyMissionChk,
