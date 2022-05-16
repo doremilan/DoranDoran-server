@@ -71,7 +71,7 @@ const signup = async (req, res) => {
       return
     }
 
-    const hashed = await bcrypt.hash(password, config.bcrypt.saltRounds)
+    const hashed = await bcrypt.hash(password, 10)
     const user = new User({
       email,
       password: hashed,
