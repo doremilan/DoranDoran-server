@@ -176,20 +176,67 @@ const createFamilyMember = async (req, res) => {
   }
 }
 
-//멤버 검색 API
+//멤버 검색 API (전체 일치만 검색)
+// const searchUser = async (req, res) => {
+//   try {
+//     const { search } = req.query
+//     let searchKeyword = await User.findOne({ email: search })
+//     const userEmail = searchKeyword.email
+//     res.status(200).json({
+//       userEmail,
+//     })
+//   } catch (error) {
+//     console.log("이메일 없음", error)
+//     res.status(400).send({
+//       result: false,
+//       msg: "해당 이메일과 일치하는 정보가 없어요!",
+//     })
+//   }
+// }
+
+// 멤버 검색 API (앞자리 일치만 검색)
 const searchUser = async (req, res) => {
+  const { search } = req.query
   try {
-    const { search } = req.query
-    let searchKeyword = await User.find({ $text: { $search: search } })
-    const userEmail = searchKeyword[0].email
-    res.status(200).json({
-      userEmail,
-    })
+    let searchKeywords = await User.find({ $text: { $search: search } })
+    console.log(1, searchKeywords)
+
+    if (searchKeywords.length) {
+      for (let searchKeyword of searchKeywords) {
+        console.log(2, searchKeyword)
+        const keyword1 = search.split("@")
+        const keyword2 = searchKeyword.email.split("@")
+        console.log(3, keyword1, keyword2)
+
+        if (search === searchKeyword.email) {
+          const userEmail = searchKeyword.email
+          console.log(5, userEmail)
+          return res.status(200).json({
+            userEmail,
+          })
+        } else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
+          const userEmail = searchKeyword.email
+          console.log(4, userEmail)
+          return res.status(200).json({
+            userEmail,
+          })
+        }
+      }
+      res.status(400).send({
+        result: false,
+        msg: "해당 이메일과 일치하는 정보가 없어요!",
+      })
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "해당 이메일과 일치하는 정보가 없어요!",
+      })
+    }
   } catch (error) {
-    console.log("이메일 없음", error)
+    console.log("검색 오류", error)
     res.status(400).send({
       result: false,
-      msg: "해당 이메일과 일치하는 정보가 없어요!",
+      msg: "가족 구성원 검색 실패",
     })
   }
 }
