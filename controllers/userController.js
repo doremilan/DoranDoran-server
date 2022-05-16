@@ -40,6 +40,7 @@ const getUser = async (req, res) => {
 //프로필 조회 API
 const getProfile = async (req, res) => {
   try {
+    console.log(res)
     const { email } = res.locals.user
     const userInfo = await User.findOne({ email })
     const nickname = userInfo.nickname
