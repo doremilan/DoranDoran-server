@@ -32,11 +32,11 @@ const userSchema = Joi.object({
   passwordCheck: Joi.string(),
 
   nickname: Joi.string()
-    .min(3)
+    .min(2)
     .max(15)
     .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$")),
 
-  //3-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
+  //2-15자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
 
   profileImg: Joi.string(),
   todayMood: Joi.string(),
