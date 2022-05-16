@@ -102,9 +102,9 @@ const deleteVoiceAlbum = async (req, res) => {
   const { voiceAlbumId } = req.params
 
   try {
-    const existVoiceAlbum = await VoiceAlbum.findOne({ voiceAlbumId })
+    const existVoiceAlbum = await VoiceAlbum.findOne({ _id: voiceAlbumId })
     if (existVoiceAlbum) {
-      await VoiceAlbum.deleteOne({ voiceAlbumId })
+      await VoiceAlbum.deleteOne({ _id: voiceAlbumId })
       await VoiceFile.deleteMany({
         voiceAlbumId: existVoiceAlbum.voiceAlbumId,
       })
