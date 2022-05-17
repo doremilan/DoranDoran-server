@@ -14,6 +14,7 @@ const getUser = async (req, res) => {
     user.password = ""
     const { userId } = res.locals.user
     const familyChk = await FamilyMember.find({ userId })
+    console.log(123, familyChk)
 
     let familyList = []
     if (familyChk.length) {
@@ -24,7 +25,7 @@ const getUser = async (req, res) => {
       console.log("유저정보", user, familyList)
       res.status(200).json({ user, familyList })
     } else {
-      familyList = []
+      // familyList = []
       res.status(200).json({ user, familyList })
     }
   } catch (error) {
