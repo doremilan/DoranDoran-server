@@ -23,13 +23,13 @@ const getMainPage = async (req, res) => {
     // 가족정보 추출
     const familyInfo = await Family.findOne({ _id: familyId })
     // 최신사진 추출
-    let recentPhoto = []
+    let recentPhoto = {}
     const photos = await Photo.find({ familyId }).sort("-createdAt")
     if (photos.length) {
       recentPhoto = photos[0]
     }
     // 최신음성메시지 추출
-    let recentVoiceFile = []
+    let recentVoiceFile = {}
     const voiceFiles = await VoiceFile.find({ familyId }).sort("-createdAt")
     if (voiceFiles.length) {
       recentVoiceFile = voiceFiles[0]
@@ -46,20 +46,17 @@ const getMainPage = async (req, res) => {
       }
     }
     // 최신 미션 및 미션 멤버 추출
-    let recentMission = []
-    let recentMissionUser = []
+    let recentMission = {}
+    let recentMissionUser = {}
     let recentMissionMembers = []
     const missions = await Mission.find({ familyId }).sort("-createdAt")
-    console.log(1, missions)
     if (missions.length) {
-      console.log(2, missions.length)
-      const recentMission = missions[0]
-      console.log(3, recentMission)
+      recentMission = missions[0]
       if (recentMission) {
-        const recentMissionUser = await MissionMember.findOne({
+        recentMissionUser = await MissionMember.findOne({
           userId: recentMission.userId,
         })
-        const recentMissionMembers = await MissionMember.find({
+        recentMissionMembers = await MissionMember.find({
           missionId: recentMission.missionId,
         })
       }
