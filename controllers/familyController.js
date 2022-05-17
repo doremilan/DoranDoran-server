@@ -132,7 +132,7 @@ const createFamilyMember = async (req, res) => {
     const { familyId } = req.params
     let { email, familyMemberNickname } =
       await familyMemberSchema.validateAsync(req.body)
-    console.log(1, body)
+    console.log(1, email, familyMemberNickname)
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
     const todayMood = newFamilyMember.todayMood
