@@ -53,11 +53,47 @@ const getMainPage = async (req, res) => {
     if (missions.length) {
       recentMission = missions[0]
       if (recentMission) {
-        recentMissionUser = await MissionMember.findOne({
-          userId: recentMission.userId,
-        })
-        recentMissionMembers = await MissionMember.find({
+        recentMissionUser = await MissionMember.findOne(
+          {
+            userId: recentMission.userId,
+          },
+          "familyMemberNickname familyMemberId"
+        )
+        recentMissionMembers = await MissionMember.find(
+          {
+            missionId: recentMission.missionId,
+          },
+          "familyMemberNickname profileImg myMissionChk familyMemberId"
+        )
+        const completedMembers = await MissionChk.find({
           missionId: recentMission.missionId,
+        })
+        // 각 멤버의 미션완료 여부 체크
+        let myMissionChk = false
+        // 완료멤버가 없을 시 예외처리 (빈 객체 속성을 배열로 바꿔서 체크)
+        if (Object.keys(completedMembers).length === 0) {
+          recentMissionMembers.map((missionMember) => {
+            myMissionChk = false
+            missionMember.myMissionChk = myMissionChk
+          })
+        }
+        recentMissionMembers.filter((missionMember) => {
+          completedMembers.forEach((completedMember) => {
+            if (
+              completedMember.familyMemberId === missionMember.familyMemberId
+            ) {
+              myMissionChk = true
+              missionMember.myMissionChk = myMissionChk
+              // 중복체크 예외처리
+            } else if (missionMember.myMissionChk === true) {
+              missionMember.myMissionChk === true
+            } else if (
+              completedMember.familyMemberId !== missionMember.familyMemberId
+            ) {
+              myMissionChk = false
+              missionMember.myMissionChk = myMissionChk
+            }
+          })
         })
       }
     }
