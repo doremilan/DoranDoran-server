@@ -12,8 +12,6 @@ const PhotoAlbum = require("../schemas/photoAlbum")
 const VoiceAlbum = require("../schemas/voiceAlbum")
 const VoiceFile = require("../schemas/voiceFile")
 const Like = require("../schemas/like")
-const MissionMember = require("../schemas/missionMember")
-const MissionChk = require("../schemas/missionChk")
 const Joi = require("joi")
 
 const familySchema = Joi.object({
