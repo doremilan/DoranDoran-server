@@ -74,7 +74,7 @@ const createFamily = async (req, res) => {
       familyMemberNickname: user.nickname,
       userId: user.userId,
       profileImg: user.profileImg,
-      todayMood: user.todayMood,
+      todayMood: null,
     })
 
     // 배지 자동생성
