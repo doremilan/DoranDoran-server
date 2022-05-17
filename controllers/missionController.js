@@ -170,6 +170,7 @@ const getMission = async (req, res) => {
         const missionMembers = await MissionMember.find({
           missionId: mission.missionId,
         })
+        console.log("미션멤버", missionMembers)
         mission.missionMemberList = missionMembers
         for (let missionMember of missionMembers) {
           mission.myMissionChk = false
@@ -178,6 +179,7 @@ const getMission = async (req, res) => {
         const completedMembers = await MissionChk.find({
           missionId: mission.missionId,
         })
+        console.log("완료멤버", completedMembers)
         for (let completedMember of completedMembers) {
           if (completedMember.userId === userId) {
             mission.myMissionChk = true
@@ -206,19 +208,24 @@ const getMission = async (req, res) => {
         }
         missionMembers.filter((missionMember) => {
           completedMembers.forEach((completedMember) => {
+            console.log(1, missionMember)
+            console.log(2, completedMember)
             if (
               completedMember.familyMemberId === missionMember.familyMemberId
             ) {
               myMissionChk = true
               missionMember.myMissionChk = myMissionChk
+              console.log(3, missionMember.myMissionChk)
               // 중복체크 예외처리
             } else if (missionMember.myMissionChk === true) {
               missionMember.myMissionChk === true
+              console.log(4, missionMember.myMissionChk)
             } else if (
               completedMember.familyMemberId !== missionMember.familyMemberId
             ) {
               myMissionChk = false
               missionMember.myMissionChk = myMissionChk
+              console.log(5, missionMember.myMissionChk)
             }
           })
         })

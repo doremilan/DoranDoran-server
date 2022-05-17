@@ -2,6 +2,8 @@ const Family = require("../schemas/family")
 const FamilyMember = require("../schemas/familyMember")
 const User = require("../schemas/user")
 const Mission = require("../schemas/mission")
+const MissionMember = require("../schemas/missionMember")
+const MissionChk = require("../schemas/missionChk")
 const Badge = require("../schemas/badge")
 const Comment = require("../schemas/comment")
 const Event = require("../schemas/event")
@@ -134,6 +136,7 @@ const createFamilyMember = async (req, res) => {
 
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
+    const todayMood = newFamilyMember.todayMood
     const existMember = await FamilyMember.findOne({
       familyId: familyId,
       userId: userId,
@@ -159,11 +162,18 @@ const createFamilyMember = async (req, res) => {
       profileImg = null
     }
 
+    if (newFamilyMember.todayMood) {
+      todayMood = newFamilyMember.todayMood
+    } else {
+      todayMood = null
+    }
+
     const familyMember = await FamilyMember.create({
       familyId: familyId,
       familyMemberNickname,
       userId: userId,
       profileImg,
+      todayMood,
     })
 
     res.status(201).json({
@@ -242,12 +252,10 @@ const searchUser = async (req, res) => {
 }
 
 //가족구성원 조회 API
-//user의 userId를 -> userId로 FamlilyMember db에서 member를 찾는다. ->
 const getfamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params
-    const familyMemberList = await FamilyMember.find({ familyId: familyId })
-
+    const familyMemberList = await FamilyMember.find({ familyId })
     res.status(200).json({ familyMemberList })
   } catch (error) {
     console.log("가족 구성원 조회에서 오류!", error)
@@ -317,18 +325,18 @@ const deleteFamily = async (req, res) => {
     console.log("삭제 familyId-->", familyId)
 
     await Family.deleteOne({ _id: familyId })
-    await FamilyMember.deleteMany({ familyId: familyId })
-    await Mission.deleteMany({ familyId: familyId })
-    await Badge.deleteMany({ familyId: familyId })
-    await Comment.deleteMany({ familyId: familyId })
-    await Event.deleteMany({ familyId: familyId })
-    await Photo.deleteMany({ familyId: familyId })
-    await PhotoAlbum.deleteMany({ familyId: familyId })
-    await VoiceAlbum.deleteMany({ familyId: familyId })
-    await VoiceFile.deleteMany({ familyId: familyId })
-    await Like.deleteMany({ familyId: familyId })
-    await MissionMember.deleteMany({ familyId: familyId })
-    await MissionChk.deleteMany({ familyId: familyId })
+    await FamilyMember.deleteMany({ familyId })
+    await Mission.deleteMany({ familyId })
+    await Badge.deleteMany({ familyId })
+    await Comment.deleteMany({ familyId })
+    await Event.deleteMany({ familyId })
+    await Photo.deleteMany({ familyId })
+    await PhotoAlbum.deleteMany({ familyId })
+    await VoiceAlbum.deleteMany({ familyId })
+    await VoiceFile.deleteMany({ familyId })
+    await Like.deleteMany({ familyId })
+    await MissionMember.deleteMany({ familyId })
+    await MissionChk.deleteMany({ familyId })
 
     res.status(200).json({ msg: "가족이 삭제됐습니다." })
   } catch (error) {
@@ -347,6 +355,8 @@ const deleteFamilyMember = async (req, res) => {
     console.log("삭제 email-->", email)
     console.log("삭제 familyMemberId-->", familyMemberId)
     await FamilyMember.deleteOne({ _id: familyMemberId })
+    await MissionMember.deleteMany({ familyMemberId })
+    await MissionChk.deleteMany({ familyMemberId })
 
     res.status(200).json({ msg: "가족 구성원이 삭제됐습니다" })
   } catch (error) {
