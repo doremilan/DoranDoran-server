@@ -135,19 +135,17 @@ const login = async (req, res) => {
     const payload = { email }
 
     const options = {
-      issuer: "백엔드 개발자", // 발행자
+      issuer: "백엔드 개발자",
       expiresIn: config.jwt.expiresIn,
     }
     const token = jwt.sign(payload, config.jwt.secretKey, options)
     const userChk = await User.findOne({ email })
     const familyChk = await FamilyMember.find({ userId: userChk._id })
-    const userInfoList = [
-      {
-        email: userChk.email,
-        nickname: userChk.nickname,
-        profileImg: userChk.profileImg,
-      },
-    ]
+    const userInfo = {
+      email: userChk.email,
+      nickname: userChk.nickname,
+      profileImg: userChk.profileImg,
+    }
 
     let familyList = []
     if (familyChk.length) {
@@ -159,14 +157,14 @@ const login = async (req, res) => {
       console.log("일반로그인", token)
       res.status(200).json({
         logIntoken: token,
-        userInfoList: userInfoList,
+        userInfo: userInfo,
         familyList,
         msg: "로그인이 완료되었습니다.",
       })
     } else {
       res.status(200).json({
         logIntoken: token,
-        userInfoList: userInfoList,
+        userInfo: userInfo,
         familyList,
         msg: "로그인이 완료되었습니다.",
       })
