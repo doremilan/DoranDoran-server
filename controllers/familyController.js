@@ -74,6 +74,7 @@ const createFamily = async (req, res) => {
       familyMemberNickname: user.nickname,
       userId: user.userId,
       profileImg: user.profileImg,
+      todayMood: user.todayMood,
     })
 
     // 배지 자동생성
@@ -131,10 +132,11 @@ const createFamilyMember = async (req, res) => {
     const { familyId } = req.params
     let { email, familyMemberNickname } =
       await familyMemberSchema.validateAsync(req.body)
-
+    console.log(1, body)
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
     const todayMood = newFamilyMember.todayMood
+    console.log(2, newFamilyMember, userId, todayMood)
     const existMember = await FamilyMember.findOne({
       familyId: familyId,
       userId: userId,
