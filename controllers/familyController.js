@@ -16,16 +16,17 @@ const Joi = require("joi")
 
 const familySchema = Joi.object({
   familyTitle: Joi.string()
-    .max(8)
-    .pattern(new RegExp("^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$"))
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$"))
     .required(),
 })
-// 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
+//2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 
 const familyMemberSchema = Joi.object({
   email: Joi.string(),
-  familyMemberNickname: Joi.string().min(2).max(8).required(),
-  // 2~8자
+  familyMemberNickname: Joi.string()
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,8}$"))
+    .required(),
+  //r가족 멤버 닉네임 - 2-8자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 })
 
 //가족 목록 GET API
@@ -136,6 +137,7 @@ const createFamilyMember = async (req, res) => {
 
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
+    let todayMood
     if (newFamilyMember.snsId && todayMood === null) {
       todayMood = null
       console.log(2, newFamilyMember, userId, todayMood)
