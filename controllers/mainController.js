@@ -22,19 +22,6 @@ const getMainPage = async (req, res) => {
     const userInfo = await User.findOne({ _id: userId })
     // 가족정보 추출
     const familyInfo = await Family.findOne({ _id: familyId })
-    // 가족 멤버리스트 추출
-    const familyMemberList = await FamilyMember.find({ familyId })
-    // if (familyMemberList.length) {
-    //   for (let familyMember of familyMemberList) {
-    //     const user = await User.findOne({ _id: familyMember.userId })
-    //     if (user.todayMood) {
-    //       familyMember.todayMood = user.todayMood
-    //     } else {
-    //       familyMember.todayMood = null
-    //     }
-    //   }
-    // }
-
     // 최신사진 추출
     let recentPhoto = []
     const photos = await Photo.find({ familyId }).sort("-createdAt")
@@ -58,51 +45,25 @@ const getMainPage = async (req, res) => {
         }
       }
     }
-
-    // 이번달 미션 달성률 계산
+    // 최신 미션 및 미션 멤버 추출
+    let recentMission = []
+    let recentMissionUser = []
+    let recentMissionMembers = []
     const missions = await Mission.find({ familyId }).sort("-createdAt")
-    // 이번달 미션 리스트 추출 & 전체 미션 수 계산
-    const thisMonthMissionList = []
-    let recentMission = {}
-    let totalMission = 0
+    console.log(1, missions)
     if (missions.length) {
-      for (let mission of missions) {
-        if (
-          mission.createdAt.toISOString().substring(0, 7).replace(/-/g, "") ===
-          thisMonth
-        ) {
-          thisMonthMissionList.push(mission)
-          totalMission++
-        }
+      console.log(2, missions.length)
+      const recentMission = missions[0]
+      console.log(3, recentMission)
+      if (recentMission) {
+        const recentMissionUser = await MissionMember.findOne({
+          userId: recentMission.userId,
+        })
+        const recentMissionMembers = await MissionMember.find({
+          missionId: recentMission.missionId,
+        })
       }
     }
-    if (thisMonthMissionList.length) {
-      recentMission = thisMonthMissionList[0]
-    }
-    // 각 미션의 멤버 리스트 추출 후 달성 완료된 미션 수 계산
-    let completedMission = 0
-    if (thisMonthMissionList.length) {
-      for (let mission of thisMonthMissionList) {
-        const missionMembers = await MissionMember.find({
-          missionId: mission.missionId,
-        })
-        const completedMembers = await MissionChk.find({
-          missionId: mission.missionId,
-        })
-        if (missionMembers.length === completedMembers.length) {
-          completedMission++
-        }
-      }
-    }
-
-    // 미션 달성률 계산
-    const Percentage = (completedMission / totalMission) * 100
-    let completePercentage = Math.floor(Percentage)
-    // NaN일 경우 예외처리 (0으로 반환)
-    if (!Percentage) {
-      completePercentage = 0
-    }
-
     // 획득배지 랜덤추출
     const badgeList = await Badge.findOne({ familyId })
     const badges = badgeList.badge
@@ -151,17 +112,16 @@ const getMainPage = async (req, res) => {
     // 획득배지 랜덤추출
     let randomValue = Math.floor(Math.random() * checkedbadges.length)
     const randomBadge = checkedbadges[randomValue]
-
     res.status(200).json({
       randomMsg,
       userInfo,
       familyInfo,
-      familyMemberList,
-      completePercentage,
       recentPhoto,
       recentVoiceFile,
       thisMonthEventList,
       recentMission,
+      recentMissionUser,
+      recentMissionMembers,
       randomBadge,
     })
   } catch (error) {
