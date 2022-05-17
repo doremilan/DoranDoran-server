@@ -24,6 +24,7 @@ const getUser = async (req, res) => {
       console.log("유저정보", user, familyList)
       res.status(200).json({ user, familyList })
     } else {
+      familyList = []
       res.status(200).json({ user, familyList })
     }
   } catch (error) {
