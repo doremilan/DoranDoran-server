@@ -27,6 +27,7 @@ const createVoiceFile = async (req, res) => {
     // console.log(33, familyMemberNickname, profileImg);
     if (voiceFile !== null) {
       const createVoice = await VoiceFile.create({
+        userId,
         voiceAlbumId,
         voiceTitle,
         voiceFile,

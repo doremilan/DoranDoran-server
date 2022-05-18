@@ -302,17 +302,19 @@ const editFamilyMember = async (req, res) => {
     let { familyMemberNickname } = await familyMemberSchema.validateAsync(
       req.body
     )
-    console.log(familyMemberNickname)
     await FamilyMember.updateOne(
       { familyId, _id: familyMemberId },
       { $set: { familyMemberNickname } }
     )
-
     const modifyFamilyMemberList = await FamilyMember.findOne({
       familyId,
       _id: familyMemberId,
     })
-    console.log(modifyFamilyMemberList)
+    // 음성 파일 수정
+    await VoiceFile.updateOne(
+      { familyId, userId: modifyFamilyMemberList.userId },
+      { $set: { familyMemberNickname } }
+    )
     res.status(200).json({ modifyFamilyMemberList })
   } catch (error) {
     console.log("가족 구성원 수정에서 오류!", error)
