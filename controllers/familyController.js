@@ -302,15 +302,9 @@ const editFamilyMember = async (req, res) => {
     let { familyMemberNickname } = await familyMemberSchema.validateAsync(
       req.body
     )
-    const { email } = res.locals.user
 
     await FamilyMember.updateOne(
-      { email, _id: familyId, _id: familyMemberId },
-      { $set: { familyMemberNickname } }
-    )
-    //미션 멤버 수정
-    await MissionMember.updateOne(
-      { familyId, familyMemberId },
+      { familyId, _id: familyMemberId },
       { $set: { familyMemberNickname } }
     )
 

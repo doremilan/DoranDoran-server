@@ -53,11 +53,11 @@ const getMainPage = async (req, res) => {
     if (missions.length) {
       recentMission = missions[0]
       if (recentMission) {
-        recentMissionUser = await MissionMember.findOne(
+        recentMissionUser = await FamilyMember.findOne(
           {
             userId: recentMission.userId,
           },
-          "familyMemberNickname familyMemberId"
+          "familyMemberNickname"
         )
         recentMissionMembers = await MissionMember.find(
           {
