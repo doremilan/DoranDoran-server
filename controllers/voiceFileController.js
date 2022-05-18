@@ -20,7 +20,7 @@ const createVoiceFile = async (req, res) => {
     const voiceFile = req.file.location
     const createdAt = new Date()
 
-    const userInfo = await FamilyMember.findOne({ userId })
+    const userInfo = await FamilyMember.findOne({ familyId, userId })
     // console.log(22, userInfo)
     const familyMemberNickname = userInfo.familyMemberNickname
     const profileImg = userInfo.profileImg
