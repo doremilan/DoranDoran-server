@@ -273,7 +273,6 @@ const getfamilyMember = async (req, res) => {
 }
 
 //가족 이름 수정 API
-//api 테스트 성공
 const editFamilyTitle = async (req, res) => {
   try {
     const { familyId } = req.params
@@ -297,7 +296,6 @@ const editFamilyTitle = async (req, res) => {
 }
 
 //가족 구성원 수정 API
-//api 테스트 성공
 const editFamilyMember = async (req, res) => {
   try {
     const { familyId, familyMemberId } = req.params
@@ -308,6 +306,11 @@ const editFamilyMember = async (req, res) => {
 
     await FamilyMember.updateOne(
       { email, _id: familyId, _id: familyMemberId },
+      { $set: { familyMemberNickname } }
+    )
+    //미션 멤버 수정
+    await MissionMember.updateOne(
+      { familyId, familyMemberId },
       { $set: { familyMemberNickname } }
     )
 
