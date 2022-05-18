@@ -6,6 +6,7 @@ const MissionMember = require("../schemas/missionMember")
 const MissionChk = require("../schemas/missionChk")
 const Badge = require("../schemas/badge")
 const Photo = require("../schemas/photo")
+const VoiceAlbum = require("../schemas/voiceAlbum")
 const VoiceFile = require("../schemas/voiceFile")
 const Comment = require("../schemas/comment")
 const Event = require("../schemas/event")
@@ -28,12 +29,19 @@ const getMainPage = async (req, res) => {
     if (photos.length) {
       recentPhoto = photos[0]
     }
-    // 최신음성메시지 추출
+    // 최신 음성메시지 추출
     let recentVoiceFile = {}
     const voiceFiles = await VoiceFile.find({ familyId }).sort("-createdAt")
     if (voiceFiles.length) {
       recentVoiceFile = voiceFiles[0]
     }
+    const voiceAlbumInfo = await VoiceAlbum.findOne(
+      {
+        _id: recentVoiceFile.voiceAlbumId,
+      },
+      "voiceAlbumName"
+    )
+
     // 이번달 일정 추출
     const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")
     const thisMonthEventList = []
@@ -151,6 +159,7 @@ const getMainPage = async (req, res) => {
       familyInfo,
       recentPhoto,
       recentVoiceFile,
+      voiceAlbumInfo,
       thisMonthEventList,
       recentMission,
       recentMissionUser,
