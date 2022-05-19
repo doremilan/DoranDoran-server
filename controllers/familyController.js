@@ -133,19 +133,16 @@ const createFamilyMember = async (req, res) => {
     const { familyId } = req.params
     let { email, familyMemberNickname } =
       await familyMemberSchema.validateAsync(req.body)
-    console.log(1, email, familyMemberNickname)
-
+    // 새 구성원 추가
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
+    // 카카오 로그인 유저의 경우 오늘의 기분 예외처리
     let todayMood
     if (newFamilyMember.snsId && todayMood === null) {
       todayMood = null
-      console.log(2, newFamilyMember, userId, todayMood)
     } else {
       todayMood = newFamilyMember.todayMood
-      console.log(3, newFamilyMember, userId, todayMood)
     }
-
     const existMember = await FamilyMember.findOne({
       familyId: familyId,
       userId: userId,
@@ -154,7 +151,6 @@ const createFamilyMember = async (req, res) => {
       familyId: familyId,
       familyMemberNickname,
     })
-
     if (existMember) {
       res.status(400).send({
         msg: "이미 추가되어 있는 구성원입니다.",
@@ -164,19 +160,18 @@ const createFamilyMember = async (req, res) => {
         msg: "중복된 호칭이 있습니다.",
       })
     }
-
+    // 프로필 이미지 없을 경우 키값 생성
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg
     } else {
       profileImg = null
     }
-
+    // 오늘의 기분 상태값 없을 경우 키값 생성
     if (newFamilyMember.todayMood) {
       todayMood = newFamilyMember.todayMood
     } else {
       todayMood = null
     }
-
     const familyMember = await FamilyMember.create({
       familyId: familyId,
       familyMemberNickname,
@@ -184,7 +179,6 @@ const createFamilyMember = async (req, res) => {
       profileImg,
       todayMood,
     })
-
     res.status(201).json({
       restult: true,
       familyMember,

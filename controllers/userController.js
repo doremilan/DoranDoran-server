@@ -113,16 +113,27 @@ const editProfile = async (req, res) => {
 //오늘의 기분 수정 API
 const editTodayMood = async (req, res) => {
   try {
-    const { email } = res.locals.user
+    const { userId } = res.locals.user
     const { todayMood } = req.body
-    await User.updateOne({ email }, { $set: { todayMood: req.body.todayMood } })
-
-    res.status(200).json({
-      todayMood,
-    })
+    // 오늘의 기분 상태값 공백 체크
+    if (todayMood !== null) {
+      const existUser = await User.findOne({ _id: userId })
+      if (existUser) {
+        // 유저 db 수정
+        await User.updateOne({ _id: userId }, { $set: { todayMood } })
+        // 가족멤버 db 수정
+        await FamilyMember.updateMany({ userId }, { $set: { todayMood } })
+      }
+      res.status(200).json({
+        todayMood,
+        msg: "오늘의 기분이 수정되었어요.",
+      })
+    }
   } catch (error) {
     console.log("오늘의기분 수정에서 오류!", error)
-    res.status(400).send({ result: false })
+    res.status(400).send({
+      result: false,
+    })
   }
 }
 
