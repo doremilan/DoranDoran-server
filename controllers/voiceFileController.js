@@ -2,29 +2,49 @@ const VoiceAlbum = require("../schemas/voiceAlbum")
 const VoiceFile = require("../schemas/voiceFile")
 const FamilyMember = require("../schemas/familyMember")
 const User = require("../schemas/user")
+const convertAndSaveS3 = require("../middlewares/converter")
+const config = require("../config")
 
 const AWS = require("aws-sdk")
 const s3 = new AWS.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: process.env.S3_BUCKET_REGION,
+  accessKeyId: config.s3.accessKey,
+  secretAccessKey: config.s3.secretKey,
+  region: config.s3.bucketRegion,
 })
 
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
   try {
-    console.log(11, req.file)
+    console.log("녹음파일속성", req.file)
     const { familyId, voiceAlbumId } = req.params
     const { voiceTitle, voicePlayTime } = req.body
     const { userId } = res.locals.user
-    const voiceFile = req.file.location
     const createdAt = new Date()
-
+    // 녹음파일 변환
+    const { location } = req.file
+    const { key } = req.file
+    const fileName1 = key.split("/")[1]
+    const fileName2 = fileName1.split(".")[0]
+    const newFileName = `${fileName2}.mp3`
+    const oldFileName = `${fileName2}.webm`
+    const voiceFile = `${config.s3.s3Host}/voice/${newFileName}`
+    console.log(voiceFile)
+    await convertAndSaveS3(newFileName, location)
+    // 변환 전 파일 삭제
+    s3.deleteObject(
+      {
+        Bucket: "family-8",
+        Key: "voice/" + oldFileName.replaceAll("+", " "),
+      },
+      (err, data) => {
+        if (err) {
+          throw err
+        }
+      }
+    )
     const userInfo = await FamilyMember.findOne({ familyId, userId })
-    // console.log(22, userInfo)
     const familyMemberNickname = userInfo.familyMemberNickname
     const profileImg = userInfo.profileImg
-    // console.log(33, familyMemberNickname, profileImg);
     if (voiceFile !== null) {
       const createVoice = await VoiceFile.create({
         userId,
@@ -58,8 +78,6 @@ const createVoiceFile = async (req, res) => {
 // 음성파일 조회
 const getVoiceFile = async (req, res) => {
   const { voiceAlbumId } = req.params
-  // const { userId } = res.locals.user;
-  // console.log(11, voiceAlbumId);
   try {
     const albumName = await VoiceAlbum.findOne({ _id: voiceAlbumId })
     const voiceFileList = await VoiceFile.find({ voiceAlbumId })
@@ -79,10 +97,9 @@ const getVoiceFile = async (req, res) => {
 //음성파일 삭제
 const deleteVoiceFile = async (req, res) => {
   const { voiceFileId } = req.params
-  // const { userId } = res.locals.user;
   const { userId } = req.body
   try {
-    const [voiceInfo] = await VoiceFile.find({ _id: voiceFileId })
+    const voiceInfo = await VoiceFile.findOne({ _id: voiceFileId })
     // console.log(11, voiceInfo)
     const voiceFileURL = voiceInfo.voiceFile
     // console.log(22, voiceFileURL)
@@ -103,7 +120,6 @@ const deleteVoiceFile = async (req, res) => {
         }
       }
     )
-    // console.log(s3)
     res.status(200).send({
       result: true,
       msg: "음성파일 삭제가 완료되었습니다.",

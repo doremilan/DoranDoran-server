@@ -1,4 +1,5 @@
 const RandomMsg = require("../schemas/randomMsg")
+const RandomImg = require("../schemas/randomImg")
 
 // 랜덤메시지 작성(내부용)
 const postRandomMsg = async (req, res) => {
@@ -49,7 +50,29 @@ const deleteRandomMsg = async (req, res) => {
   }
 }
 
+// 랜덤프로필 이미지 등록(내부용)
+const postRandomImg = async (req, res) => {
+  const { randomImg } = req.body
+  const createdAt = new Date()
+  try {
+    await RandomImg.create({
+      randomImg,
+      createdAt,
+    })
+    res.status(201).json({
+      msg: "랜덤 프로필 이미지 등록완료",
+    })
+  } catch (error) {
+    console.log(error)
+    res.status(400).send({
+      result: false,
+      msg: "랜덤 프로필 이미지 등록 실패",
+    })
+  }
+}
+
 module.exports = {
   postRandomMsg,
   deleteRandomMsg,
+  postRandomImg,
 }

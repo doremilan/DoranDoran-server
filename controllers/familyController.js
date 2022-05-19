@@ -29,7 +29,7 @@ const familyMemberSchema = Joi.object({
   //r가족 멤버 닉네임 - 2-8자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 })
 
-//가족 목록 GET API
+//가족 목록 GET API // 투데이무드/ 이미지 같이 업데이트 되서 들어가는지 확인
 const getFamilyList = async (req, res) => {
   try {
     const { userId } = res.locals.user
@@ -133,19 +133,16 @@ const createFamilyMember = async (req, res) => {
     const { familyId } = req.params
     let { email, familyMemberNickname } =
       await familyMemberSchema.validateAsync(req.body)
-    console.log(1, email, familyMemberNickname)
-
+    // 새 구성원 추가
     const newFamilyMember = await User.findOne({ email })
     const userId = newFamilyMember.userId
+    // 카카오 로그인 유저의 경우 오늘의 기분 예외처리
     let todayMood
     if (newFamilyMember.snsId && todayMood === null) {
       todayMood = null
-      console.log(2, newFamilyMember, userId, todayMood)
     } else {
       todayMood = newFamilyMember.todayMood
-      console.log(3, newFamilyMember, userId, todayMood)
     }
-
     const existMember = await FamilyMember.findOne({
       familyId: familyId,
       userId: userId,
@@ -154,7 +151,6 @@ const createFamilyMember = async (req, res) => {
       familyId: familyId,
       familyMemberNickname,
     })
-
     if (existMember) {
       res.status(400).send({
         msg: "이미 추가되어 있는 구성원입니다.",
@@ -164,19 +160,18 @@ const createFamilyMember = async (req, res) => {
         msg: "중복된 호칭이 있습니다.",
       })
     }
-
+    // 프로필 이미지 없을 경우 키값 생성
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg
     } else {
       profileImg = null
     }
-
+    // 오늘의 기분 상태값 없을 경우 키값 생성
     if (newFamilyMember.todayMood) {
       todayMood = newFamilyMember.todayMood
     } else {
       todayMood = null
     }
-
     const familyMember = await FamilyMember.create({
       familyId: familyId,
       familyMemberNickname,
@@ -184,7 +179,6 @@ const createFamilyMember = async (req, res) => {
       profileImg,
       todayMood,
     })
-
     res.status(201).json({
       restult: true,
       familyMember,
@@ -195,47 +189,22 @@ const createFamilyMember = async (req, res) => {
   }
 }
 
-//멤버 검색 API (전체 일치만 검색)
-// const searchUser = async (req, res) => {
-//   try {
-//     const { search } = req.query
-//     let searchKeyword = await User.findOne({ email: search })
-//     const userEmail = searchKeyword.email
-//     res.status(200).json({
-//       userEmail,
-//     })
-//   } catch (error) {
-//     console.log("이메일 없음", error)
-//     res.status(400).send({
-//       result: false,
-//       msg: "해당 이메일과 일치하는 정보가 없어요!",
-//     })
-//   }
-// }
-
 // 멤버 검색 API (앞자리 일치만 검색)
 const searchUser = async (req, res) => {
   const { search } = req.query
   try {
     let searchKeywords = await User.find({ $text: { $search: search } })
-    console.log(1, searchKeywords)
-
     if (searchKeywords.length) {
       for (let searchKeyword of searchKeywords) {
-        console.log(2, searchKeyword)
         const keyword1 = search.split("@")
         const keyword2 = searchKeyword.email.split("@")
-        console.log(3, keyword1, keyword2)
-
         if (search === searchKeyword.email) {
           const userEmail = searchKeyword.email
-          console.log(5, userEmail)
           return res.status(200).json({
             userEmail,
           })
         } else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
           const userEmail = searchKeyword.email
-          console.log(4, userEmail)
           return res.status(200).json({
             userEmail,
           })
@@ -311,7 +280,7 @@ const editFamilyMember = async (req, res) => {
       _id: familyMemberId,
     })
     // 음성 파일 수정
-    await VoiceFile.updateOne(
+    await VoiceFile.updateMany(
       { familyId, userId: modifyFamilyMemberList.userId },
       { $set: { familyMemberNickname } }
     )
