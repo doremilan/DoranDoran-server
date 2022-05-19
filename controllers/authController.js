@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt")
 const passport = require("passport")
 const FamilyMember = require("../schemas/familyMember")
 const Family = require("../schemas/family")
+const RandomImg = require("../schemas/randomImg")
 const config = require("../config")
 
 const userSchema = Joi.object({
@@ -46,49 +47,39 @@ const signup = async (req, res) => {
   try {
     const { email, password, passwordCheck, nickname, profileImg, todayMood } =
       await userSchema.validateAsync(req.body)
-
-    console.log("req.body-->", req.body)
-
     const existUsers = await User.findOne({ email })
-
     //중복 아이디 체크 기능
     if (existUsers) {
       console.log("중복 아이디 찾기에서 에러 발생", error)
       res.status(400).json({
         msg: "중복된 아이디가 있습니다.",
       })
-
       return
-
       //비번 체크 기능
     } else if (password !== passwordCheck) {
       console.log("비번 체크에서 오류!", error)
       res.status(400).json({
         errorMessage: "비밀번호가 일치하지 않습니다.",
       })
-
       return
     }
-
     const hashed = await bcrypt.hash(password, 10)
+    const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
+    console.log(randomImg)
     const user = new User({
       email,
       password: hashed,
       nickname,
-      profileImg,
-      todayMood,
+      profileImg: randomImg[0].randomImg,
+      todayMood: null,
     })
-
-    console.log("가입 시의 user-->", user)
-
-    user.profileImg = null
-
     await user.save()
-
     //회원 가입 성공 시의 메시지 호출.
     console.log(`${email} 님이 가입하셨습니다.`)
-
-    res.status(201).json({ msg: "회원가입이 완료되었습니다.", user: user })
+    res.status(201).json({
+      msg: "회원가입이 완료되었습니다.",
+      user,
+    })
   } catch (error) {
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`)
     res.status(400).json({
@@ -103,37 +94,28 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email: req.body.email })
-
     //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
     // const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
-
     if (email === "" || email === undefined || email === null) {
       res.status(400).json({
         msg: "아이디를 입력하세요.",
       })
-
       return
     } else if (password === "" || password === undefined || password === null) {
       res.status(400).json({
         msg: "비밀번호를 입력하세요.",
       })
-
       return
     }
-
     //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
     const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
-
     if (user.email !== email || unHashPw == false) {
       res.status(400).json({
         msg: "아이디 또는 비밀번호가 틀렸습니다.",
       })
-
       return
     }
-
     const payload = { email }
-
     const options = {
       issuer: "백엔드 개발자",
       expiresIn: config.jwt.expiresIn,
@@ -146,7 +128,6 @@ const login = async (req, res) => {
     if (familyChk.length) {
       for (let family of familyChk) {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
-
         familyList.push(Checkedfamily)
       }
       console.log("일반로그인", token)
@@ -166,7 +147,9 @@ const login = async (req, res) => {
     }
   } catch (error) {
     console.log(error)
-    res.status(400).json({ result: false })
+    res.status(400).json({
+      result: false,
+    })
   }
 }
 
