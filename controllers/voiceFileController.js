@@ -13,18 +13,20 @@ const s3 = new AWS.S3({
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
   try {
-    console.log(11, req.file)
+    console.log("녹음파일속성", req.file)
     const { familyId, voiceAlbumId } = req.params
     const { voiceTitle, voicePlayTime } = req.body
     const { userId } = res.locals.user
     const voiceFile = req.file.location
     const createdAt = new Date()
 
+    // const ranFileName = `${randomFilename()}.mp3`;
+    // const newLocation = `${S3_HOST}/${DIRECTORY.TRACKS}/${ranFileName}`;
+    // await convertAndSaveS3(ranFileName, location);
+
     const userInfo = await FamilyMember.findOne({ familyId, userId })
-    // console.log(22, userInfo)
     const familyMemberNickname = userInfo.familyMemberNickname
     const profileImg = userInfo.profileImg
-    // console.log(33, familyMemberNickname, profileImg);
     if (voiceFile !== null) {
       const createVoice = await VoiceFile.create({
         userId,

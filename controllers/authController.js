@@ -17,7 +17,6 @@ const userSchema = Joi.object({
     )
     .required(),
   // 이메일 양식 /
-
   password: Joi.string()
     .pattern(
       new RegExp(
@@ -25,19 +24,13 @@ const userSchema = Joi.object({
       )
     )
     .required(),
-
   //조건1. 8~20 영문 대소문자
-
   //조건2. 최소 1개의 숫자 혹은 특수 문자를 포함해야 함
-
   passwordCheck: Joi.string(),
-
   nickname: Joi.string().pattern(
     new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$")
   ),
-
   //2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용
-
   profileImg: Joi.string(),
   todayMood: Joi.string(),
 })
@@ -65,7 +58,6 @@ const signup = async (req, res) => {
     }
     const hashed = await bcrypt.hash(password, 10)
     const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
-    console.log(randomImg)
     const user = new User({
       email,
       password: hashed,
@@ -94,8 +86,6 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email: req.body.email })
-    //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
-    // const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
     if (email === "" || email === undefined || email === null) {
       res.status(400).json({
         msg: "아이디를 입력하세요.",
@@ -107,7 +97,6 @@ const login = async (req, res) => {
       })
       return
     }
-    //bcrypt의 hash 적용으로 달라진 Pw를 비교해서 맞는 지 비교하기.
     const unHashPw = await bcrypt.compareSync(req.body.password, user.password)
     if (user.email !== email || unHashPw == false) {
       res.status(400).json({
@@ -153,12 +142,6 @@ const login = async (req, res) => {
   }
 }
 
-//https 적용 부분에 있어서 액세스 토큰과 리프레쉬 토큰이 들어가야 하는데, 이건 로컬 테스트가 불가능하다.
-//이유: 애초에 https 인증키가 없기 때문에. 그럼 USER API를 실현할 때, 따로 적용을 못하는가?
-//이후 https 적용을 완료한 상태에서 배포를 한 뒤에
-//개발을 해야하는 지? 당장의 구현에 있어선 액세스 토큰으로만 해야겠다.
-//**기본 구현 다 끝난 이후에 프론트와 얘기를 해서 리프레쉬 토큰 적용을 할 것.
-
 const kakaoCallback = (req, res, next) => {
   passport.authenticate("kakao", { failureRedirect: "/" }, (err, user) => {
     console.log("카카오로그인 userInfo", user)
@@ -169,15 +152,6 @@ const kakaoCallback = (req, res, next) => {
       expiresIn: config.jwt.expiresIn,
     }
     const token = jwt.sign({ email: user.email }, config.jwt.secretKey, options)
-    // 유저의 가족 리스트 추출
-    // const familyChk = FamilyMember.find({ userId: user._id })
-    // let familyList = []
-    // if (familyChk.length) {
-    //   for (let family of familyChk) {
-    //     const Checkedfamily = Family.findOne({ _id: family.familyId })
-    //     familyList.push(Checkedfamily)
-    //   }
-    // }
     console.log("카카오토큰", token)
     res.json({
       token,
