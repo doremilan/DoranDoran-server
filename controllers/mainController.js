@@ -39,7 +39,7 @@ const getMainPage = async (req, res) => {
       {
         _id: recentVoiceFile.voiceAlbumId,
       },
-      "voiceAlbumName"
+      "voiceAlbumCover"
     )
 
     // 이번달 일정 추출
