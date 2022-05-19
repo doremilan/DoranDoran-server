@@ -75,19 +75,19 @@ const editProfile = async (req, res) => {
           { $set: { profileImg: photoFile } }
         )
         // 가족멤버 db 수정
-        await FamilyMember.updateOne(
+        await FamilyMember.updateMany(
           { userId },
           { $set: { profileImg: photoFile } }
         )
         // 이벤트 db 수정
-        await Event.updateOne({ userId }, { $set: { profileImg: photoFile } })
+        await Event.updateMany({ userId }, { $set: { profileImg: photoFile } })
         // 미션멤버 db 수정
-        await MissionMember.updateOne(
+        await MissionMember.updateMany(
           { userId },
           { $set: { profileImg: photoFile } }
         )
         // 음성파일 db 수정
-        await VoiceFile.updateOne(
+        await VoiceFile.updateMany(
           { userId },
           { $set: { profileImg: photoFile } }
         )
