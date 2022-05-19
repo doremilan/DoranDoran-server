@@ -1,25 +1,24 @@
 const fs = require("fs")
-const path = require("path")
 const ffmpegPath = require("@ffmpeg-installer/ffmpeg").path
 const ffmpeg = require("fluent-ffmpeg")
 ffmpeg.setFfmpegPath(ffmpegPath)
-const aws = require("aws-sdk")
-require("dotenv").config()
+const config = require("../config")
+const AWS = require("aws-sdk")
 
-const s3 = new aws.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: process.env.S3_BUCKET_REGION,
+const s3 = new AWS.S3({
+  accessKeyId: config.s3.accessKey,
+  secretAccessKey: config.s3.secretKey,
+  region: config.s3.bucketRegion,
 })
 
-const convertAndSaveS3 = (ranFileName, location) => {
+const convertAndSaveS3 = (newFileName, location) => {
   const key = location.split(".com/")[1]
-  let params = { Bucket: S3_BUCKET_NAME, Key: key }
+  let params = { Bucket: "family-8", Key: key }
   return new Promise((resolve, reject) => {
     ffmpeg()
       .input(location)
       .toFormat("mp3")
-      .output(ranFileName)
+      .output(newFileName)
       .on("error", (err) => {
         console.log("An error occurred: " + err.message)
       })
@@ -28,13 +27,12 @@ const convertAndSaveS3 = (ranFileName, location) => {
       })
       .on("end", () => {
         console.log("Processing finished !")
-        const fileContent = fs.readFileSync(ranFileName)
-        params.Key = `tracks/${ranFileName}`
+        const fileContent = fs.readFileSync(newFileName)
+        params.Key = `voice/${newFileName}`
         params.Body = fileContent
         s3.putObject(params, function (err, data) {
           console.log(err, data)
         })
-        deleteMp3(ranFileName)
         setTimeout(() => {
           resolve()
         }, 500)
@@ -43,17 +41,4 @@ const convertAndSaveS3 = (ranFileName, location) => {
   })
 }
 
-//파일 삭제부분같은데 코드이해를 좀 더 해야될 것 같음
-const deleteMp3 = (ranFileName) => {
-  const filePath = path.join(`/home/ubuntu/voice/${ranFileName}`)
-  fs.access(filePath, fs.constants.F_OK, (err) => {
-    if (err) return console.log(MESSAGE.NOT_DELETE)
-    fs.unlink(filePath, (err) =>
-      err
-        ? console.log(err)
-        : console.log(`${filePath} 를 정상적으로 삭제했습니다`)
-    )
-  })
-}
-
-module.exports = { convertAndSaveS3 }
+module.exports = convertAndSaveS3
