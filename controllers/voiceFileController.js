@@ -26,7 +26,7 @@ const createVoiceFile = async (req, res) => {
     const fileName1 = key.split("/")[1]
     const fileName2 = fileName1.split(".")[0]
     const newFileName = `${fileName2}.mp3`
-    const oldFileName = `${fileName2}.webm`
+    // const oldFileName = `${fileName2}.webm`
     const voiceFile = `${config.s3.s3Host}/voice/${newFileName}`
     console.log(voiceFile)
     await convertAndSaveS3(newFileName, location)
@@ -34,7 +34,7 @@ const createVoiceFile = async (req, res) => {
     s3.deleteObject(
       {
         Bucket: "family-8",
-        Key: "voice/" + oldFileName.replaceAll("+", " "),
+        Key: "voice/" + fileName1.replaceAll("+", " "),
       },
       (err, data) => {
         if (err) {
