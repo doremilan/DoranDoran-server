@@ -97,7 +97,7 @@ const getEvent = async (req, res) => {
   // const { userId } = res.locals;
   try {
     let eventCalendarList = []
-    const events = await Event.find({ familyId, date })
+    const events = await Event.find({ familyId, date }).sort("startdate")
     const thisMonth = date.split("-")
     for (let event of events) {
       const eventDate = event.startDate.split("-", 2)
