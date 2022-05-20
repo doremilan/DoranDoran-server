@@ -56,14 +56,8 @@ const signup = async (req, res) => {
       })
       return
     }
-<<<<<<< HEAD
-
-    const hashed = await bcrypt.hash(password, 10)
-    // console.log(111, hashed)
-=======
     const hashed = await bcrypt.hash(password, 10)
     const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
->>>>>>> origin/main
     const user = new User({
       email,
       password: hashed,
@@ -79,16 +73,11 @@ const signup = async (req, res) => {
       user,
     })
   } catch (error) {
-<<<<<<< HEAD
-    console.log(error);
-    res.status(400).json({ msg: "요청한 조건 형식이 올바르지 않습니다." })
-=======
     console.log(`${req.method} ${req.originalUrl} : ${error.message}`)
     res.status(400).json({
       msg: "요청한 조건 형식이 올바르지 않습니다.",
       result: `${req.method} ${req.originalUrl} : ${error.message}`,
     })
->>>>>>> origin/main
   }
 }
 
