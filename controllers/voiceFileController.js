@@ -15,7 +15,6 @@ const s3 = new AWS.S3({
 //음성파일 생성
 const createVoiceFile = async (req, res) => {
   try {
-    console.log("녹음파일속성", req.file)
     const { familyId, voiceAlbumId } = req.params
     const { voiceTitle, voicePlayTime } = req.body
     const { userId } = res.locals.user
@@ -24,14 +23,9 @@ const createVoiceFile = async (req, res) => {
     const { location } = req.file
     const { key } = req.file
     const fileName1 = key.split("/")[1]
-    console.log(1, fileName1)
     const fileName2 = fileName1.split(".")[0]
     const newFileName = `${fileName2}.mp3`
-    // const oldFileName = `${fileName2}.webm`
     const voiceFile = `${config.s3.s3Host}/voice/${newFileName}`
-    console.log(2, voiceFile)
-    console.log(3, "voice/" + fileName1.replaceAll("+", " "))
-    console.log(4, "voice/" + fileName1)
     await convertAndSaveS3(newFileName, location)
     // 변환 전 파일 삭제
     s3.deleteObject(
@@ -103,13 +97,9 @@ const deleteVoiceFile = async (req, res) => {
   const { userId } = req.body
   try {
     const voiceInfo = await VoiceFile.findOne({ _id: voiceFileId })
-    // console.log(11, voiceInfo)
     const voiceFileURL = voiceInfo.voiceFile
-    // console.log(22, voiceFileURL)
     const deleteVoiceFile = voiceFileURL.split("/")[4]
-    // console.log(33, deleteVoiceFile)
     const key1 = "voice/" + decodeURI(deleteVoiceFile).replaceAll("+", " ")
-    // console.log(44, key1)
     await VoiceFile.findOne({ voiceFileId, userId })
     await VoiceFile.deleteOne({ _id: voiceFileId })
     s3.deleteObject(
