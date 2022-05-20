@@ -24,11 +24,14 @@ const createVoiceFile = async (req, res) => {
     const { location } = req.file
     const { key } = req.file
     const fileName1 = key.split("/")[1]
+    console.log(1, fileName1)
     const fileName2 = fileName1.split(".")[0]
     const newFileName = `${fileName2}.mp3`
     // const oldFileName = `${fileName2}.webm`
     const voiceFile = `${config.s3.s3Host}/voice/${newFileName}`
-    console.log(voiceFile)
+    console.log(2, voiceFile)
+    console.log(3, "voice/" + fileName1.replaceAll("+", " "))
+    console.log(4, "voice/" + fileName1)
     await convertAndSaveS3(newFileName, location)
     // 변환 전 파일 삭제
     s3.deleteObject(
