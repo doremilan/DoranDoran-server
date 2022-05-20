@@ -168,7 +168,7 @@ const putPhoto = async (req, res) => {
     } else {
       res.status(400).send({
         result: false,
-        msg: "공란을 작성해주세요.",
+        msg: "사진을 등록해주세요.",
       })
     }
   } catch (error) {

@@ -1,11 +1,9 @@
-const express = require("express")
-const router = express.Router()
 const User = require("../schemas/user")
 const Family = require("../schemas/family")
 const FamilyMember = require("../schemas/familyMember")
-const jwt = require("jsonwebtoken")
-const fs = require("fs")
-require("dotenv").config()
+const MissionMember = require("../schemas/missionMember")
+const Event = require("../schemas/event")
+const VoiceFile = require("../schemas/voiceFile")
 
 //유저 데이터 get API
 const getUser = async (req, res) => {
@@ -14,6 +12,7 @@ const getUser = async (req, res) => {
     user.password = ""
     const { userId } = res.locals.user
     const familyChk = await FamilyMember.find({ userId })
+    console.log(123, familyChk)
 
     let familyList = []
     if (familyChk.length) {
@@ -21,8 +20,10 @@ const getUser = async (req, res) => {
         const Checkedfamily = await Family.findOne({ _id: family.familyId })
         familyList.push(Checkedfamily)
       }
+      console.log("유저정보", user, familyList)
       res.status(200).json({ user, familyList })
     } else {
+      // familyList = []
       res.status(200).json({ user, familyList })
     }
   } catch (error) {
@@ -39,6 +40,7 @@ const getUser = async (req, res) => {
 //프로필 조회 API
 const getProfile = async (req, res) => {
   try {
+    console.log(res.locals)
     const { email } = res.locals.user
     const userInfo = await User.findOne({ email })
     const nickname = userInfo.nickname
@@ -61,42 +63,77 @@ const getProfile = async (req, res) => {
 //프로필 수정 API
 const editProfile = async (req, res) => {
   try {
-    const { email } = res.locals.user
-    const { nickname, profileImg } = req.body
-
-    await User.updateOne(
-      { email },
-      {
-        $set: {
-          nickname: req.body.nickname,
-          profileImg: req.body.profileImg,
-        },
+    const { userId } = res.locals.user
+    const photoFile = req.file.location
+    // 파일 업로드 공백 체크
+    if (photoFile !== null) {
+      const existUser = await User.findOne({ _id: userId })
+      if (existUser) {
+        // 유저 db 수정
+        await User.updateOne(
+          { _id: userId },
+          { $set: { profileImg: photoFile } }
+        )
+        // 가족멤버 db 수정
+        await FamilyMember.updateMany(
+          { userId },
+          { $set: { profileImg: photoFile } }
+        )
+        // 이벤트 db 수정
+        await Event.updateMany({ userId }, { $set: { profileImg: photoFile } })
+        // 미션멤버 db 수정
+        await MissionMember.updateMany(
+          { userId },
+          { $set: { profileImg: photoFile } }
+        )
+        // 음성파일 db 수정
+        await VoiceFile.updateMany(
+          { userId },
+          { $set: { profileImg: photoFile } }
+        )
+        res.status(200).json({
+          photoFile,
+          msg: "프로필 사진이 수정되었어요.",
+        })
       }
-    )
-
-    res.status(200).json({
-      nickname,
-      profileImg,
-    })
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "사진을 등록해주세요.",
+      })
+    }
   } catch (error) {
     console.log("프로필 수정에서 오류!", error)
-    res.status(400).send({ result: false })
+    res.status(400).send({
+      result: false,
+    })
   }
 }
 
 //오늘의 기분 수정 API
 const editTodayMood = async (req, res) => {
   try {
-    const { email } = res.locals.user
+    const { userId } = res.locals.user
     const { todayMood } = req.body
-    await User.updateOne({ email }, { $set: { todayMood: req.body.todayMood } })
-
-    res.status(200).json({
-      todayMood,
-    })
+    // 오늘의 기분 상태값 공백 체크
+    if (todayMood !== null) {
+      const existUser = await User.findOne({ _id: userId })
+      if (existUser) {
+        // 유저 db 수정
+        await User.updateOne({ _id: userId }, { $set: { todayMood } })
+        // 가족멤버 db 수정
+        await FamilyMember.updateMany({ userId }, { $set: { todayMood } })
+      }
+      res.status(200).json({
+        todayMood,
+        msg: "오늘의 기분이 수정되었어요.",
+      })
+    }
   } catch (error) {
     console.log("오늘의기분 수정에서 오류!", error)
-    res.status(400).send({ result: false })
+    res.status(400).send({
+      result: false,
+    })
   }
 }
 
