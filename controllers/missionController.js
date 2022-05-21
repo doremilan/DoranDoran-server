@@ -92,7 +92,7 @@ const completeMission = async (req, res) => {
     if (memberChk) {
       //개인미션 체크
       if (myMissionChk) {
-        const familyMemberId = await FamilyMember.findOne({ userId })
+        const familyMemberId = await FamilyMember.findOne({ familyId, userId })
         const missionChk = await MissionChk.create({
           familyId,
           missionId,
