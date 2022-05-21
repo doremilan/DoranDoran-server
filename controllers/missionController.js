@@ -85,6 +85,7 @@ const completeMission = async (req, res) => {
   const { familyId, missionId } = req.params
   const { userId } = res.locals.user
   const { completedAt } = req.body
+  console.log(1, completedAt)
   let { myMissionChk } = req.body
   try {
     const memberChk = await MissionMember.findOne({ userId, missionId })
@@ -118,6 +119,7 @@ const completeMission = async (req, res) => {
         res.status(200).json({
           myMissionChk,
           familyMissionChk,
+          completedAt,
         })
       }
     } else {
