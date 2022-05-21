@@ -17,6 +17,9 @@ const missionSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
+  completedAt: {
+    type: String,
+  },
   missionMemberList: {
     type: Object,
   },

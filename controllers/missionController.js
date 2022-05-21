@@ -23,6 +23,7 @@ const postMission = async (req, res) => {
         userId,
         familyId,
         createdAt,
+        completedAt: null,
       })
       // 미션 멤버 db 생성
       let createdMember = []
@@ -85,7 +86,6 @@ const completeMission = async (req, res) => {
   const { familyId, missionId } = req.params
   const { userId } = res.locals.user
   const { completedAt } = req.body
-  console.log(1, completedAt)
   let { myMissionChk } = req.body
   try {
     const memberChk = await MissionMember.findOne({ userId, missionId })
@@ -100,12 +100,14 @@ const completeMission = async (req, res) => {
           familyMemberId: familyMemberId.familyMemberId,
         })
         let myMissionChk = true
-        //전체미션 체크
+        //전체미션 체크 & 미션 달성완료 시간 저장
         const missionMember = await MissionMember.find({ missionId })
         const completedMember = await MissionChk.find({ missionId })
         let familyMissionChk = false
         if (missionMember.length === completedMember.length) {
           familyMissionChk = true
+          await Mission.updateOne({ _id: missionId }, { $set: { completedAt } })
+          const mission = await Mission.findOne({ _id: missionId })
         }
         res.status(200).json({
           myMissionChk,
@@ -240,6 +242,7 @@ const getDashboard = async (req, res) => {
 const getMission = async (req, res) => {
   const { familyId } = req.params
   const { userId } = res.locals.user
+
   try {
     // 이번달 미션 리스트 추출
     const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")
@@ -269,8 +272,12 @@ const getMission = async (req, res) => {
         const completedMembers = await MissionChk.find({
           missionId: mission.missionId,
         })
+        const checkMemberId = await FamilyMember.findOne({
+          familyId,
+          userId,
+        })
         for (let completedMember of completedMembers) {
-          if (completedMember.userId === userId) {
+          if (completedMember.familyMemberId === checkMemberId.familyMemberId) {
             mission.myMissionChk = true
           }
         }
