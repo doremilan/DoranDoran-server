@@ -74,7 +74,7 @@ const getPhoto = async (req, res) => {
 
 // 사진 상세조회 & 댓글 목록조회
 const getPhotoDetail = async (req, res) => {
-  const { photoId } = req.params
+  const { familyId, photoId } = req.params
   const { userId } = res.locals.user
 
   try {
@@ -85,16 +85,14 @@ const getPhotoDetail = async (req, res) => {
     })
     const PhotoAlbumName = photoAlbum.photoAlbumName
     if (detailPhoto) {
-      const photoUser = await User.findOne({ _id: detailPhoto.userId })
-      if (photoUser) {
-        const userInfo = await FamilyMember.findOne({
-          userId: photoUser.userId,
-        })
-        if (!userInfo.profileImg) {
-          userInfo.profileImg = null
-        }
-        detailPhoto.userInfo = userInfo
+      const userInfo = await FamilyMember.findOne({
+        familyId,
+        userId: detailPhoto.userId,
+      })
+      if (!userInfo.profileImg) {
+        userInfo.profileImg = null
       }
+      detailPhoto.userInfo = userInfo
     }
     // 댓글 목록 & 댓글 수
     const commentList = await Comment.find({ photoId })
@@ -102,6 +100,7 @@ const getPhotoDetail = async (req, res) => {
     if (commentList.length) {
       for (let comment of commentList) {
         const userInfo = await FamilyMember.findOne({
+          familyId,
           userId: comment.userId,
         })
         if (!userInfo.profileImg) {
@@ -111,8 +110,6 @@ const getPhotoDetail = async (req, res) => {
       }
     }
     // 좋아요 누른 멤버
-    const checkId = await Family.findOne({ _id: detailPhoto.familyId })
-    const familyId = checkId._id
     let likeMemberList = []
     const likedMembers = await Like.find({ photoId })
     if (!likedMembers) {

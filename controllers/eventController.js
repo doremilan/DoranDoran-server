@@ -205,7 +205,10 @@ const getEventDetail = async (req, res) => {
         thisMonth[2] === eventDate[2]
       ) {
         // 작성자 정보 추출
-        const userInfo = await FamilyMember.findOne({ userId: event.userId })
+        const userInfo = await FamilyMember.findOne({
+          familyId,
+          userId: event.userId,
+        })
         const familyMemberNickname = userInfo.familyMemberNickname
         const profileImg = userInfo.profileImg
         event.familyMemberNickname = familyMemberNickname
