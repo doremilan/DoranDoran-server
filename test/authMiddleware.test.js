@@ -1,6 +1,6 @@
 const httpMocks = require("node-mocks-http")
 const authMiddleware = require("../middlewares/authMiddleware")
-const faker = require("@faker-js/faker")
+const { faker } = require("@faker-js/faker")
 const jwt = require("jsonwebtoken")
 const User = require("../schemas/user")
 
@@ -38,7 +38,7 @@ describe("Auth Middleware", () => {
   })
 
   it("returns 401 for the request with invalid JWT", async () => {
-    const tokenValue = faker.random.alphaNumeric(126)
+    const tokenValue = faker.random.alphaNumeric(128)
     const request = httpMocks.createRequest({
       method: "GET",
       url: "/mission",
@@ -46,7 +46,7 @@ describe("Auth Middleware", () => {
     })
     const response = httpMocks.createResponse()
     const next = jest.fn()
-    jwt.verify = jest.fn((token, secret, callback) => {
+    jwt.verify = jest.fn((tokenValue, secret, callback) => {
       callback(new Error("bad token"), undefined)
     })
 
@@ -56,45 +56,44 @@ describe("Auth Middleware", () => {
     expect(next).not.toBeCalled()
   })
 
-  // it("returns 401 when cannot find a user by id from the JWT", async () => {
-  //   const token = faker.random.alphaNumeric(128)
-  //   const userId = faker.random.alphaNumeric(32)
-  //   const request = httpMocks.createRequest({
-  //     method: "GET",
-  //     url: "/tweets",
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   })
-  //   const response = httpMocks.createResponse()
-  //   const next = jest.fn()
-  //   jwt.verify = jest.fn((token, secret, callback) => {
-  //     callback(undefined, { id: userId })
-  //   })
-  //   userRepository.findById = jest.fn((id) => Promise.resolve(undefined))
+  it("returns 401 when cannot find a user by email from the JWT", async () => {
+    const tokenValue = faker.random.alphaNumeric(128)
+    const email = faker.internet.email()
+    const request = httpMocks.createRequest({
+      method: "GET",
+      url: "/mission",
+      headers: { Authorization: `Bearer ${tokenValue}` },
+    })
+    const response = httpMocks.createResponse()
+    const next = jest.fn()
+    jwt.verify = jest.fn((tokenValue, secret, callback) => {
+      callback(undefined, { email })
+    })
+    User.findOne = jest.fn((email) => Promise.resolve(undefined))
+    await authMiddleware(request, response, next)
 
-  //   await isAuth(request, response, next)
+    expect(response.statusCode).toBe(401)
+    expect(next).not.toBeCalled()
+  })
 
-  //   expect(response.statusCode).toBe(401)
-  //   expect(response._getJSONData().message).toBe("Authentication Error")
-  //   expect(next).not.toBeCalled()
-  // })
-
-  // it("passes a request with valid Authorization header with token", async () => {
-  //   const token = faker.random.alphaNumeric(128)
-  //   const userId = faker.random.alphaNumeric(32)
-  //   const request = httpMocks.createRequest({
-  //     method: "GET",
-  //     url: "/tweets",
-  //     headers: { Authorization: `Bearer ${token}` },
-  //   })
-  //   const response = httpMocks.createResponse()
-  //   const next = jest.fn()
-  //   jwt.verify = jest.fn((token, secret, callback) => {
-  //     callback(undefined, { id: userId })
-  //   })
-  //   userRepository.findById = jest.fn((id) => Promise.resolve({ id }))
-  //   await isAuth(request, response, next)
-
-  //   expect(request).toMatchObject({ userId, token })
-  //   expect(next).toHaveBeenCalledTimes(1)
-  // })
+  it("passes a request with valid Authorization header with token", async () => {
+    const tokenValue = faker.random.alphaNumeric(128)
+    const email = faker.internet.email()
+    const request = httpMocks.createRequest({
+      method: "GET",
+      url: "/mission",
+      headers: { Authorization: `Bearer ${tokenValue}` },
+    })
+    const response = httpMocks.createResponse()
+    const next = jest.fn()
+    jwt.verify = jest.fn((tokenValue, secret, callback) => {
+      callback(undefined, { email })
+    })
+    User.findOne = jest.fn((user) => Promise.resolve({ user }))
+    res.locals.user = user
+    await authMiddleware(request, response, next)
+    console.log(response)
+    expect(response.locals).toMatchObject({ user, tokenValue })
+    expect(next).toHaveBeenCalledTimes(1)
+  })
 })
