@@ -242,7 +242,6 @@ const getDashboard = async (req, res) => {
 const getMission = async (req, res) => {
   const { familyId } = req.params
   const { userId } = res.locals.user
-  console.log(111, "familyId", familyId, "userId", userId)
   try {
     // 이번달 미션 리스트 추출
     const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")
@@ -258,7 +257,6 @@ const getMission = async (req, res) => {
         }
       }
     }
-    console.log(0, thisMonthMissionList)
     // 각 미션의 멤버 리스트 추출
     if (thisMonthMissionList.length) {
       for (let mission of thisMonthMissionList) {
@@ -269,8 +267,6 @@ const getMission = async (req, res) => {
         for (let missionMember of missionMembers) {
           mission.myMissionChk = false
         }
-        console.log(1, mission)
-        console.log(1.5, mission.missionMemberList)
         // 해당 유저의 각 미션 달성 여부 체크
         const completedMembers = await MissionChk.find({
           missionId: mission.missionId,
@@ -280,12 +276,9 @@ const getMission = async (req, res) => {
           userId,
         })
         for (let completedMember of completedMembers) {
-          console.log(2, completedMember.familyMemberId)
-          console.log(2, checkMemberId.familyMemberId)
           if (completedMember.familyMemberId === checkMemberId.familyMemberId) {
             mission.myMissionChk = true
           }
-          console.log(3, mission.myMissionChk)
         }
         // 각 미션 전체 달성완료 여부 체크 & 완료된 미션 수 추출
         let familyMissionChk = false
@@ -310,21 +303,16 @@ const getMission = async (req, res) => {
             if (
               completedMember.familyMemberId === missionMember.familyMemberId
             ) {
-              console.log(4, completedMember.familyMemberId)
-              console.log(4, missionMember.familyMemberId)
               myMissionChk = true
               missionMember.myMissionChk = myMissionChk
-              console.log(5, missionMember.myMissionChk)
               // 중복체크 예외처리
             } else if (missionMember.myMissionChk === true) {
               missionMember.myMissionChk === true
-              console.log(6, missionMember.myMissionChk)
             } else if (
               completedMember.familyMemberId !== missionMember.familyMemberId
             ) {
               myMissionChk = false
               missionMember.myMissionChk = myMissionChk
-              console.log(7, missionMember.myMissionChk)
             }
           })
         })

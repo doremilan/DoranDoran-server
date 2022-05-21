@@ -20,7 +20,7 @@ const postComment = async (req, res) => {
         createdAt,
       })
       // 댓글 작성자 정보 추출
-      let userInfo = await FamilyMember.findOne({ userId })
+      let userInfo = await FamilyMember.findOne({ familyId, userId })
       if (userInfo) {
         if (!userInfo.profileImg) {
           userInfo.profileImg = null
