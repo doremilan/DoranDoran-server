@@ -9,7 +9,7 @@ const Photo = require("../schemas/photo");
 const VoiceAlbum = require("../schemas/voiceAlbum");
 const VoiceFile = require("../schemas/voiceFile");
 const Comment = require("../schemas/comment");
-const Connect = require("../schemas/connenct");
+const Connect = require("../schemas/connect");
 const Event = require("../schemas/event");
 const RandomMsg = require("../schemas/randomMsg");
 
