@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const randomMsgSchema = mongoose.Schema({
   randomMsg: {
@@ -11,12 +11,12 @@ const randomMsgSchema = mongoose.Schema({
   },
 });
 
-randomMsgSchema.virtual('randomMsgId').get(function () {
+randomMsgSchema.virtual("randomMsgId").get(function () {
   return this._id.toHexString();
 });
 
-randomMsgSchema.set('toJSON', {
+randomMsgSchema.set("toJSON", {
   virtuals: true,
 });
 
-module.exports = mongoose.model('RandomMsg', randomMsgSchema);
+module.exports = mongoose.model("RandomMsg", randomMsgSchema);

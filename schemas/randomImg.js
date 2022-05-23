@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const randomImgSchema = mongoose.Schema({
   randomImg: {
@@ -9,14 +9,14 @@ const randomImgSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-})
+});
 
 randomImgSchema.virtual("randomImgId").get(function () {
-  return this._id.toHexString()
-})
+  return this._id.toHexString();
+});
 
 randomImgSchema.set("toJSON", {
   virtuals: true,
-})
+});
 
-module.exports = mongoose.model("RandomImg", randomImgSchema)
+module.exports = mongoose.model("RandomImg", randomImgSchema);

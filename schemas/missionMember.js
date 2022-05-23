@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const missionMemberSchema = mongoose.Schema({
   missionId: {
@@ -27,16 +27,16 @@ const missionMemberSchema = mongoose.Schema({
     type: String,
     required: true,
   },
-})
+});
 
 missionMemberSchema.virtual("missionMemberId").get(function () {
-  return this._id.toHexString()
-})
+  return this._id.toHexString();
+});
 
 missionMemberSchema.set("toJSON", {
   virtuals: true,
-})
+});
 
 module.exports =
   mongoose.models.MissionMember ||
-  mongoose.model("MissionMember", missionMemberSchema)
+  mongoose.model("MissionMember", missionMemberSchema);

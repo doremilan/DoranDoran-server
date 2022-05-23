@@ -1,9 +1,9 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const familyMemberSchema = mongoose.Schema({
   familyId: {
     type: String,
-    // required: true,
+    required: true,
   },
   familyMemberNickname: {
     type: String,
@@ -19,14 +19,14 @@ const familyMemberSchema = mongoose.Schema({
   todayMood: {
     type: String,
   },
-})
+});
 
 familyMemberSchema.virtual("familyMemberId").get(function () {
-  return this._id.toHexString()
-})
+  return this._id.toHexString();
+});
 
 familyMemberSchema.set("toJSON", {
   virtuals: true,
-})
+});
 
-module.exports = mongoose.model("FamilyMember", familyMemberSchema)
+module.exports = mongoose.model("FamilyMember", familyMemberSchema);

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 
 const likeSchema = mongoose.Schema({
   photoId: {
@@ -19,12 +19,12 @@ const likeSchema = mongoose.Schema({
   },
 });
 
-likeSchema.virtual('likeId').get(function () {
+likeSchema.virtual("likeId").get(function () {
   return this._id.toHexString();
 });
 
-likeSchema.set('toJSON', {
+likeSchema.set("toJSON", {
   virtuals: true,
 });
 
-module.exports = mongoose.model('Like', likeSchema);
+module.exports = mongoose.model("Like", likeSchema);

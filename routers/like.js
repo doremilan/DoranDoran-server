@@ -1,10 +1,10 @@
-const express = require('express')
-const router = express.Router()
-const authMiddleware = require('../middlewares/authMiddleware')
+const express = require("express");
+const router = express.Router();
+const authMiddleware = require("../middlewares/authMiddleware");
 
-const { postLike } = require('../controllers/likeController')
+const { postLike } = require("../controllers/likeController");
 
 // 좋아요
-router.post('/:familyId/:photoId', authMiddleware, postLike)
+router.post("/:familyId/:photoId", authMiddleware, postLike);
 
-module.exports = router
+module.exports = router;
