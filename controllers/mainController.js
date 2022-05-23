@@ -178,4 +178,34 @@ const getMainPage = async (req, res) => {
   }
 }
 
-module.exports = { getMainPage }
+//가족구성원 접속 상태조회 API
+const getConnected = async (req, res) => {
+  try {
+    const { familyId } = req.params
+
+    const familyMemberList = await FamilyMember.find({ familyId })
+    console.log(familyMemberList)
+
+    let familyMemberStatusList = []
+
+    for (let familyConnect of familyMemberList) {
+
+      console.log("familyConnect", familyConnect)
+      console.log("familyConnect.userId", familyConnect.userId)
+      const userConnect = await Connect.findOne({ userId: familyConnect.userId })
+      console.log("userConnect", userConnect)
+      if (userConnect) {
+        userConnect.connectedAt = timeForToday(userConnect.connectedAt)
+        familyMemberStatusList.push(userConnect)
+      }
+    }
+    console.log("familyMemberStatusList", familyMemberStatusList)
+    res.status(200).json({ familyMemberStatusList })
+  } catch (error) {
+    console.log("가족 구성원 조회에서 오류!", error)
+    res.status(400).send({ result: false })
+  }
+}
+
+
+module.exports = { getMainPage, getConnected }

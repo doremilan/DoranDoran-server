@@ -10,7 +10,7 @@ const passportConfig = require("./passport")
 const config = require("./config")
 const app = express()
 
-// const webSocket = require('./socket');
+const webSocket = require('./socket');
 
 
 connect()
@@ -58,8 +58,9 @@ app.use((error, req, res, next) => {
 })
 
 // 서버 열기
-app.listen(config.host.port, () => {
+const server = app.listen(config.host.port, () => {
   console.log("Server is listening...")
 })
 
-// webSocket(server);
+
+webSocket(server);
