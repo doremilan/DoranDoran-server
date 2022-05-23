@@ -1,29 +1,30 @@
-const path = require('path')
-const multer = require('multer')
-const multerS3 = require('multer-s3')
-const AWS = require('aws-sdk')
-require('dotenv').config()
+const path = require("path")
+const multer = require("multer")
+const multerS3 = require("multer-s3")
+const AWS = require("aws-sdk")
+const config = require("../config")
 
 const s3 = new AWS.S3({
-  accessKeyId: process.env.S3_ACCESS_KEY,
-  secretAccessKey: process.env.S3_SECRET_ACCESS_KEY,
-  region: process.env.S3_BUCKET_REGION,
+  accessKeyId: config.s3.accessKey,
+  secretAccessKey: config.s3.secretKey,
+  region: config.s3.bucketRegion,
 })
 
 const upload = multer({
   storage: multerS3({
     s3: s3,
-    bucket: 'family-8',
+    bucket: "family-8",
     contentType: multerS3.AUTO_CONTENT_TYPE,
-    acl: 'public-read',
+    acl: "public-read",
     metadata: function (req, file, cb) {
       cb(null, { fieldName: file.fieldname })
     },
     key: function (req, file, cb) {
-      if (file.fieldname === 'voiceFile')
+      if (file.fieldname === "voiceFile")
         cb(null, `voice/${Date.now()}${path.basename(file.originalname)}`)
-      if (file.fieldname === 'photoFile')
+      if (file.fieldname === "photoFile")
         cb(null, `photo/${Date.now()}${path.basename(file.originalname)}`)
+      console.log(1111, file)
     },
   }),
 })

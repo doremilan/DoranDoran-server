@@ -1,291 +1,354 @@
-const Family = require('../schemas/family');
-const FamilyMember = require('../schemas/familyMember');
-const User = require('../schemas/user');
-const Mission = require('../schemas/mission');
-const Badge = require('../schemas/badge');
-const Comment = require('../schemas/comment');
-const Event = require('../schemas/event');
-const Photo = require('../schemas/photo');
-const PhotoAlbum = require('../schemas/photoAlbum');
-const VoiceAlbum = require('../schemas/voiceAlbum');
-const VoiceFile = require('../schemas/voiceFile');
-const Like = require('../schemas/like');
-const MissionMember = require('../schemas/missionMember');
-const MissionChk = require('../schemas/missionChk');
-const Joi = require('joi');
-
+const Family = require("../schemas/family")
+const FamilyMember = require("../schemas/familyMember")
+const User = require("../schemas/user")
+const Mission = require("../schemas/mission")
+const MissionMember = require("../schemas/missionMember")
+const MissionChk = require("../schemas/missionChk")
+const Badge = require("../schemas/badge")
+const Comment = require("../schemas/comment")
+const Event = require("../schemas/event")
+const Photo = require("../schemas/photo")
+const PhotoAlbum = require("../schemas/photoAlbum")
+const VoiceAlbum = require("../schemas/voiceAlbum")
+const VoiceFile = require("../schemas/voiceFile")
+const Like = require("../schemas/like")
+const Joi = require("joi")
 
 const familySchema = Joi.object({
-
-  familyTitle: Joi.string().max(8)
-  .pattern(new RegExp(
-    '^[a-zA-Z0-9ㄱ-ㅎ|ㅏ-ㅣ|가-힣+]*$'
-    )).required()
+  familyTitle: Joi.string()
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$"))
+    .required(),
 })
-// 최대 8 자 / 숫자,영어,한글만 가능 / 특수문자 불가능/ 띄어쓰기 불가.
+//2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 
 const familyMemberSchema = Joi.object({
-
-  familyMemberNickname: Joi.string().min(2).max(8).required()
-
+  email: Joi.string(),
+  familyMemberNickname: Joi.string()
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,8}$"))
+    .required(),
+  //r가족 멤버 닉네임 - 2-8자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 })
-// 2~8자 
 
+//가족 목록 GET API // 투데이무드/ 이미지 같이 업데이트 되서 들어가는지 확인
+const getFamilyList = async (req, res) => {
+  try {
+    const { userId } = res.locals.user
+    const familyChk = await FamilyMember.find({ userId })
+
+    let familyList = []
+
+    if (familyChk.length) {
+      for (let family of familyChk) {
+        const Checkedfamily = await Family.findOne({ _id: family.familyId })
+        familyList.push(Checkedfamily)
+      }
+      res.status(200).json({ familyList })
+    } else if (familyListUnique) {
+      new Set(familyList)
+      res.status(200).json({ familyList })
+    } else {
+      res.status(200).json({ familyList })
+    }
+  } catch (error) {
+    console.log("가족 리스트 조회에서 오류!", error)
+    res.status(400).send({ result: false })
+  }
+}
 
 //가족 생성 API
-//api 테스트 성공
+//api 테스트 성공`
 const createFamily = async (req, res) => {
   try {
-    const { user } = res.locals;
+    const { user } = res.locals
 
-    console.log('가족 생성의 user-->', user);
+    console.log("가족 생성의 user-->", user)
 
-    let { 
-      familyTitle
-    } = await familySchema.validateAsync(req.body)
+    let { familyTitle } = await familySchema.validateAsync(req.body)
 
     const newFamily = await Family.create({
       familyTitle,
       familyHost: user.userId,
-    });
+    })
 
     const familyHost = await FamilyMember.create({
       familyId: newFamily.familyId,
       familyMemberNickname: user.nickname,
       userId: user.userId,
       profileImg: user.profileImg,
-    });
+      todayMood: null,
+    })
 
     // 배지 자동생성
-      await badge.create({
+    await Badge.create({
       familyId: newFamily.familyId,
       badge: [
         {
           badgeChk: false,
-          badgeTitle: '단란한 시작',
+          badgeTitle: "단란한 시작",
           badgeCnt: 0,
         },
         {
           badgeChk: false,
-          badgeTitle: '추억의 발자국',
+          badgeTitle: "추억의 발자국",
           badgeCnt: 0,
         },
         {
           badgeChk: false,
-          badgeTitle: '정겨운 목소리',
+          badgeTitle: "정겨운 목소리",
           badgeCnt: 0,
         },
         {
           badgeChk: false,
-          badgeTitle: '협동의 즐거움',
+          badgeTitle: "협동의 즐거움",
           badgeCnt: 0,
         },
         {
           badgeChk: false,
-          badgeTitle: '소통의 기쁨',
+          badgeTitle: "소통의 기쁨",
           badgeCnt: 0,
         },
         {
           badgeChk: false,
-          badgeTitle: '함께하는 나날',
+          badgeTitle: "함께하는 나날",
           badgeCnt: 0,
         },
       ],
-    });
+    })
 
-    console.log('familyHost-->', familyHost);
+    console.log("familyHost-->", familyHost)
 
-    res.status(200).json({ msg: '가족이 생성되었습니다.' });
+    res
+      .status(200)
+      .json({ msg: "가족이 생성되었습니다.", familyId: newFamily.familyId })
   } catch (error) {
-    console.log('가족 생성에서 오류!', error);
-    res.status(400).send({ msg: '가족 생성에 실패했습니다.' });
+    console.log("가족 생성에서 오류!", error)
+    res.status(400).send({ msg: "가족 생성에 실패했습니다." })
   }
-};
+}
 
 //가족 구성원 생성 api
 //api 테스트 성공
 const createFamilyMember = async (req, res) => {
   try {
-    const { familyId } = req.params;
-    const { user } = res.locals;
-    const { email} = req.body;
-    let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
-
-    const findMmemberUser = await User.findOne({ email });
-    const userId = findMmemberUser.userId;
-    const profileImg = findMmemberUser.profileImg;
-
-    console.log('familyId-->', familyId);
-    console.log('familyMemberNickname-->', familyMemberNickname);
-    console.log('userId-->', userId);
-    console.log('profileImg-->', profileImg);
-
-    await FamilyMember.insertMany({
+    const { familyId } = req.params
+    let { email, familyMemberNickname } =
+      await familyMemberSchema.validateAsync(req.body)
+    // 새 구성원 추가
+    const newFamilyMember = await User.findOne({ email })
+    const userId = newFamilyMember.userId
+    // 카카오 로그인 유저의 경우 오늘의 기분 예외처리
+    let todayMood
+    if (newFamilyMember.snsId && todayMood === null) {
+      todayMood = null
+    } else {
+      todayMood = newFamilyMember.todayMood
+    }
+    const existMember = await FamilyMember.findOne({
       familyId: familyId,
-      familyMemberNickname: familyMemberNickname,
       userId: userId,
-      profileImg: profileImg,
-    });
-
-    res.status(201).json({ restult: true });
+    })
+    const existMemberNickname = await FamilyMember.findOne({
+      familyId: familyId,
+      familyMemberNickname,
+    })
+    if (existMember) {
+      res.status(400).send({
+        msg: "이미 추가되어 있는 구성원입니다.",
+      })
+    } else if (existMemberNickname) {
+      res.status(400).send({
+        msg: "중복된 호칭이 있습니다.",
+      })
+    }
+    // 프로필 이미지 없을 경우 키값 생성
+    if (newFamilyMember.profileImg) {
+      profileImg = newFamilyMember.profileImg
+    } else {
+      profileImg = null
+    }
+    // 오늘의 기분 상태값 없을 경우 키값 생성
+    if (newFamilyMember.todayMood) {
+      todayMood = newFamilyMember.todayMood
+    } else {
+      todayMood = null
+    }
+    const familyMember = await FamilyMember.create({
+      familyId: familyId,
+      familyMemberNickname,
+      userId: userId,
+      profileImg,
+      todayMood,
+    })
+    res.status(201).json({
+      restult: true,
+      familyMember,
+    })
   } catch (error) {
-    console.log('멤버 생성에서 오류!', error);
-    res.status(400).send({ result: false });
+    console.log("멤버 생성에서 오류!", error)
+    res.status(400).send({ result: false })
   }
-};
+}
 
-//멤버 검색 API
-//api 테스트 성공.
+// 멤버 검색 API (앞자리 일치만 검색)
 const searchUser = async (req, res) => {
+  const { search } = req.query
   try {
-    const { search } = req.query;
-    console.log('req.query-->', search);
-
-    const regex = (pattern) => new RegExp(`.*${pattern}.*`);
-    //RegExp 생성자는 패턴을 사용해 텍스트를 판별할 때 사용
-    //$ = 텍스트(문자열)의 끝과 일치하는 지.
-    //^ = 텍스트의 첫 자와 일치하는 지를 보는 정규식 표현.
-    //세세한 패턴 수정 필요
-    //산토끼를 완성 검색하면 토끼는 안 나옴. 토끼를 검색하면 산토끼는 나옴.
-
-    const userRegex = regex(search);
-
-    const searchKeyword = await User.find({
-      $or: [{ email: { $regex: userRegex, $options: 'i' } }],
-    });
-
-    console.log('searchKeyword-->', searchKeyword);
-
-    res.status(200).json({
-      email: searchKeyword[0].email,
-      nickname: searchKeyword[0].nickname,
-    });
-
-    // console.log("searchKeyword.email-->" , searchKeyword.email )
-    // console.log("searchKeyword.nickname-->" , searchKeyword.nickname )
+    let searchKeywords = await User.find({ $text: { $search: search } })
+    if (searchKeywords.length) {
+      for (let searchKeyword of searchKeywords) {
+        const keyword1 = search.split("@")
+        const keyword2 = searchKeyword.email.split("@")
+        if (search === searchKeyword.email) {
+          const userEmail = searchKeyword.email
+          return res.status(200).json({
+            userEmail,
+          })
+        } else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
+          const userEmail = searchKeyword.email
+          return res.status(200).json({
+            userEmail,
+          })
+        }
+      }
+      res.status(400).send({
+        result: false,
+        msg: "해당 이메일과 일치하는 정보가 없어요!",
+      })
+    } else {
+      res.status(400).send({
+        result: false,
+        msg: "해당 이메일과 일치하는 정보가 없어요!",
+      })
+    }
   } catch (error) {
-    console.log('멤버 검색에서 오류!', error);
-    res.status(400).send({ result: false });
+    console.log("검색 오류", error)
+    res.status(400).send({
+      result: false,
+      msg: "가족 구성원 검색 실패",
+    })
   }
-};
+}
 
 //가족구성원 조회 API
-//api 테스트 성공
 const getfamilyMember = async (req, res) => {
   try {
-    const { familyId } = req.params;
-    const { user } = res.locals;
-    const familyMemberList = await FamilyMember.find({ _id: familyId });
-
-    res.status(200).json({ familyMemberList });
+    const { familyId } = req.params
+    const familyMemberList = await FamilyMember.find({ familyId })
+    res.status(200).json({ familyMemberList })
   } catch (error) {
-    console.log('가족 구성원 조회에서 오류!', error);
-    res.status(400).send({ result: false });
+    console.log("가족 구성원 조회에서 오류!", error)
+    res.status(400).send({ result: false })
   }
-};
+}
 
 //가족 이름 수정 API
-//api 테스트 성공
 const editFamilyTitle = async (req, res) => {
   try {
-    const { familyId } = req.params;
-    const { familyTitle} = await familySchema.validateAsync(req.body)
-    const { email } = res.locals.user;
+    const { familyId } = req.params
+    const { familyTitle } = await familySchema.validateAsync(req.body)
+    const { email } = res.locals.user
 
-    await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } });
+    await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } })
 
-    console.log('_id:familyId-->', familyId);
+    console.log("_id:familyId-->", familyId)
 
     res.status(200).json({
       familyId,
       familyTitle,
-    });
+    })
   } catch (error) {
-    console.log('가족 이름 수정에서 오류!', error);
+    console.log("가족 이름 수정에서 오류!", error)
     res.status(400).send({
       result: false,
-    });
+    })
   }
-};
+}
 
 //가족 구성원 수정 API
-//api 테스트 성공
 const editFamilyMember = async (req, res) => {
   try {
-    const { familyId, familyMemberId } = req.params;
-    let { familyMemberNickname } = await familyMemberSchema.validateAsync(req.body)
-    const { email } = res.locals.user;
-
+    const { familyId, familyMemberId } = req.params
+    let { familyMemberNickname } = await familyMemberSchema.validateAsync(
+      req.body
+    )
     await FamilyMember.updateOne(
-      { email, _id: familyId, _id: familyMemberId },
+      { familyId, _id: familyMemberId },
       { $set: { familyMemberNickname } }
-    );
-
-    const modifyFamilyMemberList = await FamilyMember.find({
-      _id: familyId,
+    )
+    const modifyFamilyMemberList = await FamilyMember.findOne({
+      familyId,
       _id: familyMemberId,
-    });
-
-    res.status(200).json({ modifyFamilyMemberList });
+    })
+    // 음성 파일 수정
+    await VoiceFile.updateMany(
+      { familyId, userId: modifyFamilyMemberList.userId },
+      { $set: { familyMemberNickname } }
+    )
+    // 미션멤버 수정
+    await MissionMember.updateMany(
+      { familyId, userId: modifyFamilyMemberList.userId },
+      { $set: { familyMemberNickname } }
+    )
+    res.status(200).json({ modifyFamilyMemberList })
   } catch (error) {
-    console.log('가족 구성원 수정에서 오류!', error);
-    res.status(400).send({ result: false });
+    console.log("가족 구성원 수정에서 오류!", error)
+    res.status(400).send({ result: false })
   }
-};
+}
 
 //가족 삭제 API
 //api 테스트 성공
-//familyId 로 연관된 갤러리, 보이스, 미션 등등이 다 삭제되게 하기.
-//like, missionChk, MissionMember 세 개 다 familyId 따로 추가 예정.
-//user, randomMsg 데이터는 삭제 제외.
 const deleteFamily = async (req, res) => {
   try {
-    const { familyId } = req.params;
-    const { email } = res.locals.user;
+    const { familyId } = req.params
+    const { email } = res.locals.user
 
-    console.log('삭제 email-->', email);
-    console.log('삭제 familyId-->', familyId);
+    console.log("삭제 email-->", email)
+    console.log("삭제 familyId-->", familyId)
 
-    await Family.deleteOne({ _id: familyId });
-    await FamilyMember.deleteMany({ _id: familyId });
-    await Mission.deleteMany({ _id: familyId });
-    await Badge.deleteMany({ _id: familyId });
-    await Comment.deleteMany({ _id: familyId });
-    await Event.deleteMany({ _id: familyId });
-    await Photo.deleteMany({ _id: familyId });
-    await PhotoAlbum.deleteMany({ _id: familyId });
-    await VoiceAlbum.deleteMany({ _id: familyId });
-    await VoiceFile.deleteMany({ _id: familyId });
-    await Like.deleteMany({ _id: familyId });
-    await MissionMember.deleteMany({ _id: familyId });
-    await MissionChk.deleteMany({ _id: familyId });
+    await Family.deleteOne({ _id: familyId })
+    await FamilyMember.deleteMany({ familyId })
+    await Mission.deleteMany({ familyId })
+    await Badge.deleteMany({ familyId })
+    await Comment.deleteMany({ familyId })
+    await Event.deleteMany({ familyId })
+    await Photo.deleteMany({ familyId })
+    await PhotoAlbum.deleteMany({ familyId })
+    await VoiceAlbum.deleteMany({ familyId })
+    await VoiceFile.deleteMany({ familyId })
+    await Like.deleteMany({ familyId })
+    await MissionMember.deleteMany({ familyId })
+    await MissionChk.deleteMany({ familyId })
 
-    res.status(200).json({ msg: '가족이 삭제됐습니다.' });
+    res.status(200).json({ msg: "가족이 삭제됐습니다." })
   } catch (error) {
-    console.log('가족 삭제에서 오류!', error);
-    res.status(400).send({ msg: '가족 삭제에 실패했습니다.' });
+    console.log("가족 삭제에서 오류!", error)
+    res.status(400).send({ msg: "가족 삭제에 실패했습니다." })
   }
-};
+}
 
 //가족 구성원 삭제 API
 //api 테스트 성공
 const deleteFamilyMember = async (req, res) => {
   try {
-    const { familyMemberId } = req.params;
-    const { email } = res.locals.user;
+    const { familyMemberId } = req.params
+    const { email } = res.locals.user
 
-    console.log('삭제 email-->', email);
-    console.log('삭제 familyMemberId-->', familyMemberId);
-    await FamilyMember.deleteOne({ _id: familyMemberId });
+    console.log("삭제 email-->", email)
+    console.log("삭제 familyMemberId-->", familyMemberId)
+    await FamilyMember.deleteOne({ _id: familyMemberId })
+    await MissionMember.deleteMany({ familyMemberId })
+    await MissionChk.deleteMany({ familyMemberId })
 
-    res.status(200).json({ msg: '가족 구성원이 삭제됐습니다' });
+    res.status(200).json({ msg: "가족 구성원이 삭제됐습니다" })
   } catch (error) {
-    console.log('가족 구성원 삭제에서 오류!', error);
-    res.status(400).send({ result: false });
+    console.log("가족 구성원 삭제에서 오류!", error)
+    res.status(400).send({ result: false })
   }
-};
+}
 
 module.exports = {
+  getFamilyList,
   createFamily,
   createFamilyMember,
   searchUser,
@@ -294,4 +357,4 @@ module.exports = {
   editFamilyMember,
   deleteFamily,
   deleteFamilyMember,
-};
+}
