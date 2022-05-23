@@ -24,7 +24,6 @@ const upload = multer({
         cb(null, `voice/${Date.now()}${path.basename(file.originalname)}`);
       if (file.fieldname === "photoFile")
         cb(null, `photo/${Date.now()}${path.basename(file.originalname)}`);
-      console.log(1111, file);
     },
   }),
 });
