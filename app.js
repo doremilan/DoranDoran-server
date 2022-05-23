@@ -15,7 +15,7 @@ connect();
 passportConfig(app);
 
 app.use(cors());
-// app.use(cors({ origin: process.env.CORS }))
+// app.use(cors({ origin: config.cors.cors }));
 
 // app.get("/cors-test", (req, res) => {
 //   res.send("hi")

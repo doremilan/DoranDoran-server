@@ -9,6 +9,7 @@ const Photo = require("../schemas/photo");
 const VoiceAlbum = require("../schemas/voiceAlbum");
 const VoiceFile = require("../schemas/voiceFile");
 const Comment = require("../schemas/comment");
+const Connect = require("../schemas/connenct");
 const Event = require("../schemas/event");
 const RandomMsg = require("../schemas/randomMsg");
 
@@ -200,7 +201,7 @@ const getConnected = async (req, res) => {
       familyMemberStatusList,
     });
   } catch (error) {
-    console.log("가족 구성원 접속상태 조회에서 오류!", error);
+    console.log("가족구성원 접속상태 조회 오류", error);
     res.status(400).send({
       result: false,
     });

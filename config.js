@@ -1,4 +1,4 @@
-require("dotenv").config()
+require("dotenv").config();
 
 module.exports = {
   rateLimit: {
@@ -28,4 +28,7 @@ module.exports = {
     kakaoId: process.env.KAKAO_ID,
     kakaoUrl: process.env.KAKAO_URL,
   },
-}
+  cors: {
+    cors: process.env.CORS,
+  },
+};
