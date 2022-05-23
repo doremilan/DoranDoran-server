@@ -21,7 +21,7 @@ module.exports = (req, res, next) => {
       .exec()
       .then((user) => {
         res.locals.user = user
-        res.locals.token = tokenValue
+        // res.locals.token = tokenValue
         next()
       })
   } catch (error) {

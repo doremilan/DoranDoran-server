@@ -3,6 +3,7 @@ const authMiddleware = require("../middlewares/authMiddleware")
 const { faker } = require("@faker-js/faker")
 const jwt = require("jsonwebtoken")
 const User = require("../schemas/user")
+const user = require("../schemas/user")
 
 jest.mock("jsonwebtoken")
 jest.mock("../schemas/user")
@@ -89,11 +90,10 @@ describe("Auth Middleware", () => {
     jwt.verify = jest.fn((tokenValue, secret, callback) => {
       callback(undefined, { email })
     })
-    User.findOne = jest.fn((user) => Promise.resolve({ user }))
-    res.locals.user = user
+    User.findOne = jest.fn((email) => Promise.resolve({ email }))
     await authMiddleware(request, response, next)
-    console.log(response)
-    expect(response.locals).toMatchObject({ user, tokenValue })
+
+    expect(response.locals.user).toMatchObject({ user })
     expect(next).toHaveBeenCalledTimes(1)
   })
 })

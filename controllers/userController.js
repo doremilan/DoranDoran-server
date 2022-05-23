@@ -47,13 +47,11 @@ const getProfile = async (req, res) => {
     const profileImg = userInfo.profileImg
     const todayMood = userInfo.todayMood
 
-    const getMyprofile = res.status(200).json({
+    res.status(200).json({
       nickname: nickname,
       profileImg: profileImg,
       todayMood: todayMood,
     })
-
-    await getMyprofile
   } catch (error) {
     console.log("프로필 조회에서 오류!", error)
     res.status(400).send({ result: false })
