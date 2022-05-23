@@ -35,12 +35,15 @@ const getMainPage = async (req, res) => {
     if (voiceFiles.length) {
       recentVoiceFile = voiceFiles[0]
     }
-    const voiceAlbumInfo = await VoiceAlbum.findOne(
-      {
-        _id: recentVoiceFile.voiceAlbumId,
-      },
-      "voiceAlbumCover"
-    )
+    let voiceAlbumInfo = {}
+    if (recentVoiceFile.length) {
+      voiceAlbumInfo = await VoiceAlbum.findOne(
+        {
+          _id: recentVoiceFile.voiceAlbumId,
+        },
+        "voiceAlbumCover"
+      )
+    }
 
     // 이번달 일정 추출
     const thisMonth = new Date().toISOString().substring(0, 7).replace(/-/g, "")

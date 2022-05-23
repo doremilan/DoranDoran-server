@@ -284,6 +284,11 @@ const editFamilyMember = async (req, res) => {
       { familyId, userId: modifyFamilyMemberList.userId },
       { $set: { familyMemberNickname } }
     )
+    // 미션멤버 수정
+    await MissionMember.updateMany(
+      { familyId, userId: modifyFamilyMemberList.userId },
+      { $set: { familyMemberNickname } }
+    )
     res.status(200).json({ modifyFamilyMemberList })
   } catch (error) {
     console.log("가족 구성원 수정에서 오류!", error)
