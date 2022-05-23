@@ -10,13 +10,12 @@ const passportConfig = require("./passport")
 const config = require("./config")
 const app = express()
 
-const webSocket = require('./socket');
-
+const webSocket = require("./socket")
 
 connect()
 passportConfig(app)
 
-app.use(cors())
+// app.use(cors())
 // app.use(cors({ origin: process.env.CORS }))
 
 // app.get("/cors-test", (req, res) => {
@@ -43,14 +42,6 @@ app.use((req, res, next) => {
   res.sendStatus(404)
 })
 
-
-
-// cors test 
-app.get("/cors-test", (req, res) => {
-  console.log(process.env.CORS)
-  res.send("hi")
-})
-
 // error handler
 app.use((error, req, res, next) => {
   console.error(error)
@@ -62,5 +53,4 @@ const server = app.listen(config.host.port, () => {
   console.log("Server is listening...")
 })
 
-
-webSocket(server);
+webSocket(server)
