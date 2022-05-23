@@ -107,7 +107,7 @@ const login = async (req, res) => {
     const payload = { email }
     const options = {
       issuer: "백엔드 개발자",
-      expiresIn: config.jwt.expiresIn,
+      expiresIn: "2d",
     }
     const token = jwt.sign(payload, config.jwt.secretKey, options)
     const userInfo = await User.findOne({ email })
