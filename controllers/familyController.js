@@ -41,19 +41,10 @@ const getFamilyList = async (req, res) => {
         const Checkedfamily = await Family.findOne({ _id: family.familyId });
         familyList.push(Checkedfamily);
       }
-      res.status(200).json({
-        familyList,
-      });
-    } else if (familyListUnique) {
-      new Set(familyList);
-      res.status(200).json({
-        familyList,
-      });
-    } else {
-      res.status(200).json({
-        familyList,
-      });
     }
+    res.status(200).json({
+      familyList,
+    });
   } catch (error) {
     console.log("가족 리스트 조회에서 오류!", error);
     res.status(400).send({
