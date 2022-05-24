@@ -119,21 +119,17 @@ module.exports = (server) => {
         } else {
           socket.emit("errorMsg", "이미 초대한 가족입니다.");
         }
+        const findUserAlertDB = await Alert.findOne({
+          userId,
+          type,
+          selectEmail,
+        });
+        findUserAlertDB.createdAt = timeForToday(createdAt);
+        console.log(findUserAlertDB.createdAt);
         const receiver = getUser(userId);
         // 데이터 전송
         io.to(receiver.socketId).emit("newInviteDB", {
-          findUserAlertDB: [
-            {
-              familyId,
-              userId: findUser.userId,
-              familyMemberNickname,
-              selectEmail,
-              category: "가족 초대",
-              type: "초대",
-              nickname,
-              createdAt: timeForToday(createdAt),
-            },
-          ],
+          findUserAlertDB: [findUserAlertDB],
         });
       }
     );
@@ -143,7 +139,7 @@ module.exports = (server) => {
       console.log(5, userId, type);
       if (userId && type) {
         const receiver = getUser(userId);
-        const findUserAlertDB = await Alert.find({ userId, type: type });
+        const findUserAlertDB = await Alert.find({ userId, type });
         if (findUserAlertDB.length) {
           for (let findUserDB of findUserAlertDB) {
             findUserDB.createdAt = timeForToday(findUserDB.createdAt);
