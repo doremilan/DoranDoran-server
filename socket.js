@@ -92,6 +92,14 @@ module.exports = (server) => {
         nickname,
         type,
       }) => {
+        console.log(
+          4,
+          familyId,
+          selectEmail,
+          familyMemberNickname,
+          nickname,
+          type
+        );
         const findUser = await User.findOne({ email: selectEmail });
         const chkAlertDB = await Alert.findOne({ familyId, selectEmail, type });
         const userId = findUser.userId;
@@ -132,6 +140,7 @@ module.exports = (server) => {
 
     //가족 초대 수락
     socket.on("getMyAlert", async ({ userId, type }) => {
+      console.log(5, userId, type);
       if (userId && type) {
         const receiver = getUser(userId);
         const findUserAlertDB = await Alert.find({ userId, type: type });
@@ -158,6 +167,16 @@ module.exports = (server) => {
         category,
         likeChk,
       }) => {
+        console.log(
+          1,
+          photoId,
+          senderName,
+          senderId,
+          receiverId,
+          type,
+          category,
+          likeChk
+        );
         // DB 생성
         if (receiverId !== undefined && senderId !== receiverId) {
           const createdAt = new Date();
@@ -192,6 +211,15 @@ module.exports = (server) => {
     socket.on(
       "sendCommentNoti",
       async ({ photoId, senderName, senderId, receiverId, type, category }) => {
+        console.log(
+          2,
+          photoId,
+          senderName,
+          senderId,
+          receiverId,
+          type,
+          category
+        );
         // DB 생성
         if (receiverId !== undefined && senderId !== receiverId) {
           const createdAt = new Date();
@@ -218,6 +246,7 @@ module.exports = (server) => {
 
     // 댓글 & 좋아요 알림
     socket.on("getPhotoAlert", async ({ receiverId }) => {
+      console.log(3, receiverId);
       if (receiverId !== undefined) {
         const receiver = getUser(receiverId);
         const findUserAlertDB = await Alert.find({ receiverId });
