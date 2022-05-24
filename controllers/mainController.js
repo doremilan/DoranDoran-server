@@ -95,6 +95,7 @@ const getMainPage = async (req, res) => {
         recentMissionUser = await FamilyMember.findOne(
           {
             userId: recentMission.userId,
+            familyId,
           },
           "familyMemberNickname"
         );
