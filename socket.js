@@ -60,7 +60,7 @@ module.exports = (server) => {
         const createdAt = new Date();
         const userFind = await Connect.findOne({ userId });
         if (!userFind) {
-          const newConnectedUser = await Connect.create({
+          await Connect.create({
             userId: userId,
             connected: true,
             socketId: receiver.socketId,
@@ -77,7 +77,7 @@ module.exports = (server) => {
               },
             }
           );
-          const userFind22 = await Connect.findOne({ userId });
+          await Connect.findOne({ userId });
         }
       }
     });
@@ -92,18 +92,8 @@ module.exports = (server) => {
         nickname,
         type,
       }) => {
-        console.log(
-          1,
-          familyId,
-          selectEmail,
-          familyMemberNickname,
-          nickname,
-          type
-        );
         const findUser = await User.findOne({ email: selectEmail });
-        console.log(2, findUser);
         const chkAlertDB = await Alert.findOne({ familyId, selectEmail, type });
-        console.log(3, chkAlertDB);
         const userId = findUser.userId;
         const createdAt = new Date();
         // DB 생성
@@ -122,7 +112,6 @@ module.exports = (server) => {
           socket.emit("errorMsg", "이미 초대한 가족입니다.");
         }
         const receiver = getUser(userId);
-        console.log(4, receiver);
         // 데이터 전송
         io.to(receiver.socketId).emit("newInviteDB", {
           findUserAlertDB: [
@@ -143,12 +132,9 @@ module.exports = (server) => {
 
     //가족 초대 수락
     socket.on("getMyAlert", async ({ userId, type }) => {
-      console.log(4, userId, type);
       if (userId && type) {
         const receiver = getUser(userId);
-        console.log(5, receiver);
         const findUserAlertDB = await Alert.find({ userId, type: type });
-        console.log(6, findUserAlertDB);
         if (findUserAlertDB.length) {
           for (let findUserDB of findUserAlertDB) {
             findUserDB.createdAt = timeForToday(findUserDB.createdAt);
