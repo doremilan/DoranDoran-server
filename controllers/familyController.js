@@ -226,6 +226,12 @@ const getfamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params;
     const familyMemberList = await FamilyMember.find({ familyId });
+    console.log(familyMemberList);
+    for (let familyMember of familyMemberList) {
+      const getEmail = await User.findOne({ _id: familyMember.userId });
+      console.log(getEmail);
+      familyMember.email = getEmail.email;
+    }
     res.status(200).json({
       familyMemberList,
     });

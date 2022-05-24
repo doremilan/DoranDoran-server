@@ -19,6 +19,9 @@ const familyMemberSchema = mongoose.Schema({
   todayMood: {
     type: String,
   },
+  email: {
+    type: String,
+  },
 });
 
 familyMemberSchema.virtual("familyMemberId").get(function () {

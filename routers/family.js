@@ -26,7 +26,7 @@ router.post("/:familyId", authMiddleware, createFamilyMember);
 // 가족구성원 검색
 router.get("/search", authMiddleware, searchUser);
 
-// 가족구성원 조회
+// 가족구성원 목록조회
 router.get("/:familyId/familyMember", authMiddleware, getfamilyMember);
 
 // 가족이름 수정
