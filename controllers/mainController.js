@@ -61,7 +61,7 @@ const getMainPage = async (req, res) => {
       recentVoiceFile = voiceFiles[0];
     }
     let voiceAlbumInfo = {};
-    if (recentVoiceFile.length) {
+    if (recentVoiceFile) {
       voiceAlbumInfo = await VoiceAlbum.findOne(
         {
           _id: recentVoiceFile.voiceAlbumId,
