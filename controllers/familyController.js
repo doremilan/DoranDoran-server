@@ -133,23 +133,25 @@ const createFamilyMember = async (req, res) => {
     } else {
       todayMood = newFamilyMember.todayMood;
     }
-    const existMember = await FamilyMember.findOne({
-      familyId: familyId,
-      userId: userId,
-    });
-    const existMemberNickname = await FamilyMember.findOne({
-      familyId: familyId,
-      familyMemberNickname,
-    });
-    if (existMember) {
-      res.status(400).send({
-        msg: "이미 추가되어 있는 구성원이에요",
-      });
-    } else if (existMemberNickname) {
-      res.status(400).send({
-        msg: "중복된 호칭이 있어요.",
-      });
-    }
+
+    // const existMember = await FamilyMember.findOne({
+    //   familyId: familyId,
+    //   userId: userId,
+    // });
+    // const existMemberNickname = await FamilyMember.findOne({
+    //   familyId: familyId,
+    //   familyMemberNickname,
+    // });
+    // if (existMember) {
+    //   res.status(400).send({
+    //     msg: "이미 추가되어 있는 구성원이에요",
+    //   });
+    // } else if (existMemberNickname) {
+    //   res.status(400).send({
+    //     msg: "중복된 호칭이 있어요.",
+    //   });
+    // }
+
     // 프로필 이미지 없을 경우 키값 생성
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg;
