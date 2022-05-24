@@ -133,6 +133,19 @@ const createFamilyMember = async (req, res) => {
     } else {
       todayMood = newFamilyMember.todayMood;
     }
+    const existMember = await FamilyMember.findOne({
+      familyId: familyId,
+      userId: userId,
+    });
+    const existMemberNickname = await FamilyMember.findOne({
+      familyId: familyId,
+      familyMemberNickname,
+    });
+    if (existMember) {
+      res.status(400).send({});
+    } else if (existMemberNickname) {
+      res.status(400).send({});
+    }
     // 프로필 이미지 없을 경우 키값 생성
     if (newFamilyMember.profileImg) {
       profileImg = newFamilyMember.profileImg;
