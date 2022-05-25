@@ -174,7 +174,11 @@ module.exports = (server) => {
           likeChk
         );
         // DB 생성
-        if (receiverId !== undefined && senderId !== receiverId) {
+        if (
+          senderName !== undefined &&
+          senderId !== undefined &&
+          senderId !== receiverId
+        ) {
           const createdAt = new Date();
           if (likeChk) {
             await Alert.create({
@@ -217,7 +221,11 @@ module.exports = (server) => {
           category
         );
         // DB 생성
-        if (receiverId !== undefined && senderId !== receiverId) {
+        if (
+          senderName !== undefined &&
+          senderId !== undefined &&
+          senderId !== receiverId
+        ) {
           const createdAt = new Date();
           await Alert.create({
             photoId,
