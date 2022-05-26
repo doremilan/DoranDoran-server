@@ -15,19 +15,19 @@ const Like = require("../schemas/like");
 const Joi = require("joi");
 
 //가족이름: 2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
-const familySchema = Joi.object({
-  familyTitle: Joi.string()
-    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
-    .required(),
-});
+// const familySchema = Joi.object({
+//   familyTitle: Joi.string()
+//     .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
+//     .required(),
+// });
 
 //가족 멤버 닉네임: 2-8자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
-const familyMemberSchema = Joi.object({
-  email: Joi.string(),
-  familyMemberNickname: Joi.string()
-    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
-    .required(),
-});
+// const familyMemberSchema = Joi.object({
+//   email: Joi.string(),
+//   familyMemberNickname: Joi.string()
+//     .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
+//     .required(),
+// });
 
 //가족 목록 조회
 const getFamilyList = async (req, res) => {
@@ -57,7 +57,7 @@ const getFamilyList = async (req, res) => {
 const createFamily = async (req, res) => {
   try {
     const { user } = res.locals;
-    let { familyTitle } = await familySchema.validateAsync(req.body);
+    let { familyTitle } = req.body;
     const newFamily = await Family.create({
       familyTitle,
       familyHost: user.userId,
@@ -121,8 +121,7 @@ const createFamily = async (req, res) => {
 const createFamilyMember = async (req, res) => {
   try {
     const { familyId } = req.params;
-    let { email, familyMemberNickname } =
-      await familyMemberSchema.validateAsync(req.body);
+    const { email, familyMemberNickname } = req.body;
     // 새 구성원 추가
     const newFamilyMember = await User.findOne({ email });
     const userId = newFamilyMember.userId;
@@ -241,7 +240,7 @@ const getfamilyMember = async (req, res) => {
 const editFamilyTitle = async (req, res) => {
   try {
     const { familyId } = req.params;
-    const { familyTitle } = await familySchema.validateAsync(req.body);
+    const { familyTitle } = req.body;
     const { email } = res.locals.user;
     await Family.updateOne({ email, _id: familyId }, { $set: { familyTitle } });
     res.status(200).json({
@@ -260,9 +259,7 @@ const editFamilyTitle = async (req, res) => {
 const editFamilyMember = async (req, res) => {
   try {
     const { familyId, familyMemberId } = req.params;
-    let { familyMemberNickname } = await familyMemberSchema.validateAsync(
-      req.body
-    );
+    let { familyMemberNickname } = req.body;
     await FamilyMember.updateOne(
       { familyId, _id: familyMemberId },
       { $set: { familyMemberNickname } }
@@ -291,7 +288,6 @@ const editFamilyMember = async (req, res) => {
 // 가족 삭제
 const deleteFamily = async (req, res) => {
   const { familyId } = req.params;
-  const { email } = res.locals.user;
   try {
     await Family.deleteOne({ _id: familyId });
     await FamilyMember.deleteMany({ familyId });
@@ -320,7 +316,6 @@ const deleteFamily = async (req, res) => {
 //가족 구성원 삭제
 const deleteFamilyMember = async (req, res) => {
   const { familyMemberId } = req.params;
-  const { email } = res.locals.user;
   try {
     await FamilyMember.deleteOne({ _id: familyMemberId });
     await MissionMember.deleteMany({ familyMemberId });
