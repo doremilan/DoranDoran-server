@@ -19,56 +19,69 @@ const postMission = async (req, res) => {
   try {
     // 공백 체크 & 미션 db 생성
     if (missionTitle !== null && missionTitle !== "") {
-      const createdMission = await Mission.create({
-        missionTitle,
-        userId,
-        familyId,
-        createdAt,
-        completedAt: null,
-      });
-      // 미션 멤버 db 생성
-      let createdMember = [];
-      if (familyMemberId) {
-        for (let MemberId of familyMemberId) {
-          const familyMemberId = MemberId.familyMemberId;
-          const missionMember = await FamilyMember.findOne({
-            _id: familyMemberId,
-          });
-          const userId = missionMember.userId;
-          const familyMemberNickname = missionMember.familyMemberNickname;
-          if (missionMember.profileImg !== null) {
-            profileImg = missionMember.profileImg;
-          } else {
-            profileImg = null;
-          }
-          // 공백 체크
-          if (missionMember) {
-            const newMember = await MissionMember.create({
+      if (familyMemberId && familyMemberId.length !== 0) {
+        const createdMission = await Mission.create({
+          missionTitle,
+          userId,
+          familyId,
+          createdAt,
+          completedAt: null,
+        });
+        // 미션 멤버 db 생성
+        let createdMember = [];
+        if (createdMission) {
+          for (let MemberId of familyMemberId) {
+            const familyMemberId = MemberId.familyMemberId;
+            const missionMember = await FamilyMember.findOne({
+              _id: familyMemberId,
               familyId,
-              missionId: createdMission.missionId,
-              familyMemberId,
-              familyMemberNickname,
-              profileImg,
-              userId,
             });
-            createdMember.push(newMember);
+            if (!missionMember) {
+              return res.status(400).send({
+                result: false,
+                msg: "미션 멤버를 확인해주세요.",
+              });
+            }
+            const userId = missionMember.userId;
+            const familyMemberNickname = missionMember.familyMemberNickname;
+            if (missionMember.profileImg !== null) {
+              profileImg = missionMember.profileImg;
+            } else {
+              profileImg = null;
+            }
+            // 공백 체크
+            if (missionMember) {
+              const newMember = await MissionMember.create({
+                familyId,
+                missionId: createdMission.missionId,
+                familyMemberId,
+                familyMemberNickname,
+                profileImg,
+                userId,
+              });
+              createdMember.push(newMember);
+            }
           }
+        } else {
+          return res.status(400).send({
+            result: false,
+            msg: "미션 멤버를 등록해주세요.",
+          });
         }
-      } else {
-        res.status(400).send({
-          result: false,
-          msg: "미션 멤버를 등록해주세요.",
+        // const userInfo = await FamilyMember.findOne({ userId });
+        // const userFamilyName = userInfo.familyMemberNickname;
+        return res.status(201).json({
+          missionId: createdMission.missionId,
+          createdMember,
+          msg: "새로운 미션이 등록되었어요.",
         });
       }
-      const userInfo = await FamilyMember.findOne({ userId });
-      const userFamilyName = userInfo.familyMemberNickname;
-      res.status(201).json({
-        missionId: createdMission.missionId,
-        createdMember,
-        msg: "새로운 미션이 등록되었어요.",
+      return res.status(400).send({
+        result: false,
+        msg: "미션 멤버를 등록해주세요.",
       });
     } else {
-      res.status(400).send({
+      return res.status(400).send({
         result: false,
         msg: "미션 제목을 작성해주세요.",
       });
