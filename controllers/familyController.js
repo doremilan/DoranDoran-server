@@ -176,26 +176,27 @@ const createFamilyMember = async (req, res) => {
   }
 };
 
-// 가족 구성원 검색
+// 가족 구성원 검색 (전체가 같을때만 검색되도록 변경)
 const searchUser = async (req, res) => {
   const { search } = req.query;
   try {
     let searchKeywords = await User.find({ $text: { $search: search } });
     if (searchKeywords.length) {
       for (let searchKeyword of searchKeywords) {
-        const keyword1 = search.split("@");
-        const keyword2 = searchKeyword.email.split("@");
+        // const keyword1 = search.split("@");
+        // const keyword2 = searchKeyword.email.split("@");
         if (search === searchKeyword.email) {
           const userEmail = searchKeyword.email;
           return res.status(200).json({
             userEmail,
           });
-        } else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
-          const userEmail = searchKeyword.email;
-          return res.status(200).json({
-            userEmail,
-          });
         }
+        // else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
+        //   const userEmail = searchKeyword.email;
+        //   return res.status(200).json({
+        //     userEmail,
+        //   });
+        // }
       }
       res.status(400).send({
         result: false,
