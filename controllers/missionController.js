@@ -77,7 +77,7 @@ const postMission = async (req, res) => {
     console.log("미션 등록 오류", error);
     res.status(400).send({
       result: false,
-      msg: "[미션등록 실패] 미션 멤버를 확인해주세요.",
+      msg: "미션 멤버를 확인해주세요.",
     });
   }
 };
