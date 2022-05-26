@@ -130,6 +130,7 @@ module.exports = (server) => {
           });
         } else {
           socket.emit("errorMsg", "이미 초대한 가족입니다.");
+          return;
         }
       }
     );
