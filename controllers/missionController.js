@@ -37,6 +37,7 @@ const postMission = async (req, res) => {
               familyId,
             });
             if (!missionMember) {
+              await Mission.deleteOne({ _id: createdMission.missionId });
               return res.status(400).send({
                 result: false,
                 msg: "미션 멤버를 확인해주세요.",
@@ -68,8 +69,6 @@ const postMission = async (req, res) => {
             msg: "미션 멤버를 등록해주세요.",
           });
         }
-        // const userInfo = await FamilyMember.findOne({ userId });
-        // const userFamilyName = userInfo.familyMemberNickname;
         return res.status(201).json({
           missionId: createdMission.missionId,
           createdMember,
