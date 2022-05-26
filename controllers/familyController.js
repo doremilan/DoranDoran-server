@@ -17,7 +17,7 @@ const Joi = require("joi");
 //가족이름: 2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
 const familySchema = Joi.object({
   familyTitle: Joi.string()
-    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$"))
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
     .required(),
 });
 
@@ -25,7 +25,7 @@ const familySchema = Joi.object({
 const familyMemberSchema = Joi.object({
   email: Joi.string(),
   familyMemberNickname: Joi.string()
-    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,8}$"))
+    .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
     .required(),
 });
 
