@@ -116,21 +116,21 @@ module.exports = (server) => {
             nickname,
             createdAt,
           });
+          const findUserAlertDB = await Alert.findOne({
+            userId,
+            type,
+            selectEmail,
+          });
+          findUserAlertDB.createdAt = timeForToday(createdAt);
+          console.log(findUserAlertDB.createdAt);
+          const receiver = getUser(userId);
+          // 데이터 전송
+          io.to(receiver.socketId).emit("newInviteDB", {
+            findUserAlertDB: [findUserAlertDB],
+          });
         } else {
           socket.emit("errorMsg", "이미 초대한 가족입니다.");
         }
-        const findUserAlertDB = await Alert.findOne({
-          userId,
-          type,
-          selectEmail,
-        });
-        findUserAlertDB.createdAt = timeForToday(createdAt);
-        console.log(findUserAlertDB.createdAt);
-        const receiver = getUser(userId);
-        // 데이터 전송
-        io.to(receiver.socketId).emit("newInviteDB", {
-          findUserAlertDB: [findUserAlertDB],
-        });
       }
     );
 
