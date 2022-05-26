@@ -14,6 +14,7 @@ const postMission = async (req, res) => {
   const { familyId } = req.params;
   const { userId } = res.locals.user;
   const { missionTitle, familyMemberId } = req.body;
+  console.log(missionTitle, familyMemberId);
   const createdAt = new Date();
   try {
     // 공백 체크 & 미션 db 생성
@@ -27,7 +28,7 @@ const postMission = async (req, res) => {
       });
       // 미션 멤버 db 생성
       let createdMember = [];
-      if (familyMemberId.length) {
+      if (familyMemberId) {
         for (let MemberId of familyMemberId) {
           const familyMemberId = MemberId.familyMemberId;
           const missionMember = await FamilyMember.findOne({
