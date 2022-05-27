@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const photoSchema = mongoose.Schema({
   photoFile: {
@@ -27,14 +27,14 @@ const photoSchema = mongoose.Schema({
   userInfo: {
     type: Object,
   },
-})
+});
 
 photoSchema.virtual("photoId").get(function () {
-  return this._id.toHexString()
-})
+  return this._id.toHexString();
+});
 
 photoSchema.set("toJSON", {
   virtuals: true,
-})
+});
 
-module.exports = mongoose.model("Photo", photoSchema)
+module.exports = mongoose.model("Photo", photoSchema);

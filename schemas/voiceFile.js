@@ -1,4 +1,4 @@
-const mongoose = require("mongoose")
+const mongoose = require("mongoose");
 
 const voiceFileSchema = mongoose.Schema({
   voiceTitle: {
@@ -32,14 +32,14 @@ const voiceFileSchema = mongoose.Schema({
     type: Date,
     required: true,
   },
-})
+});
 
 voiceFileSchema.virtual("voiceFileId").get(function () {
-  return this._id.toHexString()
-})
+  return this._id.toHexString();
+});
 
 voiceFileSchema.set("toJSON", {
   virtuals: true,
-})
+});
 
-module.exports = mongoose.model("VoiceFile", voiceFileSchema)
+module.exports = mongoose.model("VoiceFile", voiceFileSchema);
