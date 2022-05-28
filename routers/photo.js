@@ -19,7 +19,7 @@ router.get("/:photoAlbumId", authMiddleware, getPhoto);
 router.get("/:photoAlbumId/:pageNum", authMiddleware, getPhotos);
 
 // 사진 상세조회
-router.get("/:familyId/:photoId", authMiddleware, getPhotoDetail);
+router.get("/:familyId/detail/:photoId", authMiddleware, getPhotoDetail);
 
 // 사진수정
 router.put("/:photoId", upload.single("photoFile"), authMiddleware, putPhoto);
