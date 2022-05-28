@@ -11,11 +11,6 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      - uses: actions/checkout@v3
-      - run: npm ci
-      - run: npm test
-
-
       - name: Deploy
         uses: appleboy/ssh-action@master
         with:
