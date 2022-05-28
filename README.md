@@ -69,18 +69,9 @@
    
 ## 트러블 슈팅
 <details>
-<summary>여기를 눌러주세요</summary>
+<summary>{토글리스트의 title}</summary>
 <div markdown="1">       
-
-ㅁㅁㅁㅁ
-
-</div>
-</details>
-<details>
-<summary>여기를 눌러주세요</summary>
-<div markdown="1">       
-
-ㅁㅁㅁㅁ
-
+  1. {토글리스트의 content}
+  2. {토글리스트의 content}
 </div>
 </details>
