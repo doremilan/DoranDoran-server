@@ -1,0 +1,29 @@
+{
+  "config": {
+    "target": "http://localhost:3000",
+    "phases": [{ "duration": 20, "arrivalRate": 10 }],
+    "defaults": {
+      "headers": {
+        "User-Agent": "Artillery"
+      }
+    },
+    "payload": {
+      "path": "./data.csv",
+      "order": "sequence",
+      "fields": ["email", "password", "name", "phone"]
+    }
+  },
+  "scenarios": [
+    {
+      "name": "유저생성테스트",
+      "flow": [
+        {
+          "post": {
+            "url": "/auth/signup",
+            "json": { "email": "{{email}}", "password": "{{password}}", "passwordCheck": "{{passwordCheck}}", "nickname": "{{nickname}}" }
+          }
+        }
+      ]
+    }
+  ]
+}
