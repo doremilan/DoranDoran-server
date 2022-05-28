@@ -41,7 +41,8 @@
     "multer-s3": "^2.10.0",
     "passport": "^0.5.2",
     "passport-kakao": "^1.0.1",
-    "socket.io": "^4.5.1"
+    "socket.io": "^4.5.1",
+    "yml": "^1.0.0"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.3.1",

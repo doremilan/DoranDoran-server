@@ -42,12 +42,12 @@ const signup = async (req, res) => {
       return
     }
     const hashed = await bcrypt.hash(password, 10)
-    const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
+    //서버 소켓 테스트 위해서 51번째 줄에서 삭제 profileImg: randomImg[0].randomImg,
+    //const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
     const user = new User({
       email,
       password: hashed,
       nickname,
-      profileImg: randomImg[0].randomImg,
       todayMood: null,
     })
     await user.save()

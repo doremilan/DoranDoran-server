@@ -1,0 +1,39 @@
+config:
+  target: "http://localhost:3000"
+  socketio:
+    transports: ["websocket"]
+    query: "id=cUW7OXP624yUTJT"
+  phases:
+    - duration: 1
+      arrivalRate: 4
+scenarios:
+  - name: "connection"
+    engine: "socketio"
+    flow:
+      - think: 15
+      - loop:
+          - emit:
+              channel: "newUser"
+              data:
+                "userId": "62921ccbf66d50171cfa1c43"
+                "socketId": 0
+                "connected": false
+                "connectedAt":
+          - think: 5
+          - emit:
+              channel: "inviteMember"
+              data:
+                "familyId": "aaaaaa"
+                "selectEmail": "aaa@aaaa.com"
+                "userId": "62921ccbf66d50171cfa1c43"
+                "familyMemberNickname": "aaaaa"
+                "nickname": "abcd"
+                "type": "초대"
+          - think: 5
+          - emit:
+              channel: "getMyAlert"
+              data:
+                "userId": "629092d02b2553c0a3647f48"
+                "type": "초대"
+          - think: 5
+      - think: 45
