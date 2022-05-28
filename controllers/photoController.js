@@ -74,7 +74,7 @@ const getPhotos = async (req, res) => {
   try {
     const photoList = await Photo.find({ photoAlbumId })
       .sort({ $natural: -1 })
-      .skip(pageNum - 1)
+      .skip((pageNum - 1) * 14)
       .limit(14);
     const photoAlbum = await PhotoAlbum.findOne({ _id: photoAlbumId });
     const PhotoAlbumName = photoAlbum.photoAlbumName;
