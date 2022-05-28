@@ -48,7 +48,7 @@ app.use((error, req, res, next) => {
 });
 
 const server = app.listen(config.host.port, () => {
-  console.log("Server is listening...");
+  console.log("Server is listening....");
 });
 
 webSocket(server);
