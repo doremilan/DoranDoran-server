@@ -15,7 +15,7 @@
   },
   "scenarios": [
     {
-      "name": "유저생성테스트",
+      "name": "회원가입",
       "flow": [
         {
           "post": {
