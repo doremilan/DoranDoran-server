@@ -80,26 +80,26 @@
 <br>
 
 ## 📚 라이브러리 
-| name                | Appliance             | version  |
-| :-----------------: | :-------------------: | :------: |
-| bcrypt              | 비밀번호 암호화        |5.0.1|
-| cors                | CORS 핸들링            |2.8.5|
+| name                | Appliance               | version  |
+| :-----------------: | :---------------------: | :------: |
+| bcrypt              | 비밀번호 암호화         |5.0.1|
+| cors                | CORS 핸들링             |2.8.5|
 | dotenv              | 환경변수 설정           |16.0.0|
-| helmet              | HTTP header 보안       |5.0.2|
-| joi                 | validator              |17.6.0|
-| mongoose            | MongoDB ODM            |6.3.2|
-| jsonwebtoken        | JWT토큰 발급             |8.5.1|
+| helmet              | HTTP header 보안        |5.0.2|
+| joi                 | validator               |17.6.0|
+| mongoose            | MongoDB ODM             |6.3.2|
+| jsonwebtoken        | JWT토큰 발급            |8.5.1|
 | passport            | node.js authentication  |0.5.2|
-| passport-kakao      | 카카오 로그인 모듈       |1.0.1|
+| passport-kakao      | 카카오 로그인 모듈      |1.0.1|
 | multer              | 파일 업로드             |1.4.4|
-| multer-s3           | AWS S3 파일 업로드       |2.10.0|
+| multer-s3           | AWS S3 파일 업로드      |2.10.0|
 | ffmpeg              | 파일 변환               |2.1.2|
 | socket.io           | 실시간 알림             |4.5.1|
-| morgan              | HTTP 요청 로그 관리      |1.10.0|
-| winston             | 전체 서비스 로그 관리     |3.7.2|
-| jest                |  테스트코드              |28.1.0|
-| artillery	          |  퍼포먼스 테스팅 툴      |2.0.0-17|
-|express-rate-limit   | DDos 보안      |2.0.0-17|
+| morgan              | HTTP 요청 로그 관리     |1.10.0|
+| winston             | 전체 서비스 로그 관리   |3.7.2|
+| jest                |  테스트코드             |28.1.0|
+| artillery	          |  퍼포먼스 테스팅 툴     |2.0.0-17|
+| express-rate-limit  | API 사용량 제한(보안)   |2.0.0-17|
 
 <br>
    
