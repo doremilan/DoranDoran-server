@@ -99,7 +99,7 @@
 | winston             | 전체 서비스 로그 관리   |3.7.2|
 | jest                |  테스트코드             |28.1.0|
 | artillery	          |  퍼포먼스 테스팅 툴     |2.0.0-17|
-| express-rate-limit  | API 사용량 제한(보안)   |2.0.0-17|
+| express-rate-limit  | API 사용량 제한(보안)   |6.4.0|
 
 <br>
    
