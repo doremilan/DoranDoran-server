@@ -11,24 +11,23 @@
 
 <br>
 
-## 프로젝트 기간
+## ⏱ 프로젝트 기간
 > 2022.04.22 ~ 2022.06.03 (6주)
 
 <br>
 
-##  도란도란 서비스 주요기능
-#### 🏆 함께 달성하는 재미를 느낄 수 있는 가족 미션
-#### 📅 우리 가족의 일정을 한눈에 파악할 수 있는 가족 캘린더
-#### 📷 남는 건 사진인 거 아시죠? 우리 가족만의 포토 갤러리
-#### 💌 듣고 싶은 목소리를 언제든 꺼내들을 수 있는 음성 메시지함
-
-<br>
+## 🌈 도란도란 서비스 주요기능
+<p6> 🔔 도란도란은 반응형으로 웹과 모바일 모두 이용 가능한 서비스입니다.</p6>
+#### 1️⃣ 함께 달성하는 재미를 느낄 수 있는 🏆 가족 미션 🏆
+#### 2️⃣ 우리 가족의 일정을 한눈에 파악할 수 있는 📅 가족 캘린더 📅
+#### 3️⃣ 남는 건 사진인 거 아시죠? 우리 가족만의 📷 포토 갤러리 📷
+#### 4️⃣ 듣고 싶은 목소리를 언제든 꺼내들을 수 있는 💌 음성 메시지함 💌 
 
 <img src="https://www.dorandorans.com/static/media/Web_01.29cbf948c7a423b343f6.png">
 
 <br>
 
-## 🎨아키텍쳐
+## ✨ 아키텍쳐
 <br>
 
 ![아키텍쳐 최최최최종](https://user-images.githubusercontent.com/100390926/170860219-34dbdce9-91c1-4c1a-8265-0b79f14a93b3.png)
@@ -80,16 +79,15 @@
 <br>
 
 ## 👾 팀원 소개
-| Name     | GitHub                             | Position  |
-| -------- | ---------------------------------- | --------- |
-| 이미란🔰   | https://github.com/doremilan          | 백엔드 |
-| 성영호   | https://github.com/Hoya11           | 백엔드 |
-| 서현우   | https://github.com/SEOCL       | 백엔드 |
-| 김정태🔰   | https://github.com/Jayteeee        | 프론트엔드     |
-| 이덕행   | https://github.com/Deokhaeng         | 프론트엔드     |
-| 정주현   | -                                   | 디자인     |
-| 윤혜원   | -                                   | 디자인     |
-
+| Name            | GitHub                              | Position  |
+| --------------- | ----------------------------------- | --------- |
+| 😁  이미란 🔰   | https://github.com/doremilan        | 백엔드     |
+| 😊  성영호      | https://github.com/Hoya11           | 백엔드     |
+| 🤪  서현우      | https://github.com/SEOCL            | 백엔드     |
+| 🤓  김정태 🔰   | https://github.com/Jayteeee         | 프론트엔드 |
+| 🤔  이덕행      | https://github.com/Deokhaeng        | 프론트엔드 |
+| 😄  정주현      | -                                   | 디자인     |
+| 🤭  윤혜원      | -                                   | 디자인     |
 
 <br>
    
@@ -111,6 +109,7 @@
   * 의사 결정 및 결과
     - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
     - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
+      <p><img src="https://user-images.githubusercontent.com/100390926/170860580-a00d7ab8-5088-4a9e-991c-1d53fea939d1.png" /></p>
 </details>
 
 <details>
@@ -133,7 +132,7 @@
     - (1) Nginx는 upstream 서버로 proxy를 할 때 HTTP 버전을 1.0으로 1.0으로 바꿔서 보냄, 따라서 Nginx 공식문서에서 권장하는 버전 1.1으로 변경함
     - (2) HTTP/1.1에서는 Connection을 유지하는 것이 기본이기 때문에 Connection 헤더가 필요없음
     - (3) socket 연결 방식은 3way handshake 방식으로, keepalive 설정을 통해 IN/OUT access 시간을 늘려주어, 리소스 소모량을 감소시키고 웹페이지 로드 속도를 높임
-
+      <p><img src="https://user-images.githubusercontent.com/100390926/170860892-de2ad264-10cf-48f5-9ee7-4d3ba18bbc10.png" /></p>
 </details>
 
 ### ✅ 서비스 보안 강화
