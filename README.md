@@ -16,16 +16,28 @@
 
 <br>
 
-## 👾 팀원 소개
-| Name            | GitHub                              | Position |
-| --------------- | ----------------------------------- | ---------|
-| 😁  이미란 🔰   | https://github.com/doremilan        | Backend  |
-| 😊  성영호      | https://github.com/Hoya11           | Backend  |
-| 🤪  서현우      | https://github.com/SEOCL            | Backend  |
-| 🤓  김정태 🔰   | https://github.com/Jayteeee         | Frontend |
-| 🤔  이덕행      | https://github.com/Deokhaeng        | Frontend |
-| 😄  정주현      | -                                   | Designer |
-| 🤭  윤혜원      | -                                   | Designer |
+## 👾 BACKEND MEMBERS
+#### 이미란 🔰
+
+`메인화면기능` `포토갤러리관련 기능` `사진관련기능` `댓글기능` `좋아요기능`
+</br>
+`미션관련기능` `배지관련기능` `가족 검색기능` 
+</br>
+`카카오 로그인` `소켓 실시간알림` `음성파일 변환기능`
+</br>
+`배포환경 구축(AWS)` `Nginx 프록시서버 설치` `https 적용` `Nginx 로드밸런싱`
+
+#### 성영호
+
+`캘린더기능` `보이스갤러리` `음성메시지기능` `소켓 실시간알림`
+<br/>
+`CI/CD 세팅(Github Action)` `Nginx 로드밸런싱` `스트레스 테스트` 
+
+#### 서현우
+
+`로그인` `회원가입` `가족관련기능` `프로필관련기능`
+<br/>
+`소켓 실시간알림` `스트레스 테스트`
 
 <br>
 
