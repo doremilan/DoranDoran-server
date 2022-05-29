@@ -153,16 +153,20 @@
   <summary>프록시 서버 및 https 적용</summary>
    
   * 도입 이유
-    - 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제발생
+    - 프록시 서버 : 서버측에서 위험이 예상되는 웹 콘텐츠 및 악성코드를 필터링
+    - https사용자가 사이트에 제공하는 정보를 암호화 하여 보안하기 때문에 적용
   * 문제 상황
-    - 녹음 후 저장 시, 저장되는 녹음파일의 오디오 포맷 : webm/Opus
-    - webm 파일은 macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인
+    - 1번 문제: Nginx 서버가 제대로 켜지지 않는 문제 발생
+    - 2번 문제: Nginx 기본설정 후 SSL 도메인인증 에러 발생(Let’s encrypt / Certbot)
+   <p><img src="https://user-images.githubusercontent.com/100390926/170860892-de2ad264-10cf-48f5-9ee7-4d3ba18bbc10.png" /></p>
   * 해결 방안
-    - 안드로이드뿐만 아니라 iOS에서 지원하는 오디오 포맷 형식으로 변환하여 저장 필요
-    - iOS에서 지원하는 오디오 포맷 확인: AAC, MP3, WAV, AIFF만 지원함 
-  * 의사 결정 및 결과
-    - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
-    - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
+    - Nginx 서버 방화벽설정이 활성화 되어 있지 않아서 생긴 에러로 확인 => 방화벽 설정 및 활성화
+   <p><img src="https://user-images.githubusercontent.com/100390926/170860892-de2ad264-10cf-48f5-9ee7-4d3ba18bbc10.png" /></p>
+    - 기존에 ec2 서버에 서버작동 테스트를 위해  80번포트를 로컬에 포트포워딩 중 이여서 생긴 에러
+    - 포트포워딩 리스트를 확인 후 제거하고 연결에러 해결
+   <p><img src="https://user-images.githubusercontent.com/100390926/170860892-de2ad264-10cf-48f5-9ee7-4d3ba18bbc10.png" /></p>
+  * 결과
+    - Nginx Proxy_server 활성화 및 HTTPS 적용
 </details>
 
 <details>
