@@ -16,11 +16,11 @@
 
 <br>
 
-##  도란도란 서비스 소개
-### 🏆 함께 달성하는 재미를 느낄 수 있는 가족 미션
-### 📅 우리 가족의 일정을 한눈에 파악할 수 있는 가족 캘린더
-### 📷 남는 건 사진인 거 아시죠? 우리 가족만의 포토 갤러리
-### 💌 듣고 싶은 목소리를 언제든 꺼내들을 수 있는 음성 메시지함
+##  도란도란 서비스 주요기능
+#### 🏆 함께 달성하는 재미를 느낄 수 있는 가족 미션
+#### 📅 우리 가족의 일정을 한눈에 파악할 수 있는 가족 캘린더
+#### 📷 남는 건 사진인 거 아시죠? 우리 가족만의 포토 갤러리
+#### 💌 듣고 싶은 목소리를 언제든 꺼내들을 수 있는 음성 메시지함
 
 <br>
 
@@ -31,7 +31,7 @@
 ## 🎨아키텍쳐
 <br>
 
-![도란도란_아키텍쳐(0528)](https://user-images.githubusercontent.com/100390926/170829780-bbecbc21-b6de-4b9b-8749-14cefc24489d.png)
+![아키텍쳐 최최최최종](https://user-images.githubusercontent.com/100390926/170860219-34dbdce9-91c1-4c1a-8265-0b79f14a93b3.png)
 
 <br>
 
@@ -90,105 +90,98 @@
 | 정주현   | -                                   | 디자인     |
 | 윤혜원   | -                                   | 디자인     |
 
-   
 
-   
-## 🔥 트러블 슈팅
-<details>
-<summary><strong>사용자 편의</strong></summary>
-   <br/>
-   <ul>
-      
-<details>
-<summary><strong>음성메세지 파일변환</strong></summary>
-   <ul>
-<div markdown="1">       
-<li> 
-   <strong><p>음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제점 발견</strong>
- <br>
-<li>
-   <strong><p>초기에 저장되던 녹음파일 형식 : webm/Opus </strong>
-   <p><h6>- WebM은 기본적으로 Firefox, Chrome 및 Opera에서만 재생됨
-   <p>- macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인</h6>
-   <p>
-      <br>
-   <img src="https://user-images.githubusercontent.com/88309582/170833946-cc8de5e4-f198-4c21-847b-4639aa64e19f.png" />
-
-<li>
-   <strong><p>iOS에서 지원하는 오디오 포멧 : AAC, MP3, WAV, AIFF </strong>
-   <p><h6>- 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 라이브러리의 컨버팅 기능을 이용해 
-   <p>프론트엔드에서 받은 WepM파일을 mp3확장자로 컨버팅 후 저장하여 문제를 해결함</h6>
-   <p> 
-      <br>
-   
-   <img src="https://user-images.githubusercontent.com/88309582/170834252-cfb8d204-36eb-4b21-bb77-04859a002d1f.png" />
 <br>
-</div>
    
-</details>
-   <details>
-<summary><strong>Socket.io </strong></summary>
-   <ul>
-<div markdown="1">       
-<li> 
-   <strong><p> MVP 기능 구현 중, 누구나 email 검색을 통해 가족원으로 추가될 수 있는 가족 구성 방식의 문제점 발견</strong>
-   <br>
-   <p><h6>- 가족 구성원 추가 시, 실시간 초대 알림메시지를 통해 승락/거부 기능을 구현하여 해결하기로 함
-   <p>- websocket 대신 모든 브라우저에서 사용 가능한 socket.io 라이브러리 도입 결정</h6>
- <br>
-      
-<li>
-   <strong><p>Socket.io 구현 중 발생한 에러</strong>
-   <p><h6>- 로컬에서 소켓연결 및 작동테스트를 확인하고 서버에 올려 클라이언트와 연동 중 웹소켓 연결실패 에러 발생
-   <p>- 확인해본 결과 리버스 프록시 용으로 설치해놓은 Nginx의 설정 관련 문제로 파악</h6>
-   <p>
-   <br>
-   <img src="https://user-images.githubusercontent.com/88309582/170837994-4ea39149-1af1-4ec8-85ea-1069ed8b7876.png" />
-    
-<li>
-   <strong><p>socket.io 관련 Nginx 설정 추가 및 변경 </strong>
-   <p><h6>- Nginx는 기본적으로 HTTP 요청을 upstream 서버로 프록시할 때 HTTP 버전을 1.0으로 바꿔서 보냄 (1.1버전으로 와야됨)<br>
-   <p>- 이 과정에서 Connection 헤더도 close로 바꾸는 것으로 확인함 <br>
-   <p>- Nginx 설정파일에 위 2개의 사항을 추가해서 해결함</h6>
-   <p>
-   <br>
-   <img src="https://user-images.githubusercontent.com/88309582/170838014-573c2c97-7ed6-4960-bdcd-b5004bf95b2e.png" />
-   <br>
-   <p><h6>- Nginx Keep Alive 설정 추가 <br>
-   <p>- socket 연결 방식은 3way handshake 방식 ->IN/OUT access 시간을 늘려주어, 리소스 소모량을 감소시키고 웹페이지 로드 속도를 높임</h6>
-   <p>
-   <br>
-   <img src="https://user-images.githubusercontent.com/88309582/170839456-506d0831-ddb3-49d8-9e63-f7b531951803.png" />
-<br>
+   
+## 🚀 트러블 슈팅
 
-</div>
-   
-</details>
+### ✅ 사용자 편의 증진
+<details>
+  <summary>음성메세지 파일 변환</summary>
+
+  * 도입 이유
+    - 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제발생
+  * 문제 상황
+    - 녹음 후 저장 시, 저장되는 녹음파일의 오디오 포맷 : webm/Opus
+    - webm 파일은 macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인
+  * 해결 방안
+    - 안드로이드뿐만 아니라 iOS에서 지원하는 오디오 포맷 형식으로 변환하여 저장 필요
+    - iOS에서 지원하는 오디오 포맷 확인: AAC, MP3, WAV, AIFF만 지원함 
+  * 의사 결정 및 결과
+    - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
+    - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
 </details>
 
 <details>
-<summary><strong>보안성</strong></summary>
-  <br/>
-  <ul>
-<li><strong>아이폰 유저를 위한 파일변환 기능 구현</strong>
-<p>- 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제점 발견
-<p>- 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제점 발견
-<li><strong>원인</strong>
-<p>- 이미지 용량이 큰 경우, 업로드가 오래 걸리는 현상임을 확인했습니다.
-<li><strong>해결방안</strong>
-    <br/>
-    <br/>
-<img src="https://family-8.s3.ap-northeast-2.amazonaws.com/photo/1653742820337blob" />
-    <br/>
-    <img src="https://family-8.s3.ap-northeast-2.amazonaws.com/photo/1653743034190blob" />
-    <img src="https://family-8.s3.ap-northeast-2.amazonaws.com/photo/1653742986577blob" />
-    <br/>
-    <p>- 이미지를 formdata로 변환하기 이전에 압축해서 서버로 전달하기로 결정했습니다.
-<p>- 적합한 라이브러리를 찾던 중 browser-image-compression이라는 라이브러리를 사용하여 이미지를 압축할 수 있었습니다.
-<p>- 유저가 이미지가 업로드되는 상황을 인지할 수 있도록 돕기 위해 사진추가버튼에 스피너를 적용하였습니다.    
-<li><strong>결과</strong>
+  <summary>Socket.io를 활용한 실시간 알림</summary>
 
-<br>
-* * *
+  * 도입 이유
+    - MVP 기능구현 중, 누구나 email 검색을 통해 가족원으로 추가될 수 있는 가족 구성방식의 문제점 발견
+  * 문제 상황
+    - email 검색만으로도 불특정 다수의 사람이 나의 가족원으로 추가될 수 있음
+  * 해결 방안
+    - 가족 구성원 추가 시, 당사자의 승락 & 거부 확인절차 추가
+    - 실시간으로 초대 알림메시지가 발송 가능한 가족 초대기능을 구현하여 문제해결
+  * 의사 결정
+    - websocket 대신 모든 브라우저에서 사용 가능한 socket.io 라이브러리를 적용하여 기능구현 결정
+  * 기능구현 중 만난 문제 상황 
+    - 로컬에서 소켓연결 및 작동테스트를 확인하고 서버에 올려 클라이언트와 연동 중, 리버스 프록시 용으로 설치해놓은 Nginx의 설정 관련 문제로 웹소켓 연결실패 문제발생
+  * 해결 방안
+    - socket.io와 관련한 Nginx의 설정을 추가 & 변경하여 문제해결 (아래 3가지 사항 설정)
+    - (1) proxy HTTP version 1.1; , (2) proxy set_header Connection ""; (3) upstream keepalive 설정 추가
+    - (1) Nginx는 upstream 서버로 proxy를 할 때 HTTP 버전을 1.0으로 1.0으로 바꿔서 보냄, 따라서 Nginx 공식문서에서 권장하는 버전 1.1으로 변경함
+    - (2) HTTP/1.1에서는 Connection을 유지하는 것이 기본이기 때문에 Connection 헤더가 필요없음
+    - (3) socket 연결 방식은 3way handshake 방식으로, keepalive 설정을 통해 IN/OUT access 시간을 늘려주어, 리소스 소모량을 감소시키고 웹페이지 로드 속도를 높임
 
-   
+</details>
+
+### ✅ 서비스 보안 강화
+<details>
+  <summary>프록시 서버 및 https 적용</summary>
+
+  * 도입 이유
+    - 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제발생
+  * 문제 상황
+    - 녹음 후 저장 시, 저장되는 녹음파일의 오디오 포맷 : webm/Opus
+    - webm 파일은 macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인
+  * 해결 방안
+    - 안드로이드뿐만 아니라 iOS에서 지원하는 오디오 포맷 형식으로 변환하여 저장 필요
+    - iOS에서 지원하는 오디오 포맷 확인: AAC, MP3, WAV, AIFF만 지원함 
+  * 의사 결정 및 결과
+    - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
+    - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
+</details>
+
+<details>
+  <summary>XSS(Cross-site scripting)공격 예방</summary>
+
+  * 도입 이유
+    - 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제발생
+  * 문제 상황
+    - 녹음 후 저장 시, 저장되는 녹음파일의 오디오 포맷 : webm/Opus
+    - webm 파일은 macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인
+  * 해결 방안
+    - 안드로이드뿐만 아니라 iOS에서 지원하는 오디오 포맷 형식으로 변환하여 저장 필요
+    - iOS에서 지원하는 오디오 포맷 확인: AAC, MP3, WAV, AIFF만 지원함 
+  * 의사 결정 및 결과
+    - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
+    - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
+</details>
+
+### ✅ 서버 성능 개선
+<details>
+  <summary>로드밸런싱 및 스트레스 테스트</summary>
+
+  * 도입 이유
+    - 음성메세지 녹음 시 IOS 기기에서 녹음 및 재생이 불가능한 문제발생
+  * 문제 상황
+    - 녹음 후 저장 시, 저장되는 녹음파일의 오디오 포맷 : webm/Opus
+    - webm 파일은 macOS 및 iOS의 IE 및 Safari는 내장 지원을 제공하지 않음을 확인
+  * 해결 방안
+    - 안드로이드뿐만 아니라 iOS에서 지원하는 오디오 포맷 형식으로 변환하여 저장 필요
+    - iOS에서 지원하는 오디오 포맷 확인: AAC, MP3, WAV, AIFF만 지원함 
+  * 의사 결정 및 결과
+    - 사용자가 기기에 상관없이 모든 기능을 이용할 수 있게 ffmpeg 파일변환 라이브러리 도입
+    - ffmpeg의 컨버팅 기능을 이용해 프론트엔드에서 받은 wepm파일을 mp3확장자로 컨버팅 후 저장하여 문제해결 
+</details>
