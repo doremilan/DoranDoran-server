@@ -31,6 +31,7 @@ const postPhoto = async (req, res) => {
       });
       res.status(201).json({
         photoId: createdPhoto.photoId,
+        createdPhoto,
         msg: "사진이 등록되었어요.",
       });
     } else {
