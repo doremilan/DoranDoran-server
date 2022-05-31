@@ -8,22 +8,22 @@ const Family = require("../schemas/family")
 const RandomImg = require("../schemas/randomImg")
 const config = require("../config")
 
-const userSchema = Joi.object({
-  email: Joi.string().pattern(new RegExp("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")).required(),
-  // 이메일 양식 /
-  password: Joi.string().pattern(new RegExp("^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}")).required(),
-  //조건1. 8~20 영문 대소문자
-  //조건2. 최소 1개의 숫자 혹은 특수 문자를 포함해야 함
-  passwordCheck: Joi.string(),
-  nickname: Joi.string().pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$")),
-  //2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용
-  profileImg: Joi.string(),
-  todayMood: Joi.string(),
-})
-
 //유저가 회원가입 요청시 사용하는 API입니다.
 const signup = async (req, res) => {
   try {
+    const userSchema = Joi.object({
+      email: Joi.string().pattern(new RegExp("^[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-_.]?[0-9a-zA-Z])*.[a-zA-Z]{2,3}$")).required(),
+      // 이메일 양식 /
+      password: Joi.string().pattern(new RegExp("^(?=.*[a-zA-z])(?=.*[0-9])(?=.*[$`~!@$!%*#^?&\\(\\)-_=+]).{8,20}")).required(),
+      //조건1. 8~20 영문 대소문자
+      //조건2. 최소 1개의 숫자 혹은 특수 문자를 포함해야 함
+      passwordCheck: Joi.string(),
+      nickname: Joi.string().pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{2,15}$")),
+      //2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용
+      profileImg: Joi.string(),
+      todayMood: Joi.string(),
+    })
+
     const { email, password, passwordCheck, nickname, profileImg, todayMood } = await userSchema.validateAsync(req.body)
     const existUsers = await User.findOne({ email })
     //중복 아이디 체크 기능
@@ -43,11 +43,12 @@ const signup = async (req, res) => {
     }
     const hashed = await bcrypt.hash(password, 10)
     //서버 소켓 테스트 위해서 51번째 줄에서 삭제 profileImg: randomImg[0].randomImg,
-    //const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
+    const randomImg = await RandomImg.aggregate([{ $sample: { size: 1 } }])
     const user = new User({
       email,
       password: hashed,
       nickname,
+      profileImg: randomImg[0].randomImg,
       todayMood: null,
     })
     await user.save()
