@@ -188,5 +188,5 @@
   * 결과
     - 하나의 EC2 인스턴스에 3개의 서버를 연결하여 2개의 서버로 부하를 분산시키고 1개의 서버는 백업용 서버로 설정함
     - 스트레스 테스트 결과, 로드밸런싱 적용 후 1000명의 가상 사용자가 50번의 요청을 보낼 때, 평균 응답시간 감소 확인
-      <p><img src="https://user-images.githubusercontent.com/100390926/171368501-ee9e28dc-1448-47c2-a77e-23129126dbc6.png" /></p>
+      <p><img src="https://user-images.githubusercontent.com/100390926/171372869-f6098d30-4318-4fed-acc7-96b17b8da9f7.png" /></p>
 </details>
