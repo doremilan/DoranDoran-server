@@ -187,7 +187,6 @@
     - Artillery 라이브러리를 활용하여 로드밸런싱 전/후 서버의 성능(속도)을 파악하기 위한 스트레스 테스트를 진행하기로 함
   * 결과
     - 하나의 EC2 인스턴스에 3개의 서버를 연결하여 2개의 서버로 부하를 분산시키고 1개의 서버는 백업용 서버로 설정함
-    - 스트레스 테스트 결과, 로드밸런싱 적용 후 1000명의 가상 사용자가 50번의 요청을 보낼 때, 33초에서 8초로 약 4배정도 성능(속도) 향상
-      <p><img src="https://user-images.githubusercontent.com/100390926/170870952-7264aaf7-0595-4430-83e5-6b6f8a83db6c.png" /></p>
-      <p><img src="https://user-images.githubusercontent.com/100390926/170871287-17e4ae39-7a22-4d54-a19d-8f4c5cad98c1.png" /></p>
+    - 스트레스 테스트 결과, 로드밸런싱 적용 후 1000명의 가상 사용자가 50번의 요청을 보낼 때, 평균 응답시간 감소 확인
+      <p><img src="https://user-images.githubusercontent.com/100390926/171368501-ee9e28dc-1448-47c2-a77e-23129126dbc6.png" /></p>
 </details>
