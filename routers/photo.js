@@ -5,17 +5,13 @@ const upload = require("../middlewares/upload");
 
 const {
   postPhoto,
-  getPhoto,
+  getPhotos,
   getPhotoDetail,
   putPhoto,
   deletePhoto,
-  getPhotos,
 } = require("../controllers/photoController");
 
-// 사진 목록조회
-router.get("/:photoAlbumId", authMiddleware, getPhoto);
-
-// 무한스크롤 사진조회
+// 사진 목록조회(무한스크롤 적용)
 router.get("/:photoAlbumId/:pageNum", authMiddleware, getPhotos);
 
 // 사진 상세조회

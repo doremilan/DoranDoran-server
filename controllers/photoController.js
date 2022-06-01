@@ -49,26 +49,6 @@ const postPhoto = async (req, res) => {
   }
 };
 
-// 사진 목록조회
-const getPhoto = async (req, res) => {
-  const { photoAlbumId } = req.params;
-  try {
-    const photoList = await Photo.find({ photoAlbumId }).sort("-createdAt");
-    const photoAlbum = await PhotoAlbum.findOne({ _id: photoAlbumId });
-    const PhotoAlbumName = photoAlbum.photoAlbumName;
-    res.status(200).json({
-      PhotoAlbumName,
-      photoList,
-    });
-  } catch (error) {
-    console.log("사진 목록조회 오류", error);
-    res.status(400).send({
-      result: false,
-      msg: "사진 목록조회 실패",
-    });
-  }
-};
-
 // 사진 목록조회 (무한스크롤 적용)
 const getPhotos = async (req, res) => {
   const { photoAlbumId, pageNum } = req.params;
@@ -235,7 +215,6 @@ const deletePhoto = async (req, res) => {
 
 module.exports = {
   postPhoto,
-  getPhoto,
   getPhotoDetail,
   putPhoto,
   deletePhoto,
