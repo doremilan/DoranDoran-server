@@ -169,7 +169,7 @@ describe("로그인", () => {
       await authController.login(req, res, next)
 
       expect(res._getJSONData()).toStrictEqual({
-        logIntoken: token,
+        logIntoken: token,s
         userInfo,
         familyList,
         msg: "로그인이 완료되었습니다.",

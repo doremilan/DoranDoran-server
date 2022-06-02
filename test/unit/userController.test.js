@@ -70,16 +70,16 @@ describe("유저 조회", async () => {
 })
 
 //photoFile 파일의 들어오는 형태 알아보기.
-describe("유저 데이터 편집", async() => {
+// describe("유저 데이터 편집", async() => {
 
-    test("유저 프로필 수정", async() => {
-        const { userId } = res.locals.userId
+//     test("유저 프로필 수정", async() => {
+//         const { userId } = res.locals.userId
         
-    await userController.editProfile(req, res, next)
-    expect(res._getJSONData()).toStrictEqual({
-      nickname,
-      profileImg,
-      todayMood,
-      })
-    })
-})
+//     await userController.editProfile(req, res, next)
+//     expect(res._getJSONData()).toStrictEqual({
+//       nickname,
+//       profileImg,
+//       todayMood,
+//       })
+//     })
+// })
