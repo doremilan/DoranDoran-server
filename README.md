@@ -7,7 +7,8 @@
 - 사이트 바로가기 : https://www.dorandorans.com
 - 프론트엔드 GitHub Repository : https://github.com/Jayteeee/Family_Project
 - 백엔드 GitHub Respository : https://github.com/doremilan/team8_familyProject
-- 시연 영상 보러가기: https://www.youtube.com/watch?v=uDesNiGJWtM
+- 시연 영상 보러가기: https://youtu.be/atkUdA8EGhk
+- 발표 영상 보러가기: https://www.youtube.com/watch?v=uDesNiGJWtM
 
 <br>
 
