@@ -14,21 +14,6 @@ const VoiceFile = require("../schemas/voiceFile");
 const Like = require("../schemas/like");
 const Joi = require("joi");
 
-//가족이름: 2-15자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
-// const familySchema = Joi.object({
-//   familyTitle: Joi.string()
-//     .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
-//     .required(),
-// });
-
-//가족 멤버 닉네임: 2-8자 / 숫자, 영어, 한국어와 언더스코어, 공백 허용/ 특수문자 불가
-// const familyMemberSchema = Joi.object({
-//   email: Joi.string(),
-//   familyMemberNickname: Joi.string()
-//     .pattern(new RegExp("^[가-힣ㄱ-ㅎa-zA-Z0-9._ -]{1,8}$"))
-//     .required(),
-// });
-
 //가족 목록 조회
 const getFamilyList = async (req, res) => {
   try {
@@ -183,20 +168,12 @@ const searchUser = async (req, res) => {
     let searchKeywords = await User.find({ $text: { $search: search } });
     if (searchKeywords.length) {
       for (let searchKeyword of searchKeywords) {
-        // const keyword1 = search.split("@");
-        // const keyword2 = searchKeyword.email.split("@");
         if (search === searchKeyword.email) {
           const userEmail = searchKeyword.email;
           return res.status(200).json({
             userEmail,
           });
         }
-        // else if (keyword1[0] === keyword2[0] && keyword1[1] !== keyword2[1]) {
-        //   const userEmail = searchKeyword.email;
-        //   return res.status(200).json({
-        //     userEmail,
-        //   });
-        // }
       }
       res.status(400).send({
         result: false,
