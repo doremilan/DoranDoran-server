@@ -2,7 +2,7 @@ node_modules
 .env
 .env.test
 coverage
-signup1 
+signup1.json 
 signup2.json
 signup4.json
 signup5.json
