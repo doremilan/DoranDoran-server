@@ -1,5 +1,5 @@
-jest.mock("jsonwebtoken")
-import jwt from "jsonwebtoken"
+// jest.mock("jsonwebtoken")
+// import jwt from "jsonwebtoken"
 
 const authController = require("../controllers/authController")
 const httpMocks = require("node-mocks-http")
@@ -15,17 +15,17 @@ const signup5 = require("../data/signup5.json")
 const signup6 = require("../data/signup6.json")
 const signup7 = require("../data/signup7.json")
 const signup8 = require("../data/signup8.json")
-const wrongPW = require("../data/wrongPW.json")
-const isUser = require("../data/isUser.json")
-const isPW = require("../data/isPW.json")
-const isMember = require("../data/isMember.json")
-const isFamily = require("../data/isFamily.json")
+// const wrongPW = require("../data/wrongPW.json")
+// const isUser = require("../data/isUser.json")
+// const isPW = require("../data/isPW.json")
+// const isMember = require("../data/isMember.json")
+// const isFamily = require("../data/isFamily.json")
 
 User.findOne = jest.fn()
 User.create = jest.fn()
 User.updateOne = jest.fn()
-Family.findOne = jest.fn()
-FamilyMember.find = jest.fn()
+//Family.findOne = jest.fn()
+//FamilyMember.find = jest.fn()
 
 beforeEach(() => {
   req = httpMocks.createRequest()
@@ -105,75 +105,75 @@ describe("회원가입", () => {
 })
 
 //로그인 테스트
-describe("로그인", () => {
-  test("아이디 조회 실패 시 에러 발생!", async () => {
-    User.findOne.mockResolvedValue(null)
+// describe("로그인", () => {
+//   test("아이디 조회 실패 시 에러 발생!", async () => {
+//     User.findOne.mockResolvedValue(null)
 
-    await authController.login(req, res, next)
-    expect(res._getJSONData()).toStrictEqual({
-      fail: "회원정보가 존재하지 않습니다. 가입 후 로그인하세요.",
-    })
-  })
+//     await authController.login(req, res, next)
+//     expect(res._getJSONData()).toStrictEqual({
+//       fail: "회원정보가 존재하지 않습니다. 가입 후 로그인하세요.",
+//     })
+//   })
 
-  test("비밀번호 틀린 경우 에러 발생!", async () => {
-    req.body = wrongPW
-    User.findOne.mockResolvedValue(isUser)
+//   test("비밀번호 틀린 경우 에러 발생!", async () => {
+//     req.body = wrongPW
+//     User.findOne.mockResolvedValue(isUser)
 
-    await authController.login(req, res, next)
-    expect(res._getJSONData()).toStrictEqual({
-      fail: "비밀번호를 다시 확인해주세요.",
-    })
-  })
+//     await authController.login(req, res, next)
+//     expect(res._getJSONData()).toStrictEqual({
+//       fail: "비밀번호를 다시 확인해주세요.",
+//     })
+//   })
 
-  test("로그인의 각 항목은 필수 값으로 하나라도 없다면 에러 발생!", () => {
-    const email = ""
-    const password = null
+//   test("로그인의 각 항목은 필수 값으로 하나라도 없다면 에러 발생!", () => {
+//     const email = ""
+//     const password = null
 
-    expect(() => {
-      if (email === "" || email === undefined || email === null) {
-        toThrow()
-      } else if (password === "" || password === undefined || password === null) {
-        toThrow()
-      }
-    })
+//     expect(() => {
+//       if (email === "" || email === undefined || email === null) {
+//         toThrow()
+//       } else if (password === "" || password === undefined || password === null) {
+//         toThrow()
+//       }
+//     })
 
-    test("로그인이 완료되었습니다.", async () => {
-      req.body = isPW
-      User.findOne.mockResolvedValue(isUser)
+//     test("로그인이 완료되었습니다.", async () => {
+//       req.body = isPW
+//       User.findOne.mockResolvedValue(isUser)
 
-      await authController.login(req, res, next)
-      expect(res.statusCode).toBe(200)
-      expect(res._isEndCalled()).toBeTruthy()
-      // 매번 토큰 값이 달라져 JSONData로 결과값 확인 어려움
-    })
+//       await authController.login(req, res, next)
+//       expect(res.statusCode).toBe(200)
+//       expect(res._isEndCalled()).toBeTruthy()
+//       // 매번 토큰 값이 달라져 JSONData로 결과값 확인 어려움
+//     })
 
-    test("로그인 완료 시, 프론트가 요청한 값을 보낸다.", async () => {
-      req.body = isPW
+//     test("로그인 완료 시, 프론트가 요청한 값을 보낸다.", async () => {
+//       req.body = isPW
 
-      const payload = { email }
-      const options = {
-        issuer: "백엔드 개발자",
-        expiresIn: "2d",
-      }
-      const token = jwt.sign(payload, config.jwt.secretKey, options)
-      const userInfo = await User.findOne.mockResolvedValue(isUser)
-      const familyChk = await FamilyMember.find.mockResolvedValue(isMember)
-      let familyList = []
-      if (familyChk.length) {
-        for (let family of familyChk) {
-          const chechkedFamily = await Family.findOne.mockResolvedValue(isFamily)
-          familyList.push(chechkedFamily)
-        }
-      }
+//       const payload = { email }
+//       const options = {
+//         issuer: "백엔드 개발자",
+//         expiresIn: "2d",
+//       }
+//       const token = jwt.sign(payload, config.jwt.secretKey, options)
+//       const userInfo = await User.findOne.mockResolvedValue(isUser)
+//       const familyChk = await FamilyMember.find.mockResolvedValue(isMember)
+//       let familyList = []
+//       if (familyChk.length) {
+//         for (let family of familyChk) {
+//           const chechkedFamily = await Family.findOne.mockResolvedValue(isFamily)
+//           familyList.push(chechkedFamily)
+//         }
+//       }
 
-      await authController.login(req, res, next)
+//       await authController.login(req, res, next)
 
-      expect(res._getJSONData()).toStrictEqual({
-        logIntoken: token,
-        userInfo,
-        familyList,
-        msg: "로그인이 완료되었습니다.",
-      })
-    })
-  })
-})
+//       expect(res._getJSONData()).toStrictEqual({
+//         logIntoken: token,
+//         userInfo,
+//         familyList,
+//         msg: "로그인이 완료되었습니다.",
+//       })
+//     })
+//   })
+// })
