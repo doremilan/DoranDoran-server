@@ -1,0 +1,12 @@
+{
+    "user" :{
+    "userId":"6290f2fef18dee23685b1c9e",
+    "email": "ppp@ppp.com",
+    "password": "1234qwer",
+    "nickname": "1234qwer",
+    "profileImg": "test",
+    "todayMood": "test",
+    "snsId": "ppp@ppp.com",
+    "provider": "kakao"
+    }
+}
