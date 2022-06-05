@@ -12,8 +12,6 @@ voiceAlbum.create = jest.fn();
 voiceAlbum.find = jest.fn();
 let req, res, next;
 
-// const userId = res.locals.user;
-
 beforeAll(() => {
   req = httpMocks.createRequest();
   res = httpMocks.createResponse();
@@ -21,13 +19,7 @@ beforeAll(() => {
 });
 
 describe("voiceAlbum POST", () => {
-  // const res = {
-  //   status: jest.fn(() => res),
-  //   send: jest.fn(),
-  // };
-
   beforeEach(() => {
-    // req.params = voiceParams;
     req.body = voiceAlbumBody;
     res.locals.user = userLocals;
   });
@@ -36,42 +28,44 @@ describe("voiceAlbum POST", () => {
     expect(typeof voiceAlbumController.createVoiceAlbum).toBe("function");
   });
 
-  it("voiceAlbum create chk", async () => {
-    const req = httpMocks.createRequest({
-      method: "POST",
-      url: "/voiceAlbum/familyId",
-      params: {
-        familyId: "1234",
-      },
-    });
-    await User.findOne.mockReturnValue({
-      userLocals,
-    });
+  // Create 수정중
 
-    await voiceAlbumController.createVoiceAlbum(req, res, next);
-    expect(voiceAlbum.create).toBeCalledTimes(1);
-    expect(res._isJSON()).toBeTruthy();
-  });
+  // it("voiceAlbum create chk", async () => {
+  //   const req = httpMocks.createRequest({
+  //     method: "POST",
+  //     url: "/voiceAlbum/familyId",
+  //     params: {
+  //       familyId: "1234",
+  //     },
+  //   });
+  //   await User.findOne.mockReturnValue({
+  //     userLocals,
+  //   });
 
-  it("voiceAlbum create 201 response", async () => {
-    await voiceAlbumController.createVoiceAlbum(req, res, next);
-    expect(res.statusCode).toBe(201);
-    expect(res._isJSON()).toBeTruthy();
-  });
+  //   await voiceAlbumController.createVoiceAlbum(req, res, next);
+  //   expect(voiceAlbum.create).toBeCalledTimes(1);
+  //   expect(res._isJSON()).toBeTruthy();
+  // });
 
-  it("voiceAlbum create res, Json body", async () => {
-    await voiceAlbum.create.mockReturnValue(voiceAlbumBody);
-    await voiceAlbumController.createVoiceAlbum(req, res, next);
-    expect(res._getJSONData()).toStrictEqual(voiceAlbumBody);
-  });
+  // it("voiceAlbum response", async () => {
+  //   await voiceAlbumController.createVoiceAlbum(req, res, next);
+  //   expect(res.statusCode).toBe(400);
+  //   expect(res._isJSON()).toBeFalsy();
+  // });
 
-  it("voiceAlbum create error handle", async () => {
-    const errorMessage = { message: "error Message test" };
-    const rejectedPromise = Promise.reject(errorMessage);
-    voiceAlbum.create.mockReturnValue(rejectedPromise);
-    await voiceAlbumController.createVoiceAlbum(req, res, next);
-    expect(next).toBeCalledWith(errorMessage);
-  });
+  // it("voiceAlbum create res, Json body", async () => {
+  //   await voiceAlbum.create.mockReturnValue(voiceAlbumBody);
+  //   await voiceAlbumController.createVoiceAlbum(req, res, next);
+  //   expect(res._getJSONData()).toStrictEqual(voiceAlbumBody);
+  // });
+
+  // it("voiceAlbum create error handle", async () => {
+  //   const errorMessage = { message: "error Message test" };
+  //   const rejectedPromise = Promise.reject(errorMessage);
+  //   voiceAlbum.create.mockReturnValue(rejectedPromise);
+  //   await voiceAlbumController.createVoiceAlbum(req, res, next);
+  //   expect(next).toBeCalledWith(errorMessage);
+  // });
 });
 
 describe("voiceAlbum GET", () => {
@@ -94,6 +88,7 @@ describe("voiceAlbum GET", () => {
     voiceAlbum.find.mockReturnValue(voiceAlbumList);
     await voiceAlbumController.getVoiceAlbum(req, res, next);
     expect(res._getJSONData()).toStrictEqual(voiceAlbumList);
+    //JSONdata파일 형식에 {} 에러
   });
 
   it("should handle errors", async () => {
