@@ -99,7 +99,6 @@
 | ffmpeg              | 파일 변환               |2.1.2|
 | socket.io           | 실시간 알림             |4.5.1|
 | morgan              | HTTP 요청 로그 관리     |1.10.0|
-| winston             | 전체 서비스 로그 관리   |3.7.2|
 | jest                |  테스트코드             |28.1.0|
 | artillery	          |  퍼포먼스 테스팅 툴     |2.0.0-17|
 | express-rate-limit  | API 사용량 제한(보안)   |6.4.0|
