@@ -143,7 +143,7 @@
   * 해결 방안
     - socket.io와 관련한 Nginx의 설정을 추가 & 변경하여 문제해결 (아래 3가지 사항 설정)
     - (1) proxy HTTP version 1.1; , (2) proxy set_header Connection ""; (3) upstream keepalive 설정 추가
-    - (1) Nginx는 upstream 서버로 proxy를 할 때 HTTP 버전을 1.0으로 1.0으로 바꿔서 보냄, 따라서 Nginx 공식문서에서 권장하는 버전 1.1으로 변경함
+    - (1) Nginx는 upstream 서버로 proxy를 할 때 HTTP 버전을 1.0으로 바꿔서 보냄, 따라서 Nginx 공식문서에서 권장하는 버전 1.1으로 변경함
     - (2) HTTP/1.1에서는 Connection을 유지하는 것이 기본이기 때문에 Connection 헤더가 필요없음
     - (3) socket 연결 방식은 3way handshake 방식으로, keepalive 설정을 통해 IN/OUT access 시간을 늘려주어, 리소스 소모량을 감소시키고 웹페이지 로드 속도를 높임
       <p><img src="https://user-images.githubusercontent.com/100390926/170860892-de2ad264-10cf-48f5-9ee7-4d3ba18bbc10.png" /></p>
