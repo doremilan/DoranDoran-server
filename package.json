@@ -19,6 +19,7 @@
   "homepage": "https://github.com/doremilan/team8_familyProject#readme",
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
+    "app-root-path": "^3.0.0",
     "aws-sdk": "^2.1126.0",
     "bcrypt": "^5.0.1",
     "cors": "^2.8.5",
@@ -40,8 +41,10 @@
     "multer-s3": "^2.10.0",
     "passport": "^0.5.2",
     "passport-kakao": "^1.0.1",
+    "process": "^0.11.10",
     "socket.io": "^4.5.1",
-    "uninstall": "^0.0.0"
+    "uninstall": "^0.0.0",
+    "winston": "^3.8.1"
   },
   "devDependencies": {
     "@faker-js/faker": "^6.3.1",
